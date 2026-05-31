@@ -1,0 +1,7 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Studio Haki symbol</title>
+  <desc id="desc">A four-point spark connector symbol for Studio Haki.</desc>
+  <rect width="256" height="256" rx="44" fill="#0D0D0D"/>
+  <path d="M128 31C128 86.2 106.2 108 51 108V148C106.2 148 128 169.8 128 225C128 169.8 149.8 148 205 148V108C149.8 108 128 86.2 128 31Z" fill="#FFFFFF"/>
+  <path d="M188 55H213V80H188V55Z" fill="#FF0F33"/>
+</svg>

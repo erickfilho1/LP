@@ -1,0 +1,203 @@
+{
+  "$schema": "https://tr.designtokens.org/format/",
+  "brand": {
+    "name": {
+      "$type": "string",
+      "$value": "Studio Haki"
+    },
+    "concept": {
+      "$type": "string",
+      "$value": "A recurring creative studio plugged into agency and infoproduct operations."
+    }
+  },
+  "color": {
+    "global": {
+      "red": {
+        "500": {
+          "$type": "color",
+          "$value": "oklch(63.34% 0.2521 24.1)",
+          "$description": "Studio Haki primary red. Used for CTAs, cuts, tags, and active accents. Hex fallback: #FF0F33."
+        },
+        "100": {
+          "$type": "color",
+          "$value": "oklch(91.24% 0.0464 8.1)",
+          "$description": "Soft red background. Hex fallback: #FFD6DC."
+        },
+        "300": {
+          "$type": "color",
+          "$value": "oklch(71.59% 0.1805 14.3)",
+          "$description": "Mid red for hover or secondary accents. Hex fallback: #FF6B80."
+        },
+        "900": {
+          "$type": "color",
+          "$value": "oklch(36.60% 0.1474 21.9)",
+          "$description": "Dark red for deep surfaces and contrast checks. Hex fallback: #7A0017."
+        }
+      },
+      "blue": {
+        "500": {
+          "$type": "color",
+          "$value": "oklch(30.78% 0.1329 261.3)",
+          "$description": "Trust blue. Use sparingly for secondary proof and technical details. Hex fallback: #012871."
+        },
+        "100": {
+          "$type": "color",
+          "$value": "oklch(88.55% 0.0331 268.7)",
+          "$description": "Soft blue background. Hex fallback: #D0D9F0."
+        },
+        "700": {
+          "$type": "color",
+          "$value": "oklch(46.45% 0.1430 262.6)",
+          "$description": "Mid blue for borders and small highlights. Hex fallback: #2B54A8."
+        },
+        "950": {
+          "$type": "color",
+          "$value": "oklch(20.64% 0.0780 258.5)",
+          "$description": "Deep blue for technical dark surfaces. Hex fallback: #00153A."
+        }
+      },
+      "neutral": {
+        "0": {
+          "$type": "color",
+          "$value": "oklch(100.00% 0.0000 89.9)",
+          "$description": "White. Hex fallback: #FFFFFF."
+        },
+        "50": {
+          "$type": "color",
+          "$value": "oklch(98.51% 0.0000 89.9)",
+          "$description": "Main light background. Hex fallback: #FAFAFA."
+        },
+        "100": {
+          "$type": "color",
+          "$value": "oklch(97.02% 0.0000 89.9)",
+          "$description": "Soft section background. Hex fallback: #F5F5F5."
+        },
+        "200": {
+          "$type": "color",
+          "$value": "oklch(90.67% 0.0000 89.9)",
+          "$description": "Subtle border. Hex fallback: #E0E0E0."
+        },
+        "500": {
+          "$type": "color",
+          "$value": "oklch(69.93% 0.0000 89.9)",
+          "$description": "Muted text on dark or light. Hex fallback: #9E9E9E."
+        },
+        "700": {
+          "$type": "color",
+          "$value": "oklch(53.82% 0.0000 89.9)",
+          "$description": "Secondary body text. Hex fallback: #6E6E6E."
+        },
+        "850": {
+          "$type": "color",
+          "$value": "oklch(30.12% 0.0000 89.9)",
+          "$description": "Dark gray surface. Hex fallback: #2E2E2E."
+        },
+        "950": {
+          "$type": "color",
+          "$value": "oklch(15.91% 0.0000 89.9)",
+          "$description": "Core black. Hex fallback: #0D0D0D."
+        }
+      }
+    },
+    "alias": {
+      "brand": {
+        "primary": {
+          "$type": "color",
+          "$value": "{color.global.red.500}"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{color.global.blue.500}"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "{color.global.neutral.950}"
+        },
+        "paper": {
+          "$type": "color",
+          "$value": "{color.global.neutral.50}"
+        }
+      },
+      "text": {
+        "primary": {
+          "$type": "color",
+          "$value": "{color.global.neutral.950}"
+        },
+        "inverse": {
+          "$type": "color",
+          "$value": "{color.global.neutral.0}"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "{color.global.neutral.700}"
+        }
+      },
+      "surface": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.global.neutral.50}"
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.global.neutral.950}"
+        },
+        "red": {
+          "$type": "color",
+          "$value": "{color.global.red.500}"
+        },
+        "blue": {
+          "$type": "color",
+          "$value": "{color.global.blue.500}"
+        }
+      }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "display": {
+        "$type": "fontFamily",
+        "$value": ["Raleway", "sans-serif"]
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": ["Roboto Flex", "sans-serif"]
+      },
+      "mono": {
+        "$type": "fontFamily",
+        "$value": ["Fragment Mono", "monospace"]
+      }
+    },
+    "weight": {
+      "regular": {
+        "$type": "fontWeight",
+        "$value": 400
+      },
+      "bold": {
+        "$type": "fontWeight",
+        "$value": 700
+      },
+      "black": {
+        "$type": "fontWeight",
+        "$value": 900
+      }
+    }
+  },
+  "logo": {
+    "clearspace": {
+      "$type": "dimension",
+      "$value": {
+        "value": 32,
+        "unit": "px"
+      },
+      "$description": "Minimum clear space around the logo in digital contexts."
+    },
+    "minimumWidth": {
+      "$type": "dimension",
+      "$value": {
+        "value": 120,
+        "unit": "px"
+      },
+      "$description": "Minimum width for horizontal logo usage."
+    }
+  }
+}

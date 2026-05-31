@@ -1,0 +1,15 @@
+<svg width="720" height="220" viewBox="0 0 720 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Studio Haki horizontal logo</title>
+  <desc id="desc">Horizontal Studio Haki logo with spark connector symbol and wordmark.</desc>
+  <rect width="720" height="220" rx="28" fill="#0D0D0D"/>
+  <g transform="translate(56 46)">
+    <rect width="128" height="128" rx="28" fill="#0D0D0D"/>
+    <path d="M64 14C64 41.6 53.1 52.5 25.5 52.5V75.5C53.1 75.5 64 86.4 64 114C64 86.4 74.9 75.5 102.5 75.5V52.5C74.9 52.5 64 41.6 64 14Z" fill="#FFFFFF"/>
+    <path d="M94 24H110V40H94V24Z" fill="#FF0F33"/>
+  </g>
+  <g fill="#FFFFFF">
+    <text x="224" y="93" font-family="Raleway, Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="8">STUDIO</text>
+    <text x="221" y="157" font-family="Raleway, Arial, sans-serif" font-size="76" font-weight="900" letter-spacing="-4">HAKI</text>
+  </g>
+  <path d="M535 68H620" stroke="#FF0F33" stroke-width="8" stroke-linecap="square"/>
+</svg>

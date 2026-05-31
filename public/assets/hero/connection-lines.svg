@@ -1,0 +1,53 @@
+<svg width="960" height="420" viewBox="0 0 960 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .flow-line {
+      stroke-dasharray: 18 26;
+      animation: flow 3.8s cubic-bezier(.23,1,.32,1) infinite;
+    }
+    .flow-line:nth-child(2) { animation-delay: .28s; }
+    .flow-line:nth-child(3) { animation-delay: .54s; }
+    .flow-line:nth-child(4) { animation-delay: .82s; }
+    circle {
+      animation: pulse 1.9s cubic-bezier(.23,1,.32,1) infinite alternate;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    circle:nth-child(2) { animation-delay: .2s; }
+    circle:nth-child(3) { animation-delay: .4s; }
+    circle:nth-child(4) { animation-delay: .6s; }
+    @keyframes flow {
+      from { stroke-dashoffset: 0; opacity: .58; }
+      50% { opacity: 1; }
+      to { stroke-dashoffset: -176; opacity: .7; }
+    }
+    @keyframes pulse {
+      from { opacity: .55; transform: scale(.78); }
+      to { opacity: 1; transform: scale(1.12); }
+    }
+  </style>
+  <defs>
+    <filter id="redGlow" x="-60" y="-60" width="1080" height="540" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 1  0 0 0 0 0.08  0 0 0 0 0.08  0 0 0 .8 0"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="flow" x1="0" y1="0" x2="960" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF3030" stop-opacity="0"/>
+      <stop offset="0.45" stop-color="#FF3030" stop-opacity="0.22"/>
+      <stop offset="0.72" stop-color="#FF3030" stop-opacity="1"/>
+      <stop offset="1" stop-color="#FF3030" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+  <g filter="url(#redGlow)" stroke="url(#flow)" stroke-width="3" stroke-linecap="round">
+    <path class="flow-line" d="M0 90H315C430 90 420 18 540 18H770"/>
+    <path class="flow-line" d="M0 160H335C435 160 430 108 540 108H770"/>
+    <path class="flow-line" d="M0 230H770"/>
+    <path class="flow-line" d="M0 300H335C435 300 430 352 540 352H770"/>
+  </g>
+  <g fill="#FF3030" filter="url(#redGlow)">
+    <circle cx="770" cy="18" r="6"/>
+    <circle cx="770" cy="108" r="6"/>
+    <circle cx="770" cy="230" r="6"/>
+    <circle cx="770" cy="352" r="6"/>
+  </g>
+</svg>

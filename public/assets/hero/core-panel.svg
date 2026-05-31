@@ -1,0 +1,26 @@
+<svg width="700" height="520" viewBox="0 0 700 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="700" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2B2B2B" stop-opacity="0.70"/>
+      <stop offset="1" stop-color="#0B0B0B" stop-opacity="0.88"/>
+    </linearGradient>
+    <filter id="shadow" x="-80" y="-80" width="860" height="680" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#000" flood-opacity="0.7"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="22" flood-color="#FF3030" flood-opacity="0.12"/>
+    </filter>
+    <pattern id="grid" width="38" height="38" patternUnits="userSpaceOnUse">
+      <path d="M38 0H0V38" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect x="70" y="45" width="550" height="390" rx="14" fill="url(#panel)" stroke="#FFFFFF" stroke-opacity="0.20" filter="url(#shadow)"/>
+  <rect x="70" y="45" width="550" height="390" rx="14" fill="url(#grid)" opacity="0.55"/>
+  <rect x="170" y="120" width="360" height="270" rx="10" fill="#111111" stroke="#FFFFFF" stroke-opacity="0.18" filter="url(#shadow)"/>
+  <g transform="translate(286 198) scale(.25)">
+    <g fill="#F7F7F7">
+      <path d="M128 128H230V230H128V128Z"/><path d="M282 128H384V230H282V128Z"/><path d="M128 282H230V384H128V282Z"/><path d="M282 282H384V384H282V282Z"/>
+    </g>
+    <g fill="#111111">
+      <path d="M230 128C230 184.333 184.333 230 128 230V128H230Z"/><path d="M282 128C282 184.333 327.667 230 384 230V128H282Z"/><path d="M230 384C230 327.667 184.333 282 128 282V384H230Z"/><path d="M282 384C282 327.667 327.667 282 384 282V384H282Z"/>
+    </g>
+  </g>
+</svg>

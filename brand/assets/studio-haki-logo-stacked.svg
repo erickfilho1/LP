@@ -1,0 +1,13 @@
+<svg width="420" height="520" viewBox="0 0 420 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Studio Haki stacked logo</title>
+  <desc id="desc">Stacked Studio Haki logo for social, covers, and vertical layouts.</desc>
+  <rect width="420" height="520" rx="36" fill="#0D0D0D"/>
+  <g transform="translate(136 72)">
+    <rect width="148" height="148" rx="32" fill="#0D0D0D"/>
+    <path d="M74 17C74 49.2 61.2 62 29 62V86C61.2 86 74 98.8 74 131C74 98.8 86.8 86 119 86V62C86.8 62 74 49.2 74 17Z" fill="#FFFFFF"/>
+    <path d="M109 27H128V46H109V27Z" fill="#FF0F33"/>
+  </g>
+  <text x="210" y="296" text-anchor="middle" fill="#FFFFFF" font-family="Raleway, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="8">STUDIO</text>
+  <text x="210" y="378" text-anchor="middle" fill="#FFFFFF" font-family="Raleway, Arial, sans-serif" font-size="86" font-weight="900" letter-spacing="-5">HAKI</text>
+  <path d="M150 414H270" stroke="#FF0F33" stroke-width="8" stroke-linecap="square"/>
+</svg>

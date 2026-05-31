@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Studio Haki Brand Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;800;900&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --red: #ff0f33;
+        --blue: #012871;
+        --black: #0d0d0d;
+        --paper: #fafafa;
+        --white: #ffffff;
+        --gray: #e0e0e0;
+        --muted: #6e6e6e;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--black);
+        font-family: "Roboto Flex", sans-serif;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 64px 0;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Raleway", sans-serif;
+        letter-spacing: -0.04em;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(48px, 8vw, 112px);
+        line-height: 0.9;
+        max-width: 900px;
+      }
+
+      h2 {
+        font-size: clamp(32px, 4vw, 56px);
+        margin-bottom: 24px;
+      }
+
+      p {
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.65;
+        max-width: 720px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 24px;
+        font-family: "Raleway", sans-serif;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 32px;
+        height: 3px;
+        background: var(--red);
+      }
+
+      .hero {
+        display: grid;
+        gap: 36px;
+        padding: 72px 0 96px;
+      }
+
+      .hero-card {
+        display: grid;
+        gap: 24px;
+        padding: 32px;
+        background: var(--black);
+        border-radius: 12px;
+      }
+
+      .hero-card img {
+        width: 100%;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        margin: 32px 0 80px;
+      }
+
+      .panel {
+        min-height: 260px;
+        display: grid;
+        place-items: center;
+        padding: 32px;
+        border-radius: 12px;
+        border: 1px solid var(--gray);
+        background: var(--white);
+      }
+
+      .panel.dark {
+        background: var(--black);
+      }
+
+      .panel.red {
+        background: var(--red);
+      }
+
+      .panel.blue {
+        background: var(--blue);
+      }
+
+      .panel img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .symbol-preview {
+        max-width: 220px;
+      }
+
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .swatch {
+        min-height: 168px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 18px;
+        border: 1px solid var(--gray);
+        border-radius: 8px;
+        font-family: "Raleway", sans-serif;
+        font-weight: 800;
+      }
+
+      .swatch span {
+        display: block;
+        margin-top: 6px;
+        font-family: "Roboto Flex", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0;
+      }
+
+      .black,
+      .red,
+      .blue {
+        color: var(--white);
+      }
+
+      .black {
+        background: var(--black);
+      }
+
+      .red {
+        background: var(--red);
+      }
+
+      .blue {
+        background: var(--blue);
+      }
+
+      .paper {
+        background: var(--paper);
+      }
+
+      .type-demo {
+        padding: 48px;
+        border-radius: 12px;
+        background: var(--black);
+        color: var(--white);
+      }
+
+      .type-demo p {
+        color: rgba(255, 255, 255, 0.68);
+      }
+
+      @media (max-width: 760px) {
+        main {
+          width: min(100% - 32px, 1180px);
+          padding: 40px 0;
+        }
+
+        .grid,
+        .swatches {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div>
+          <div class="eyebrow">Brand preview</div>
+          <h1>Studio Haki</h1>
+          <p>Identidade visual para um estudio criativo recorrente: preto, branco, vermelho, estrutura premium e simbolo spark/plug para representar operacao conectada.</p>
+        </div>
+        <div class="hero-card">
+          <img src="./assets/haki-logo-transparent.png" alt="HAKI horizontal logo" />
+        </div>
+      </section>
+
+      <section>
+        <h2>Logo Variations</h2>
+        <div class="grid">
+          <div class="panel dark"><img src="./assets/haki-logo-transparent.png" alt="Logo on dark" /></div>
+          <div class="panel red"><img src="./assets/haki-logo-transparent.png" alt="Logo on red" /></div>
+          <div class="panel blue"><img src="./assets/haki-logo-transparent.png" alt="Logo on blue" /></div>
+          <div class="panel dark"><img class="symbol-preview" src="./assets/haki-symbol-transparent.png" alt="HAKI symbol" /></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Color System</h2>
+        <div class="swatches">
+          <div class="swatch black">Black<span>#0D0D0D</span></div>
+          <div class="swatch red">Red<span>#FF0F33</span></div>
+          <div class="swatch blue">Blue<span>#012871</span></div>
+          <div class="swatch paper">Paper<span>#FAFAFA</span></div>
+        </div>
+      </section>
+
+      <section style="margin-top: 80px">
+        <h2>Typography Mood</h2>
+        <div class="type-demo">
+          <div class="eyebrow">Plugged-in creative ops</div>
+          <h2>Menos freelancer solto. Mais previsibilidade criativa.</h2>
+          <p>A Studio Haki entra como parceiro recorrente para entregar artes, videos e landing pages com processo, prazo e consistencia.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,2188 @@
+"use client";
+
+import { AnimatePresence, motion, type MotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Lenis from "lenis";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const navItems = [
+  ["Solucoes", "#solucoes"],
+  ["Processo", "#processo"],
+  ["Planos", "#planos"],
+  ["Cases", "#cases"],
+  ["Sobre", "#sobre"],
+  ["Contato", "#contato"],
+] as const;
+
+const services = [
+  "Landing Pages",
+  "Ads & Creatives",
+  "Videos",
+  "Design Systems",
+  "Web Elements",
+];
+
+const heroWords = ["Landing Pages", "Criativos", "Videos", "Design Systems"];
+
+const metrics = [
+  ["+100", "Landing pages entregues"],
+  ["+30", "Agencias atendidas"],
+  ["+10", "Lancamentos suportados"],
+  ["98%", "Entregas no prazo"],
+  ["3 dias", "Prazo medio de entrega"],
+  ["5", "Solicitacoes diarias"],
+];
+
+const clients = [
+  ["Agency X", "spark"],
+  ["LaunchLab", "frame"],
+  ["INFOpro", "orbit"],
+  ["PULSE", "signal"],
+  ["StudioNorth", "north"],
+  ["CreativeFlow", "flow"],
+];
+
+const boardColumns = [
+  {
+    title: "Backlog",
+    count: "3",
+    cards: ["Landing Page", "Anuncio", "Video Edit"],
+  },
+  {
+    title: "Em andamento",
+    count: "2",
+    cards: ["Pagina de Vendas", "VSL"],
+  },
+  {
+    title: "Revisao",
+    count: "1",
+    cards: ["Pagina Obrigado"],
+  },
+  {
+    title: "Concluido",
+    count: "4",
+    cards: ["Anuncio", "Landing Page", "Email Design", "Video Edit"],
+  },
+];
+
+const processSteps = [
+  {
+    step: "01",
+    title: "Solicitacao",
+    text: "Voce envia a demanda pelo Trello com briefing simples e objetivo.",
+    icon: "request",
+  },
+  {
+    step: "02",
+    title: "Producao",
+    text: "Entramos em acao com nosso fluxo operacional organizado.",
+    icon: "progress",
+  },
+  {
+    step: "03",
+    title: "Revisao",
+    text: "Voce revisa e solicita ajustes com agilidade e clareza.",
+    icon: "review",
+  },
+  {
+    step: "04",
+    title: "Entrega",
+    text: "Arquivos entregues com prazo, qualidade e consistencia.",
+    icon: "delivered",
+  },
+];
+
+const plans = [
+  {
+    name: "Essencial",
+    price: "R$ 997",
+    description: "Suporte criativo diario para demandas continuas.",
+    features: ["2 demandas por dia", "Entregas em 3 dias", "Revisoes limitadas", "Acompanhamento Trello"],
+  },
+  {
+    name: "Growth",
+    price: "R$ 1.497",
+    description: "Ideal para agencias em crescimento.",
+    tag: "Mais escolhido",
+    featured: true,
+    features: ["5 demandas por dia", "Entregas em 72h", "Revisoes ilimitadas", "Acompanhamento Trello"],
+  },
+  {
+    name: "Scale",
+    price: "R$ 2.497",
+    description: "Producao criativa em alta escala.",
+    features: ["10+ demandas por dia", "Entregas prioritarias", "Revisoes ilimitadas", "Acompanhamento Trello"],
+  },
+  {
+    name: "Enterprise",
+    price: "Sob consulta",
+    description: "Infraestrutura criativa personalizada.",
+    features: ["Demandas ilimitadas", "Entrega prioritaria", "Suporte dedicado", "Fluxo personalizado"],
+  },
+];
+
+const portfolio = {
+  "Landing pages": [
+    ["Launch Sprint", "Pagina de vendas para lancamento digital", "Conversao"],
+    ["Med Scale", "Landing page para captacao de pacientes", "Performance"],
+    ["Expert OS", "Pagina institucional para expert", "Autoridade"],
+  ],
+  Criativos: [
+    ["Ad Pack 01", "Pacote de criativos para teste de oferta", "Ads"],
+    ["Reels System", "Linha visual para conteudo diario", "Social"],
+    ["Launch Assets", "Pecas para aquecimento e abertura", "Lançamento"],
+  ],
+  Videos: [
+    ["VSL Cut", "Edicao objetiva para pagina de vendas", "VSL"],
+    ["Shorts Engine", "Cortes recorrentes para especialistas", "Conteudo"],
+    ["Offer Motion", "Motion simples para criativos pagos", "Motion"],
+  ],
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+};
+
+function Reveal({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      className={className}
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.22 }}
+      transition={
+        reduceMotion
+          ? { duration: 0 }
+          : { duration: 0.9, delay, ease: [0.23, 1, 0.32, 1] }
+      }
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function SmoothScroll() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    let frame = 0;
+
+    const raf = (time: number) => {
+      lenis.raf(time);
+      ScrollTrigger.update();
+      frame = requestAnimationFrame(raf);
+    };
+
+    frame = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      lenis.destroy();
+    };
+  }, []);
+
+  return null;
+}
+
+function HakiPreloader() {
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setIsVisible(false), 1450);
+
+    return () => window.clearTimeout(timeout);
+  }, []);
+
+  if (!isVisible) {
+    return null;
+  }
+
+  return (
+    <div className="haki-preloader" aria-label="Carregando Studio Haki">
+      <div className="haki-preloader-mark">
+        <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} priority />
+      </div>
+      <p>Creative operational studio</p>
+    </div>
+  );
+}
+
+function UmanoNav() {
+  const [isRailMode, setIsRailMode] = useState(false);
+  const [railIndex, setRailIndex] = useState(0);
+
+  useEffect(() => {
+    const section = document.querySelector<HTMLElement>(".umano-rail-section");
+    const viewport = document.querySelector<HTMLElement>(".umano-rail-viewport");
+    const track = document.querySelector<HTMLElement>(".umano-rail");
+
+    if (!section || !viewport || !track) {
+      return;
+    }
+
+    const getDistance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+    const deliveryCard = document.querySelector<HTMLElement>(".is-delivery-card");
+    const getFocusDistance = () => {
+      if (!deliveryCard) {
+        return getDistance();
+      }
+
+      const targetX = window.innerWidth / 2 - (deliveryCard.offsetLeft + deliveryCard.offsetWidth / 2);
+      return Math.abs(targetX);
+    };
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: () => `+=${getFocusDistance() * 0.62 + window.innerHeight * 0.16}`,
+      onEnter: () => setIsRailMode(true),
+      onEnterBack: () => setIsRailMode(true),
+      onLeave: () => setIsRailMode(false),
+      onLeaveBack: () => setIsRailMode(false),
+      onUpdate: (self) => {
+        const carouselProgress = Math.min(1, self.progress / 0.52);
+        const nextIndex = Math.min(3, Math.max(0, Math.round(carouselProgress * 3)));
+        setRailIndex((current) => (current === nextIndex ? current : nextIndex));
+      },
+      invalidateOnRefresh: true,
+    });
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+
+    return () => trigger.kill();
+  }, []);
+
+  return (
+    <header className={`umano-nav ${isRailMode ? "is-rail-mode" : ""}`} aria-label="Navegacao principal">
+      <a href="#top" className="umano-nav-logo" aria-label="Studio Haki">
+        <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} priority />
+      </a>
+
+      <div className="umano-nav-center">
+        <nav className="umano-nav-links" aria-label="Secoes">
+          <a href="#solucoes">Solucoes</a>
+          <a href="#processo">Processo</a>
+          <a href="#cases">Cases</a>
+          <a href="#planos">Planos</a>
+        </nav>
+
+        <div className="umano-nav-rail" aria-label={`Progresso do carrossel: item ${railIndex + 1} de 4`}>
+          {[0, 1, 2, 3].map((index) => (
+            <span key={index} className={railIndex === index ? "is-active" : ""} />
+          ))}
+        </div>
+      </div>
+
+      <a className="umano-nav-cta" href="#contato">
+        Plugar HAKI
+      </a>
+    </header>
+  );
+}
+
+function DynamicHeroWord() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % heroWords.length);
+    }, 1550);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <span className="umano-hero-word-shell">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={heroWords[activeIndex]}
+          initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 16, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -14, filter: "blur(8px)" }}
+          transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {heroWords[activeIndex]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
+function HeroWireframe() {
+  const heroCards = [
+    ["hero-dashboard-preview", "Dashboard operacional", "Fluxo Trello + entregas"],
+    ["case-video-01", "Video criativo", "Area para VSL / cortes"],
+    ["case-image-01", "Landing page", "Area para print do projeto"],
+  ];
+
+  return (
+    <motion.div
+      className="umano-wireframe"
+      initial={{ opacity: 0, y: 80, rotateX: 8 }}
+      animate={{ opacity: 1, y: 0, rotateX: 0 }}
+      transition={{ duration: 1.05, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="umano-wireframe-system" aria-label="Wireframe da interface operacional HAKI">
+        <div className="umano-wireframe-shell">
+          <div className="umano-wireframe-topbar">
+            <span />
+            <span />
+            <span />
+            <strong>HAKI OPS</strong>
+          </div>
+
+          <div className="umano-wireframe-grid">
+            <div className="umano-wireframe-media" data-slot="hero-video">
+              <span>hero-video</span>
+              <strong>1920 x 800</strong>
+              <em>Substituir pelo video hero final</em>
+            </div>
+
+            <div className="umano-wireframe-core">
+              <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} />
+              <small>Creative infrastructure online</small>
+            </div>
+
+            <div className="umano-wireframe-stack">
+              {heroCards.map(([slot, title, text], index) => (
+                <motion.div
+                  key={slot}
+                  className="umano-wireframe-card"
+                  data-slot={slot}
+                  animate={{ y: [0, index % 2 === 0 ? -7 : 7, 0] }}
+                  transition={{ duration: 5.5 + index, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <span>{slot}</span>
+                  <strong>{title}</strong>
+                  <p>{text}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <div className="umano-wireframe-footer">
+            <span>3 dias uteis</span>
+            <span>5 solicitacoes/dia</span>
+            <span>Fluxo previsivel</span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function UmanoHero() {
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 0.22], [0, -96]);
+  const scale = useTransform(scrollYProgress, [0, 0.22], [1, 0.94]);
+
+  return (
+    <section id="top" className="umano-hero">
+      <div className="umano-cursor-orbit" />
+      <div className="umano-hero-inner">
+        <Reveal className="umano-hero-copy">
+          <div className="umano-hero-kicker">
+            <span />
+            Studio Haki / creative ops
+          </div>
+          <h1 className="umano-hero-title">
+            Pare de depender de freelancer.
+            <br />
+            Plugue a HAKI na sua operacao.
+          </h1>
+          <p className="umano-hero-subtitle">
+            A HAKI entrega <DynamicHeroWord /> para sua operacao, sem depender de freelancer solto.
+          </p>
+          <div className="umano-hero-actions">
+            <a href="#contato">Plugar a HAKI</a>
+            <a href="#processo">Ver processo</a>
+          </div>
+        </Reveal>
+
+        <motion.div style={{ x: "-50%", y, scale }} className="umano-hero-device">
+          <HeroWireframe />
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function UmanoLogoStrip() {
+  return (
+    <section className="umano-logo-strip" aria-label="Clientes e parceiros">
+      <p>Trusted by agencies and infoproduct businesses</p>
+      <div>
+        {clients.map(([name, icon]) => (
+          <span key={name}>
+            <ClientIcon type={icon} />
+            {name}
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ManifestWord({
+  word,
+  index,
+  total,
+  progress,
+}: {
+  word: string;
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+}) {
+  const start = 0.08 + (index / total) * 0.64;
+  const end = start + 0.2;
+  const color = useTransform(progress, [start, end], ["rgba(8,8,8,0.16)", "rgba(8,8,8,0.84)"]);
+  const y = useTransform(progress, [start, end], [12, 0]);
+
+  return (
+    <motion.span className="umano-manifesto-word" style={{ color, y }}>
+      {word}
+    </motion.span>
+  );
+}
+
+function StickyManifesto() {
+  const ref = useRef<HTMLElement | null>(null);
+  const pinRef = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 76, damping: 24, mass: 0.2 });
+  const y = useTransform(smoothProgress, [0, 0.5, 1], [18, 0, -18]);
+  const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.985, 1, 0.992]);
+  const progressScale = useTransform(smoothProgress, [0.06, 0.9], [0, 1]);
+  const firstLine = ["Um", "estudio", "dentro", "da", "sua", "operacao,"];
+  const secondLine = ["com", "ritmo", "de", "produto", "e", "prazo", "de", "lancamento."];
+  const words = [...firstLine, ...secondLine];
+
+  useEffect(() => {
+    if (!ref.current || !pinRef.current) {
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: ref.current,
+        start: "top top",
+        end: () => {
+          if (!ref.current) {
+            return "+=0";
+          }
+
+          return `+=${Math.max(ref.current.offsetHeight - window.innerHeight, window.innerHeight)}`;
+        },
+        pin: pinRef.current,
+        pinSpacing: false,
+        scrub: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      });
+    }, ref);
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={ref} className="umano-manifesto">
+      <div ref={pinRef} className="umano-manifesto-pin">
+        <motion.div style={{ y, scale }} className="umano-manifesto-sticky">
+          <span className="umano-manifesto-kicker">Infraestrutura criativa plugada</span>
+          <h2>
+            <span className="umano-manifesto-line">
+              {firstLine.map((word, index) => (
+                <ManifestWord key={`${word}-${index}`} word={word} index={index} total={words.length} progress={smoothProgress} />
+              ))}
+            </span>
+            <span className="umano-manifesto-line">
+              {secondLine.map((word, index) => (
+                <ManifestWord
+                  key={`${word}-${index + firstLine.length}`}
+                  word={word}
+                  index={index + firstLine.length}
+                  total={words.length}
+                  progress={smoothProgress}
+                />
+              ))}
+            </span>
+          </h2>
+          <div className="umano-manifesto-progress" aria-hidden="true">
+            <motion.i style={{ scaleX: progressScale }} />
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function RailIcon({ type }: { type: string }) {
+  if (type === "queue") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 6.5h14M5 12h10M5 17.5h7" />
+        <path d="M17 14.5l2.5 2.5-2.5 2.5" />
+      </svg>
+    );
+  }
+
+  if (type === "system") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 7h4v4H7zM13 7h4v4h-4zM7 13h4v4H7zM13 13h4v4h-4z" />
+      </svg>
+    );
+  }
+
+  if (type === "production") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 17V7l10 5z" />
+        <path d="M4 5h3M4 19h3M17 5h3M17 19h3" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 13.5l4 4L19 7" />
+      <path d="M4.5 4.5h15v15h-15z" />
+    </svg>
+  );
+}
+
+function HowItWorksRail() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const reduceMotion = useReducedMotion();
+  type RailStep = {
+    icon: "queue" | "system" | "production" | "delivery";
+    title: string;
+    text: string;
+    label: string;
+    isDelivery?: boolean;
+  };
+  const steps: RailStep[] = [
+    { icon: "queue", title: "Pedido entra", text: "Briefing simples, prioridade clara e tudo rastreado.", label: "trello-request" },
+    { icon: "system", title: "Fluxo organiza", text: "A demanda vira card, prazo e fila operacional.", label: "ops-board" },
+    { icon: "production", title: "Producao roda", text: "Design, video e landing page seguem sem travar seu time.", label: "creative-sprint" },
+    {
+      icon: "delivery",
+      title: "Entrega volta",
+      text: "Arquivos prontos, revisao objetiva e historico no Trello.",
+      label: "delivery-pack",
+      isDelivery: true,
+    },
+  ];
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+
+    if (!section || !viewport || !track || reduceMotion) {
+      return;
+    }
+
+    const media = gsap.matchMedia();
+
+    media.add("(min-width: 768px)", () => {
+      const deliveryCard = section.querySelector<HTMLElement>(".is-delivery-card");
+      const deliveryScene = section.querySelector<HTMLElement>(".delivery-card-scene");
+      const deliveryCopy = section.querySelector<HTMLElement>(".is-delivery-card .umano-rail-card-copy");
+      const deliveryLogo = section.querySelector<HTMLElement>(".delivery-card-logo");
+      const deliveryBg = section.querySelector<HTMLElement>(".delivery-card-bg");
+      const deliveryGlow = section.querySelector<HTMLElement>(".delivery-card-glow");
+      const railCopy = section.querySelector<HTMLElement>(".umano-rail-copy");
+      const otherCards = gsap.utils.toArray<HTMLElement>(".umano-rail-card:not(.is-delivery-card)", section);
+
+      if (!deliveryCard || !deliveryScene || !deliveryCopy || !deliveryLogo || !deliveryBg || !deliveryGlow || !railCopy) {
+        return undefined;
+      }
+
+      const getCenterInTrack = (element: HTMLElement) => {
+        let x = element.offsetLeft + element.offsetWidth / 2;
+        let y = element.offsetTop + element.offsetHeight / 2;
+        let parent = element.offsetParent as HTMLElement | null;
+
+        while (parent && parent !== track) {
+          x += parent.offsetLeft;
+          y += parent.offsetTop;
+          parent = parent.offsetParent as HTMLElement | null;
+        }
+
+        return { x, y };
+      };
+      const getFocusX = () => window.innerWidth / 2 - getCenterInTrack(deliveryScene).x;
+      const getFocusDistance = () => Math.abs(getFocusX());
+      const getRailOrigin = () => {
+        const center = getCenterInTrack(deliveryScene);
+        return `${center.x}px ${center.y}px`;
+      };
+      const getRailShiftY = () => {
+        const rect = deliveryScene.getBoundingClientRect();
+        return window.innerHeight * 0.5 - (rect.top + rect.height / 2);
+      };
+      const getRailScale = () => {
+        const rect = deliveryScene.getBoundingClientRect();
+        return Math.max(window.innerWidth / rect.width, window.innerHeight / rect.height) * 1.42;
+      };
+      const getLogoCenterX = () => {
+        const rect = deliveryLogo.getBoundingClientRect();
+        const correction = window.innerWidth / 2 - (rect.left + rect.width / 2) - 20;
+        return correction / getRailScale();
+      };
+      const getLogoCenterY = () => {
+        const rect = deliveryLogo.getBoundingClientRect();
+        const correction = window.innerHeight / 2 - (rect.top + rect.height / 2);
+        return correction / getRailScale();
+      };
+      const getLogoScale = () => {
+        const targetWidth = Math.min(390, Math.max(220, window.innerWidth * 0.22));
+        return targetWidth / deliveryLogo.getBoundingClientRect().width / getRailScale();
+      };
+
+      gsap.set([track, deliveryCard, deliveryScene, deliveryBg, deliveryLogo, deliveryGlow, railCopy, ...otherCards], {
+        willChange: "transform, opacity, border-radius",
+      });
+      gsap.set(deliveryCard, { overflow: "hidden" });
+      gsap.set(deliveryCard, { zIndex: 12 });
+      gsap.set(otherCards, { zIndex: 0 });
+      gsap.set(deliveryScene, { transformOrigin: "center center" });
+      gsap.set(deliveryLogo, { xPercent: -50, yPercent: -50, transformOrigin: "center center" });
+      gsap.set(deliveryGlow, { opacity: 0 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${getFocusDistance() * 0.62 + window.innerHeight * 0.16}`,
+          pin: true,
+          scrub: 0.34,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      tl.to(track, { x: getFocusX, ease: "none", duration: 0.36 }, 0)
+        .to([railCopy, ...otherCards], { opacity: 0, filter: "blur(6px)", ease: "none", duration: 0.1 }, 0.34)
+        .set([railCopy, ...otherCards], { visibility: "hidden" }, 0.43)
+        .to(deliveryCopy, { opacity: 0, yPercent: 24, filter: "blur(8px)", ease: "none", duration: 0.09 }, 0.34)
+        .set(deliveryCopy, { visibility: "hidden" }, 0.43)
+        .set(deliveryCard, { overflow: "visible" }, 0.4)
+        .to(deliveryCard, {
+          backgroundColor: "transparent",
+          borderColor: "rgba(5, 5, 5, 0)",
+          boxShadow: "none",
+          ease: "none",
+          duration: 0.12,
+        }, 0.4)
+        .to(section, { backgroundColor: "#050505", ease: "none", duration: 0.18 }, 0.38)
+        .set(track, { transformOrigin: getRailOrigin }, 0.4)
+        .to(track, {
+          y: getRailShiftY,
+          scale: getRailScale,
+          ease: "none",
+          duration: 0.28,
+        }, 0.42)
+        .to(deliveryLogo, { x: getLogoCenterX, y: getLogoCenterY, scale: getLogoScale, xPercent: -50, yPercent: -50, ease: "none", duration: 0.28 }, 0.42)
+        .to(deliveryGlow, { opacity: 0.72, ease: "none", duration: 0.14 }, 0.46)
+        .to(deliveryLogo, { y: () => getLogoCenterY() - window.innerHeight * 0.28, opacity: 0, ease: "none", duration: 0.14 }, 0.66);
+
+      return () => tl.kill();
+    });
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+
+    return () => media.revert();
+  }, [reduceMotion]);
+
+  return (
+    <section ref={sectionRef} id="processo" className="umano-rail-section">
+      <div className="umano-rail-copy">
+        <p>Como funciona</p>
+        <h2>O operacional vira uma esteira criativa.</h2>
+      </div>
+      <div ref={viewportRef} className="umano-rail-viewport">
+        <div ref={trackRef} className="umano-rail">
+          {steps.map((step, index) => (
+            <motion.article
+              key={step.title}
+              whileHover={step.isDelivery ? undefined : { y: -8, rotate: index % 2 === 0 ? -0.45 : 0.45 }}
+              className={`umano-rail-card ${step.isDelivery ? "is-delivery-card" : ""}`}
+            >
+              <div className={`umano-card-wire ${step.isDelivery ? "delivery-card-scene" : ""}`}>
+                {step.isDelivery ? (
+                  <>
+                    <img src="/assets/cards/delivery/background.svg" alt="" className="delivery-card-bg" />
+                    <div className="delivery-card-glow" aria-hidden="true" />
+                    <img src="/assets/cards/delivery/logo.svg" alt="" className="delivery-card-logo" />
+                  </>
+                ) : (
+                  <span>{step.label}</span>
+                )}
+              </div>
+              <div className="umano-rail-card-copy">
+                <span className="umano-rail-icon">
+                  <RailIcon type={step.icon} />
+                </span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Header() {
+  return (
+    <header className="container-haki fixed left-1/2 top-7 z-50 flex -translate-x-1/2 items-center justify-between rounded-full border hairline bg-haki-black/76 px-4 py-3 backdrop-blur-2xl md:px-6">
+      <a href="#top" className="flex items-center">
+        <Image
+          src="/brand/assets/haki-logo-transparent.png"
+          alt="HAKI"
+          width={1570}
+          height={393}
+          priority
+          className="h-8 w-auto md:h-9"
+        />
+      </a>
+
+      <nav className="hidden items-center gap-9 text-sm text-haki-muted lg:flex">
+        {navItems.map(([label, href]) => (
+          <a key={label} href={href} className="transition-colors duration-300 hover:text-haki-white">
+            {label}
+          </a>
+        ))}
+      </nav>
+
+      <div className="flex items-center gap-4">
+        <a href="#planos" className="hidden text-sm text-haki-muted transition-colors duration-300 hover:text-haki-white md:block">
+          Entrar
+        </a>
+        <a
+          href="#planos"
+          className="group hidden items-center gap-3 rounded-md border border-haki-red/60 bg-haki-red px-5 py-3 text-sm font-semibold text-white shadow-red-soft transition duration-500 ease-mass hover:-translate-y-0.5 hover:bg-[#e60b2d] sm:inline-flex"
+        >
+          Comecar agora
+          <span className="transition-transform duration-500 ease-mass group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+    </header>
+  );
+}
+
+type MenuPathState = {
+  openHidden: string;
+  openBulge: string;
+  openFull: string;
+  closeStart: string;
+  closeBulge: string;
+  closeHidden: string;
+};
+
+type SplitInstance = {
+  chars: Element[];
+  revert: () => void;
+};
+
+type SplitTextConstructor = new (target: Element, vars: { type: string }) => SplitInstance;
+
+type GsapTimeline = {
+  to: (...args: unknown[]) => GsapTimeline;
+  kill: () => void;
+};
+
+type GsapApi = {
+  set: (...args: unknown[]) => void;
+  to: (...args: unknown[]) => unknown;
+  timeline: (...args: unknown[]) => GsapTimeline;
+  registerPlugin: (...args: unknown[]) => void;
+};
+
+type GsapWindow = Window & {
+  gsap?: GsapApi;
+  SplitText?: SplitTextConstructor;
+  MorphSVGPlugin?: unknown;
+};
+
+function loadScript(src: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+
+    if (existingScript?.dataset.loaded === "true") {
+      resolve();
+      return;
+    }
+
+    const script = existingScript || document.createElement("script");
+
+    script.src = src;
+    script.async = true;
+    script.onload = () => {
+      script.dataset.loaded = "true";
+      resolve();
+    };
+    script.onerror = () => reject(new Error(`Failed to load ${src}`));
+
+    if (!existingScript) {
+      document.head.appendChild(script);
+    }
+  });
+}
+
+function getMenuPathStates(svg: SVGSVGElement): MenuPathState {
+  const box = svg.viewBox.baseVal;
+  const left = box.x;
+  const top = box.y;
+  const width = box.width;
+  const height = box.height;
+  const right = left + width;
+  const bottom = top + height;
+  const cx = left + width / 2;
+
+  return {
+    openHidden: `M ${left} ${top} L ${right} ${top} L ${right} ${top} Q ${cx} ${top} ${left} ${top} Z`,
+    openBulge: `M ${left} ${top} L ${right} ${top} L ${right} ${top + height * 0.34} Q ${cx} ${bottom + height * 0.34} ${left} ${top + height * 0.34} Z`,
+    openFull: `M ${left} ${top} L ${right} ${top} L ${right} ${bottom} Q ${cx} ${bottom} ${left} ${bottom} Z`,
+    closeStart: `M ${left} ${top} L ${right} ${top} L ${right} ${bottom} Q ${cx} ${bottom} ${left} ${bottom} Z`,
+    closeBulge: `M ${left} ${top} L ${right} ${top} L ${right} ${bottom} Q ${cx} ${top - height * 0.34} ${left} ${bottom} Z`,
+    closeHidden: `M ${left} ${bottom} L ${right} ${bottom} L ${right} ${bottom} Q ${cx} ${bottom} ${left} ${bottom} Z`,
+  };
+}
+
+function FullscreenNav() {
+  const [isOpen, setIsOpen] = useState(false);
+  const navRef = useRef<HTMLElement | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const pathRef = useRef<SVGPathElement | null>(null);
+  const menuLogoRef = useRef<HTMLAnchorElement | null>(null);
+  const toggleMenuRef = useRef<HTMLSpanElement | null>(null);
+  const toggleCloseRef = useRef<HTMLSpanElement | null>(null);
+  const infoRefs = useRef<HTMLElement[]>([]);
+  const linkRefs = useRef<HTMLAnchorElement[]>([]);
+  const splitsRef = useRef<SplitInstance[]>([]);
+  const gsapRef = useRef<GsapApi | null>(null);
+  const timelineRef = useRef<GsapTimeline | null>(null);
+  const pluginsReadyRef = useRef(false);
+  const isOpenRef = useRef(false);
+  const isAnimatingRef = useRef(false);
+  const reduceMotionRef = useRef(false);
+
+  const setInfoRef = (node: HTMLElement | null) => {
+    if (node && !infoRefs.current.includes(node)) {
+      infoRefs.current.push(node);
+    }
+  };
+
+  const setLinkRef = (node: HTMLAnchorElement | null) => {
+    if (node && !linkRefs.current.includes(node)) {
+      linkRefs.current.push(node);
+    }
+  };
+
+  const setOpenState = useCallback((nextOpen: boolean) => {
+    isOpenRef.current = nextOpen;
+    setIsOpen(nextOpen);
+  }, []);
+
+  const resetMenuItems = useCallback(() => {
+    const gsap = gsapRef.current;
+    if (!gsap) {
+      return;
+    }
+
+    const chars = splitsRef.current.flatMap((split) => split.chars);
+    gsap.set(chars, { xPercent: 115, opacity: 0, willChange: "transform, opacity" });
+    gsap.set(infoRefs.current, { y: 18, opacity: 0, willChange: "transform, opacity" });
+    gsap.set(menuLogoRef.current, { y: -14, opacity: 0, willChange: "transform, opacity" });
+    gsap.set(toggleMenuRef.current, { yPercent: 0, opacity: 1 });
+    gsap.set(toggleCloseRef.current, { yPercent: 120, opacity: 0 });
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    const gsap = gsapRef.current;
+
+    if (!gsap || !pluginsReadyRef.current || !svgRef.current || !pathRef.current || isAnimatingRef.current || !isOpenRef.current) {
+      return;
+    }
+
+    const paths = getMenuPathStates(svgRef.current);
+    const chars = splitsRef.current.flatMap((split) => split.chars);
+    const reduceMotion = reduceMotionRef.current;
+
+    isAnimatingRef.current = true;
+    timelineRef.current?.kill();
+    gsap.set(pathRef.current, { attr: { d: paths.closeStart } });
+
+    const tl = gsap.timeline({
+      defaults: { ease: "power3.inOut" },
+      onComplete: () => {
+        resetMenuItems();
+        gsap.set(pathRef.current, { attr: { d: paths.openHidden } });
+        navRef.current?.classList.remove("is-open");
+        setOpenState(false);
+        isAnimatingRef.current = false;
+      },
+    });
+
+    timelineRef.current = tl;
+
+    if (reduceMotion) {
+      tl.to([chars, infoRefs.current, menuLogoRef.current], { opacity: 0, duration: 0.16 }).to(
+        pathRef.current,
+        { morphSVG: paths.closeHidden, duration: 0.22 },
+        0,
+      );
+      return;
+    }
+
+    tl.to(chars, { xPercent: 55, opacity: 0, duration: 0.28, stagger: { each: 0.006, from: "end" }, ease: "power2.in" }, 0)
+      .to(infoRefs.current, { y: 18, opacity: 0, duration: 0.26, stagger: 0.025 }, 0)
+      .to(menuLogoRef.current, { y: -14, opacity: 0, duration: 0.24 }, 0)
+      .to(toggleMenuRef.current, { yPercent: 0, opacity: 1, duration: 0.28 }, 0)
+      .to(toggleCloseRef.current, { yPercent: 120, opacity: 0, duration: 0.28 }, 0)
+      .to(pathRef.current, { morphSVG: paths.closeBulge, duration: 0.52 }, 0.08)
+      .to(pathRef.current, { morphSVG: paths.closeHidden, duration: 0.46, ease: "power4.inOut" });
+  }, [resetMenuItems, setOpenState]);
+
+  const openMenu = useCallback(() => {
+    const gsap = gsapRef.current;
+
+    if (!gsap || !pluginsReadyRef.current || !svgRef.current || !pathRef.current || isAnimatingRef.current || isOpenRef.current) {
+      return;
+    }
+
+    const paths = getMenuPathStates(svgRef.current);
+    const chars = splitsRef.current.flatMap((split) => split.chars);
+    const reduceMotion = reduceMotionRef.current;
+
+    isAnimatingRef.current = true;
+    timelineRef.current?.kill();
+    navRef.current?.classList.add("is-open");
+    setOpenState(true);
+    resetMenuItems();
+    gsap.set(pathRef.current, { attr: { d: paths.openHidden } });
+
+    const tl = gsap.timeline({
+      defaults: { ease: "power3.inOut" },
+      onComplete: () => {
+        isAnimatingRef.current = false;
+      },
+    });
+
+    timelineRef.current = tl;
+
+    if (reduceMotion) {
+      tl.to(pathRef.current, { morphSVG: paths.openFull, duration: 0.22 }).to(
+        [chars, infoRefs.current, menuLogoRef.current],
+        { opacity: 1, xPercent: 0, y: 0, duration: 0.18 },
+      );
+      return;
+    }
+
+    tl.to(pathRef.current, { morphSVG: paths.openBulge, duration: 0.55, ease: "power3.inOut" })
+      .to(pathRef.current, { morphSVG: paths.openFull, duration: 0.48, ease: "power4.out" })
+      .to(menuLogoRef.current, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, "-=0.28")
+      .to(toggleMenuRef.current, { yPercent: -120, opacity: 0, duration: 0.32 }, "-=0.42")
+      .to(toggleCloseRef.current, { yPercent: 0, opacity: 1, duration: 0.32 }, "<")
+      .to(infoRefs.current, { y: 0, opacity: 1, duration: 0.55, stagger: 0.08, ease: "power3.out" }, "-=0.2")
+      .to(chars, { xPercent: 0, opacity: 1, duration: 1.15, stagger: 0.012, ease: "elastic.out(1, 0.72)" }, "-=0.56")
+      .to(chars, { opacity: 1, duration: 0.28, stagger: 0.008, ease: "power1.out" }, "<");
+  }, [resetMenuItems, setOpenState]);
+
+  const toggleMenu = useCallback(() => {
+    if (isOpenRef.current) {
+      closeMenu();
+      return;
+    }
+
+    openMenu();
+  }, [closeMenu, openMenu]);
+
+  const handleMenuLinkClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      event.preventDefault();
+
+      if (!isOpenRef.current) {
+        window.location.hash = href;
+        return;
+      }
+
+      closeMenu();
+      window.setTimeout(() => {
+        const target = document.querySelector(href);
+
+        if (target) {
+          target.scrollIntoView({ behavior: reduceMotionRef.current ? "auto" : "smooth", block: "start" });
+          window.history.replaceState(null, "", href);
+        }
+      }, reduceMotionRef.current ? 80 : 620);
+    },
+    [closeMenu],
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateReducedMotion = () => {
+      reduceMotionRef.current = mediaQuery.matches;
+    };
+
+    updateReducedMotion();
+    mediaQuery.addEventListener("change", updateReducedMotion);
+
+    if (svgRef.current && pathRef.current) {
+      pathRef.current.setAttribute("d", getMenuPathStates(svgRef.current).openHidden);
+    }
+
+    let isMounted = true;
+
+    Promise.all([
+      loadScript("/vendor/gsap/gsap.min.js"),
+      loadScript("/vendor/gsap/SplitText.min.js"),
+      loadScript("/vendor/gsap/MorphSVGPlugin.min.js"),
+    ]).then(() => {
+      if (!isMounted) {
+        return;
+      }
+
+      const gsapWindow = window as GsapWindow;
+      const gsap = gsapWindow.gsap;
+      const SplitTextConstructor = gsapWindow.SplitText;
+      const MorphSVGPlugin = gsapWindow.MorphSVGPlugin;
+
+      if (!gsap || !SplitTextConstructor || !MorphSVGPlugin) {
+        return;
+      }
+
+      gsap.registerPlugin(SplitTextConstructor, MorphSVGPlugin);
+      gsapRef.current = gsap;
+      splitsRef.current = linkRefs.current.map((link) => new SplitTextConstructor(link, { type: "chars" }));
+      pluginsReadyRef.current = true;
+      resetMenuItems();
+    });
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      isMounted = false;
+      timelineRef.current?.kill();
+      splitsRef.current.forEach((split) => split.revert());
+      splitsRef.current = [];
+      gsapRef.current = null;
+      pluginsReadyRef.current = false;
+      window.removeEventListener("keydown", handleKeyDown);
+      mediaQuery.removeEventListener("change", updateReducedMotion);
+    };
+  }, [closeMenu, resetMenuItems]);
+
+  return (
+    <nav ref={navRef} className="fullscreen-nav" aria-label="Navegacao principal">
+      <div className="container-haki fullscreen-nav-bar">
+        <a href="#top" className="nav-logo" aria-label="Voltar para o inicio" onClick={closeMenu}>
+          <Image
+            src="/brand/assets/haki-logo-transparent.png"
+            alt="HAKI"
+            width={1570}
+            height={393}
+            priority
+            className="h-8 w-auto md:h-9"
+          />
+        </a>
+
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-controls="fullscreen-menu"
+          aria-expanded={isOpen}
+          aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+          onClick={toggleMenu}
+        >
+          <span ref={toggleMenuRef}>menu</span>
+          <span ref={toggleCloseRef} aria-hidden="true">
+            close
+          </span>
+        </button>
+      </div>
+
+      <div id="fullscreen-menu" className="menu" aria-hidden={!isOpen}>
+        <svg ref={svgRef} className="menu-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path ref={pathRef} className="menu-path" />
+        </svg>
+
+        <div className="menu-column-info" aria-label="Informacoes do Studio Haki">
+          <p ref={setInfoRef}>Studio Haki</p>
+          <p ref={setInfoRef}>Creative operational studio</p>
+          <a ref={setInfoRef} href="mailto:contato@studiohaki.com">
+            contato@studiohaki.com
+          </a>
+          <a ref={setInfoRef} href="#contato" onClick={closeMenu}>
+            WhatsApp: falar com especialista
+          </a>
+          <p ref={setInfoRef}>Brasil / remoto</p>
+        </div>
+
+        <div className="menu-column-links" aria-label="Links principais">
+          {navItems.map(([label, href], index) => (
+            <a
+              key={label}
+              ref={setLinkRef}
+              href={href}
+              className="menu-link"
+              onClick={(event) => handleMenuLinkClick(event, href)}
+              style={{ ["--menu-link-index" as string]: index }}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+function HeroVisual() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div className="relative">
+      <motion.div
+        className="absolute -inset-16 grid-fade"
+        animate={reduceMotion ? undefined : { opacity: [0.32, 0.54, 0.38], scale: [1, 1.018, 1] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Image src="/assets/hero/grid-background.svg" alt="" fill className="object-cover opacity-70" />
+      </motion.div>
+
+      <motion.div
+        className="absolute -inset-20"
+        animate={reduceMotion ? undefined : { opacity: [0.42, 0.88, 0.48] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Image src="/assets/hero/red-glow.svg" alt="" fill className="object-cover mix-blend-screen" />
+      </motion.div>
+
+      <motion.div
+        className="relative overflow-hidden rounded-2xl border hairline bg-white/[0.025] p-2 shadow-panel"
+        animate={reduceMotion ? undefined : { y: [-6, 7, -6], scale: [0.995, 1.006, 0.995] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="relative aspect-[1920/800] w-full max-w-[calc(100vw-32px)] overflow-hidden rounded-xl bg-black md:max-w-none">
+          <video
+            className="h-full w-full object-cover"
+            src="/videos/haki-hero.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_45%,transparent_0%,rgba(0,0,0,0.1)_42%,rgba(0,0,0,0.42)_100%)]" />
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+function Hero() {
+  const { scrollYProgress } = useScroll();
+  const visualY = useTransform(scrollYProgress, [0, 0.3], [0, -46]);
+
+  return (
+    <section id="top" className="relative overflow-hidden pb-16 pt-32 md:pb-20 md:pt-36">
+      <div className="container-haki grid min-h-[720px] items-center gap-12 lg:grid-cols-[0.72fr_1.28fr]">
+        <Reveal className="relative z-10">
+          <div className="mb-6 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.16em] text-haki-muted">
+            <span className="h-2.5 w-2.5 rounded-full bg-haki-red shadow-[0_0_18px_rgba(255,15,51,0.8)]" />
+            Infraestrutura criativa
+          </div>
+          <h1 className="max-w-[620px] text-balance text-[clamp(2.45rem,4.9vw,5.9rem)] font-medium leading-[0.94] tracking-[-0.07em] text-haki-white max-sm:max-w-[calc(100vw-40px)] max-sm:text-[2.05rem] max-sm:leading-[1.02] max-sm:tracking-[-0.055em]">
+            Plugamos um estudio criativo na sua operacao.
+          </h1>
+          <p className="mt-6 max-w-[calc(100vw-32px)] text-base leading-7 text-haki-muted md:max-w-lg md:text-lg md:leading-8">
+            Entregamos landing pages, videos e criativos com velocidade, consistencia e previsibilidade
+            para agencias e negocios digitais que querem crescer.
+          </p>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <a className="group inline-flex w-full items-center justify-center gap-4 rounded-md bg-haki-red px-5 py-4 text-sm font-semibold text-white shadow-red-soft transition duration-500 ease-mass hover:-translate-y-1 sm:w-auto sm:px-7 sm:text-base" href="#planos">
+              Plugar HAKI na operacao
+              <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+            </a>
+            <a className="inline-flex w-full items-center justify-center rounded-md border hairline bg-white/[0.025] px-5 py-4 text-sm font-semibold text-haki-muted transition duration-500 ease-mass hover:-translate-y-1 hover:text-haki-white sm:w-auto sm:px-7 sm:text-base" href="#processo">
+              Ver como funciona
+            </a>
+          </div>
+          <div className="mt-6 flex max-w-[calc(100vw-32px)] flex-wrap gap-x-5 gap-y-3 font-mono text-xs text-haki-muted">
+            {["Rapido", "Escalavel", "Previsivel", "Sem burocracia"].map((item) => (
+              <span key={item} className="flex items-center gap-2">
+                <i className="h-1.5 w-1.5 rounded-full bg-haki-red" />
+                {item}
+              </span>
+            ))}
+          </div>
+        </Reveal>
+
+        <motion.div style={{ y: visualY }} className="relative z-0">
+          <HeroVisual />
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function Metrics() {
+  return (
+    <Reveal className="container-haki">
+      <div className="grid grid-cols-2 border hairline bg-white/[0.018] md:grid-cols-3 xl:grid-cols-6">
+        {metrics.map(([value, label]) => (
+          <div key={label} className="border-b border-r border-white/[0.08] p-6 last:border-r-0 xl:border-b-0">
+            <p className="text-3xl font-semibold tracking-[-0.05em] text-haki-white">{value}</p>
+            <span className="mt-1 block text-sm text-haki-muted">{label}</span>
+          </div>
+        ))}
+      </div>
+    </Reveal>
+  );
+}
+
+function ClientIcon({ type }: { type: string }) {
+  const common = "h-5 w-5 shrink-0 text-haki-muted/80";
+
+  if (type === "frame") {
+    return (
+      <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M7 4.5H5.8A1.8 1.8 0 0 0 4 6.3v11.4a1.8 1.8 0 0 0 1.8 1.8h11.4a1.8 1.8 0 0 0 1.8-1.8v-1.2" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M8 4.5h5.5L19 10v4.5H8v-10Z" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M13.5 5v5H19" stroke="currentColor" strokeWidth="1.6" />
+      </svg>
+    );
+  }
+
+  if (type === "orbit") {
+    return (
+      <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="7.5" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M4.7 9.6c2.9 1.8 7.7 3.2 14.6 4.8M4.7 14.4c2.9-1.8 7.7-3.2 14.6-4.8" stroke="currentColor" strokeWidth="1.3" />
+        <circle cx="12" cy="12" r="2" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (type === "signal") {
+    return (
+      <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4.5 17.5 12 4.5l7.5 13" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+        <path d="M8.3 13.2h7.4M6.7 16h10.6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (type === "north") {
+    return (
+      <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="m5 5 14 14M19 5 5 19" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+        <circle cx="12" cy="12" r="2.3" stroke="currentColor" strokeWidth="1.5" />
+      </svg>
+    );
+  }
+
+  if (type === "flow") {
+    return (
+      <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.6" />
+        <path d="m8.5 8.5 7 7M15.5 8.5l-7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 4.5v15M4.5 12h15" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="m8.2 7.9 7.6 8.2M15.8 7.9l-7.6 8.2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ClientsBar() {
+  return (
+    <Reveal className="container-haki">
+      <section className="overflow-hidden border-y border-white/[0.07] bg-white/[0.012]">
+        <div className="flex flex-col gap-6 px-5 py-6 md:flex-row md:items-center md:justify-between md:px-8">
+          <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-haki-muted/70">
+            Trusted by agencies and infoproduct businesses
+          </p>
+
+          <div className="grid min-w-0 grid-cols-2 gap-x-7 gap-y-5 sm:grid-cols-3 lg:flex lg:flex-1 lg:items-center lg:justify-end lg:gap-10">
+            {clients.map(([name, icon], index) => (
+              <motion.div
+                key={name}
+                initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.75, delay: 0.08 + index * 0.05, ease: [0.23, 1, 0.32, 1] }}
+                className="group flex items-center gap-2.5 text-sm font-medium tracking-[-0.03em] text-haki-muted/75 transition duration-500 hover:text-haki-white"
+              >
+                <ClientIcon type={icon} />
+                <span>{name}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </Reveal>
+  );
+}
+
+function Workflow() {
+  return (
+    <section id="solucoes" className="container-haki grid gap-12 border-b border-white/[0.08] py-28 lg:grid-cols-[0.55fr_1.45fr]">
+      <Reveal>
+        <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Feito para escalar</p>
+        <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
+          Saidas criativas que funcionam como seu time interno.
+        </h2>
+        <p className="mt-6 max-w-md leading-7 text-haki-muted">
+          Integramos seus fluxos e entregamos criacoes de alto volume com qualidade e previsibilidade.
+        </p>
+        <ul className="mt-8 space-y-3 text-sm text-haki-muted">
+          {["Demandas ilimitadas", "Entregas diarias", "Fluxo previsivel", "Acompanhamento no Trello"].map((item) => (
+            <li key={item} className="flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-haki-red" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </Reveal>
+
+      <Reveal delay={0.12}>
+        <div className="grid min-w-0 gap-4 overflow-x-auto rounded-xl border hairline bg-white/[0.018] p-4 lg:grid-cols-4">
+          {boardColumns.map((column) => (
+            <div key={column.title} className="min-w-[220px] rounded-lg border border-white/[0.07] bg-black/35 p-4">
+              <div className="mb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.12em] text-haki-muted">
+                {column.title}
+                <span className="rounded bg-white/[0.06] px-2 py-1">{column.count}</span>
+              </div>
+              <div className="space-y-3">
+                {column.cards.map((card) => (
+                  <motion.div
+                    key={card}
+                    whileHover={{ y: -4, borderColor: "rgba(255,15,51,0.42)" }}
+                    className="rounded-md border hairline bg-haki-ink p-4 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <strong className="text-sm text-haki-white">{card}</strong>
+                      <span className="h-2.5 w-2.5 rounded-full bg-haki-red shadow-[0_0_16px_rgba(255,15,51,0.7)]" />
+                    </div>
+                    <p className="mt-1 text-xs text-haki-muted">Cliente {card.at(0)}</p>
+                  </motion.div>
+                ))}
+                <button className="pt-2 text-left text-xs text-haki-muted">+ Adicionar card</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function ProcessIcon({ type }: { type: string }) {
+  const common = "h-9 w-9 text-haki-white";
+
+  if (type === "request") {
+    return (
+      <svg className={common} viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <rect x="9" y="6.5" width="22" height="27" rx="3" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M16 6.5V33.5" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M20 13H26M20 19H26" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <circle cx="13" cy="13" r="1.2" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (type === "progress") {
+    return (
+      <svg className={common} viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <path d="M8 12.5C8 9.46 10.46 7 13.5 7H26.5C29.54 7 32 9.46 32 12.5V21.5C32 24.54 29.54 27 26.5 27H18L11.5 32V27.08C9.49 26.55 8 24.72 8 22.55V12.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M14 19L18 16L22 18L27 14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  if (type === "review") {
+    return (
+      <svg className={common} viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <circle cx="20" cy="20" r="13" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M20 11.5V20L25.5 23.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M31.5 12.5L34 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg className={common} viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <rect x="9" y="8" width="22" height="24" rx="3" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M14 14H26V26H14V14Z" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M16.5 20.5L19.2 23.2L24.5 17.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 14H9M31 14H34M6 26H9M31 26H34" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function Process() {
+  return (
+    <section id="processo" className="container-haki grid gap-12 border-b border-white/[0.08] py-28 lg:grid-cols-[0.55fr_1.45fr]">
+      <Reveal>
+        <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Nosso processo</p>
+        <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
+          Um sistema para fluxo criativo previsivel.
+        </h2>
+        <p className="mt-6 max-w-md leading-7 text-haki-muted">
+          Do pedido a entrega, tudo rastreado, organizado e otimizado para maxima performance.
+        </p>
+      </Reveal>
+
+      <div className="grid gap-8 md:grid-cols-4 md:gap-8">
+        {processSteps.map((item, index) => (
+          <Reveal key={item.title} delay={index * 0.12}>
+            <motion.article
+              whileHover={{ y: -7, borderColor: "rgba(255,15,51,0.52)" }}
+              className={`group relative min-h-[292px] rounded-xl border bg-white/[0.025] p-6 shadow-panel transition-colors ${
+                index === processSteps.length - 1 ? "border-haki-red/60 shadow-red-soft" : "hairline"
+              }`}
+            >
+              {index < processSteps.length - 1 ? (
+                <motion.span
+                  className="pointer-events-none absolute -right-7 top-[86px] hidden h-px w-7 bg-haki-red md:block"
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  whileInView={{ scaleX: 1, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.6 }}
+                  transition={{ duration: 0.7, delay: 0.28 + index * 0.12, ease: [0.23, 1, 0.32, 1] }}
+                  style={{ transformOrigin: "left" }}
+                >
+                  <i className="absolute -right-1 -top-[3px] h-2 w-2 rotate-45 border-r border-t border-haki-red" />
+                </motion.span>
+              ) : null}
+
+              <div className="mb-14 flex items-start justify-between">
+                <span className="font-mono text-xs text-haki-red">{item.step}</span>
+                <motion.span
+                  className={`grid h-14 w-14 place-items-center rounded-xl border transition-colors duration-500 ${
+                    index === processSteps.length - 1
+                      ? "border-haki-red/70 bg-haki-red/10 text-haki-red shadow-red-soft"
+                      : "hairline bg-white/[0.025] text-haki-white group-hover:border-haki-red/45 group-hover:text-haki-red"
+                  }`}
+                  initial={{ opacity: 0, scale: 0.82, rotate: -4 }}
+                  whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                  viewport={{ once: true, amount: 0.6 }}
+                  transition={{ duration: 0.72, delay: 0.18 + index * 0.12, ease: [0.23, 1, 0.32, 1] }}
+                >
+                  <ProcessIcon type={item.icon} />
+                </motion.span>
+              </div>
+              <h3 className="text-xl font-semibold tracking-[-0.04em] text-haki-white">{item.title}</h3>
+              <p className="mt-4 text-sm leading-6 text-haki-muted">{item.text}</p>
+            </motion.article>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Plans() {
+  return (
+    <section id="planos" className="container-haki border-b border-white/[0.08] py-28">
+      <Reveal className="mx-auto max-w-3xl text-center">
+        <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Planos recorrentes</p>
+        <h2 className="mx-auto text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
+          Planos que escalam com a sua operacao.
+        </h2>
+        <p className="mx-auto mt-6 max-w-xl leading-7 text-haki-muted">
+          Escolha o plano ideal para o volume de demandas da sua agencia ou negocio digital.
+        </p>
+      </Reveal>
+
+      <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {plans.map((plan, index) => (
+          <Reveal key={plan.name} delay={index * 0.07}>
+            <motion.article
+              whileHover={{ y: -8 }}
+              className={`flex min-h-[460px] flex-col rounded-xl border p-6 ${
+                plan.featured ? "border-haki-red/65 bg-haki-red/10 shadow-red-soft" : "hairline bg-white/[0.025]"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-2xl font-medium tracking-[-0.05em] text-haki-white">{plan.name}</h3>
+                  <p className="mt-3 min-h-12 text-sm leading-6 text-haki-muted">{plan.description}</p>
+                </div>
+                {plan.tag ? (
+                  <span className="rounded bg-haki-red px-2 py-1 font-mono text-[9px] uppercase text-white">
+                    {plan.tag}
+                  </span>
+                ) : null}
+              </div>
+              <div className="mt-10">
+                <span className="text-sm text-haki-muted">R$ </span>
+                <strong className="text-5xl font-medium tracking-[-0.06em] text-haki-white">
+                  {plan.price.replace("R$ ", "")}
+                </strong>
+                {plan.price.includes("R$") ? <span className="text-haki-muted">/mes</span> : null}
+              </div>
+              <ul className="mt-8 space-y-3 text-sm text-haki-muted">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex gap-3">
+                    <span className="text-haki-red">✓</span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <a className={`mt-auto inline-flex justify-center rounded-md px-5 py-3 text-sm font-semibold transition duration-500 ease-mass hover:-translate-y-1 ${
+                plan.featured ? "bg-haki-red text-white" : "border hairline text-haki-white"
+              }`} href="#cta">
+                {plan.name === "Enterprise" ? "Falar com especialista" : "Escolher plano"}
+              </a>
+            </motion.article>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+const faqItems = [
+  ["Como a HAKI entra na minha operacao?", "Voce assina o plano, entra no Trello e passa a solicitar demandas por cards com prazo, briefing e status claros."],
+  ["As entregas sao realmente previsiveis?", "A proposta e manter uma esteira recorrente com limite de demandas, prioridade e prazo combinado para nao quebrar seu fluxo."],
+  ["Consigo usar em lancamentos?", "Sim. A HAKI funciona bem para paginas, criativos, cortes e pecas de suporte durante aquecimento, abertura e carrinho."],
+  ["E se eu ja tiver designer interno?", "A HAKI pode entrar como extensao operacional para tirar gargalo, absorver volume e manter seu time focado no que e mais estrategico."],
+];
+
+const caseTabs = {
+  "Landing pages": [
+    ["case-image-01", "Launch OS", "Pagina de vendas para lancamento com estrutura de conversao."],
+    ["case-image-02", "Expert Authority", "Landing institucional para expert com prova e oferta clara."],
+    ["case-video-01", "VSL Page", "Espaco para video + pagina de conversao em uma experiencia unica."],
+  ],
+  Criativos: [
+    ["case-image-03", "Ads Sprint", "Pacote visual para testar angulos de oferta em trafego pago."],
+    ["case-video-02", "Reels Engine", "Linha visual para cortes, anuncios e conteudo diario."],
+    ["case-image-04", "Launch Kit", "Pecas de aquecimento, abertura e remarketing."],
+  ],
+  Operacao: [
+    ["hero-dashboard-preview", "Trello Flow", "Quadro operacional com backlog, producao, revisao e entrega."],
+    ["founder-photo", "Founder Layer", "Espaco para foto do Eric ou bastidores do estudio."],
+    ["contact-bg", "Client Room", "Espaco visual para depoimentos, reunioes ou prints de entrega."],
+  ],
+};
+
+function UmanoPlans() {
+  return (
+    <section id="planos" className="umano-pricing-section">
+      <Reveal className="umano-section-header">
+        <p>Planos recorrentes</p>
+        <h2>Escolha o tamanho da infraestrutura.</h2>
+        <span>Planos para agencias e infoprodutos que precisam de volume sem criar caos operacional.</span>
+      </Reveal>
+
+      <div className="umano-pricing-grid">
+        {plans.map((plan, index) => (
+          <Reveal key={plan.name} delay={index * 0.08}>
+            <motion.article
+              whileHover={{ y: -10, rotate: index === 1 ? 0 : index % 2 === 0 ? -0.35 : 0.35 }}
+              className={`umano-price-card ${plan.featured ? "is-featured" : ""}`}
+            >
+              <div className="umano-price-card-top">
+                <span>0{index + 1}</span>
+                {plan.tag ? <em>{plan.tag}</em> : null}
+              </div>
+              <h3>{plan.name}</h3>
+              <p>{plan.description}</p>
+              <strong>{plan.price}</strong>
+              <ul>
+                {plan.features.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+              <a href="#contato">{plan.name === "Enterprise" ? "Falar com especialista" : "Escolher plano"}</a>
+            </motion.article>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function UmanoCases() {
+  const [activeCaseTab, setActiveCaseTab] = useState<keyof typeof caseTabs>("Landing pages");
+  const cases = caseTabs[activeCaseTab];
+
+  return (
+    <section id="cases" className="umano-cases-section">
+      <Reveal className="umano-section-header">
+        <p>Cases / portfolio</p>
+        <h2>Uma vitrine operacional, nao um mural de Behance.</h2>
+        <span>Espacos nomeados para voce substituir depois por imagens, videos e prints reais.</span>
+      </Reveal>
+
+      <Reveal className="umano-case-tabs">
+        {(Object.keys(caseTabs) as Array<keyof typeof caseTabs>).map((tab) => (
+          <button key={tab} type="button" onClick={() => setActiveCaseTab(tab)} className={activeCaseTab === tab ? "is-active" : ""}>
+            {tab}
+          </button>
+        ))}
+      </Reveal>
+
+      <motion.div
+        key={activeCaseTab}
+        className="umano-case-stage"
+        initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 0.72, ease: [0.23, 1, 0.32, 1] }}
+      >
+        {cases.map(([slot, title, text], index) => (
+          <motion.article
+            key={slot}
+            className={`umano-case-card case-${index + 1}`}
+            data-slot={slot}
+            whileHover={{ y: -12, rotate: 0 }}
+            transition={{ duration: 0.36 }}
+          >
+            <div className="umano-case-media">
+              <span>{slot}</span>
+              <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} />
+            </div>
+            <div className="umano-case-content">
+              <small>Case 0{index + 1}</small>
+              <h3>{title}</h3>
+              <p>{text}</p>
+              <a href="#contato">Quero algo assim</a>
+            </div>
+          </motion.article>
+        ))}
+      </motion.div>
+    </section>
+  );
+}
+
+function UmanoFAQ() {
+  const [openIndex, setOpenIndex] = useState(0);
+
+  return (
+    <section className="umano-faq-section" id="faq">
+      <Reveal className="umano-section-header">
+        <p>FAQ</p>
+        <h2>Perguntas antes de plugar.</h2>
+      </Reveal>
+
+      <div className="umano-faq-list">
+        {faqItems.map(([question, answer], index) => (
+          <motion.button
+            key={question}
+            type="button"
+            className={`umano-faq-item ${openIndex === index ? "is-open" : ""}`}
+            onClick={() => setOpenIndex(openIndex === index ? -1 : index)}
+            whileHover={{ x: 8 }}
+          >
+            <span>{openIndex === index ? "-" : "+"}</span>
+            <strong>{question}</strong>
+            <AnimatePresence>
+              {openIndex === index ? (
+                <motion.p
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.34, ease: [0.23, 1, 0.32, 1] }}
+                >
+                  {answer}
+                </motion.p>
+              ) : null}
+            </AnimatePresence>
+          </motion.button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function UmanoContact() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const card = cardRef.current;
+
+    if (!section || !card || reduceMotion) {
+      return;
+    }
+
+    const media = gsap.matchMedia();
+
+    media.add("(min-width: 768px)", () => {
+      const ctx = gsap.context(() => {
+        gsap.set(card, {
+          transformOrigin: "top center",
+          willChange: "transform, border-radius, box-shadow",
+        });
+
+        gsap.to(card, {
+          scale: 0.72,
+          y: -18,
+          borderRadius: 32,
+          boxShadow: "0 20px 90px rgba(0, 0, 0, 0.42)",
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.75,
+            invalidateOnRefresh: true,
+          },
+        });
+      }, section);
+
+      return () => ctx.revert();
+    });
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+
+    return () => media.revert();
+  }, [reduceMotion]);
+
+  return (
+    <section ref={sectionRef} id="contato" className="umano-contact-section">
+      <div ref={cardRef} className="umano-contact-card" data-slot="contact-bg">
+        <div className="umano-contact-orbit" />
+        <Reveal className="umano-contact-content">
+          <p>Pronto para escalar?</p>
+          <h2>Plugue a HAKI na sua operacao e comece com fluxo claro.</h2>
+          <span>Sem formulario. Chame direto e a gente entende volume, gargalo e melhor plano.</span>
+          <a href="mailto:contato@studiohaki.com?subject=Quero%20plugar%20a%20HAKI%20na%20minha%20operacao">
+            Falar com Eric agora
+          </a>
+        </Reveal>
+
+        <motion.div className="umano-founder-placeholder" data-slot="founder-photo" whileHover={{ y: -8 }}>
+          <span>founder-photo</span>
+          <strong>Eric Filho</strong>
+          <p>Espaco para foto, video curto ou bastidor do Studio Haki.</p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function UmanoFooter() {
+  return (
+    <footer className="umano-footer">
+      <div className="umano-footer-grid">
+        <div className="umano-footer-brand">
+          <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} />
+          <p>Infraestrutura criativa para agencias e negocios digitais.</p>
+        </div>
+        <div className="umano-footer-links">
+          {["Solucoes", "Processo", "Planos", "Cases", "FAQ", "Contato"].map((item) => (
+            <a key={item} href={`#${item === "FAQ" ? "faq" : item.toLowerCase()}`}>
+              {item}
+            </a>
+          ))}
+        </div>
+        <a className="umano-footer-cta" href="mailto:contato@studiohaki.com">
+          contato@studiohaki.com
+        </a>
+      </div>
+      <strong>studiohaki.com</strong>
+      <div className="umano-footer-bottom">
+        <span>© 2026 HAKI Studio.</span>
+        <span>Termos de uso · Privacidade</span>
+      </div>
+    </footer>
+  );
+}
+
+function About() {
+  const aboutBullets = [
+    ["Operacao", "Eu entro como uma extensao criativa da sua agencia, sem criar mais uma camada de gestao."],
+    ["Velocidade", "Meu foco e manter demanda andando com prazo claro, prioridade e previsibilidade."],
+    ["Parceria", "Nao busco relacao transacional. A ideia e construir um fluxo onde os dois lados crescem."],
+  ];
+
+  return (
+    <section id="sobre" className="container-haki border-b border-white/[0.08] py-28">
+      <div className="grid items-center gap-6 lg:grid-cols-[0.92fr_1.08fr]">
+        <Reveal>
+          <div className="relative min-h-[540px] overflow-hidden rounded-2xl border hairline bg-white/[0.018] p-6 shadow-panel">
+            <Image src="/assets/hero/grid-background.svg" alt="" fill className="object-cover opacity-35" />
+            <Image src="/assets/hero/red-glow.svg" alt="" width={760} height={760} className="absolute -left-28 -top-24 w-[82%] opacity-70 mix-blend-screen" />
+
+            <div className="absolute left-6 top-6 flex items-center gap-2 rounded-full border hairline bg-black/45 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-haki-muted backdrop-blur-xl">
+              <span className="h-2 w-2 rounded-full bg-haki-red shadow-[0_0_16px_rgba(255,15,51,0.8)]" />
+              Founder profile
+            </div>
+
+            <div className="absolute inset-x-6 bottom-6 overflow-hidden rounded-xl border hairline bg-black/55 p-6 backdrop-blur-xl">
+              <div className="flex items-start justify-between gap-6">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-haki-red">Eric Filho</p>
+                  <h3 className="mt-3 text-4xl font-medium leading-none tracking-[-0.07em] text-haki-white md:text-5xl">
+                    Web designer e operador criativo.
+                  </h3>
+                </div>
+                <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} className="w-16 shrink-0 opacity-90" />
+              </div>
+              <div className="mt-10 grid grid-cols-3 gap-2">
+                {["LP", "ADS", "VSL"].map((item) => (
+                  <div key={item} className="rounded-md border hairline bg-white/[0.035] px-3 py-4 text-center font-mono text-xs text-haki-muted">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.12}>
+          <div className="rounded-2xl border hairline bg-white/[0.018] p-8 md:p-12">
+            <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Sobre nos</p>
+            <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
+              Por tras da HAKI esta Eric Filho.
+            </h2>
+            <p className="mt-7 text-lg leading-8 text-haki-muted">
+              Eu criei a HAKI para plugar um estudio criativo dentro da operacao de agencias e negocios digitais que precisam de consistencia, prazo e execucao sem depender de freelancers soltos.
+            </p>
+            <p className="mt-5 leading-7 text-haki-muted">
+              Minha funcao e transformar demanda em fluxo: landing pages, criativos e videos organizados em uma rotina clara, com acompanhamento e entregas que nao quebram o ritmo do seu time.
+            </p>
+
+            <div className="mt-10 space-y-4">
+              {aboutBullets.map(([title, text]) => (
+                <div key={title} className="flex gap-4 rounded-xl border hairline bg-black/28 p-5">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-haki-red/45 bg-haki-red/10 text-haki-red">
+                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M6 12.5 10.1 16.5 18.5 7.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h3 className="text-lg font-semibold tracking-[-0.04em] text-haki-white">{title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-haki-muted">{text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function Portfolio() {
+  const [activeTab, setActiveTab] = useState<keyof typeof portfolio>("Landing pages");
+  const items = portfolio[activeTab];
+
+  return (
+    <section id="cases" className="container-haki border-b border-white/[0.08] py-28">
+      <Reveal className="mx-auto max-w-3xl text-center">
+        <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Portfolio</p>
+        <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
+          Trabalhos separados por tipo de demanda.
+        </h2>
+        <p className="mx-auto mt-6 max-w-xl leading-7 text-haki-muted">
+          Por enquanto com cases genericos. Depois substituimos pelos seus projetos reais e pelos designs finais.
+        </p>
+      </Reveal>
+
+      <Reveal className="mt-12">
+        <div className="mx-auto flex w-fit flex-wrap justify-center gap-2 rounded-full border hairline bg-white/[0.018] p-2">
+          {(Object.keys(portfolio) as Array<keyof typeof portfolio>).map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={`rounded-full px-5 py-3 text-sm font-semibold transition duration-300 ${
+                activeTab === tab
+                  ? "bg-haki-red text-white shadow-red-soft"
+                  : "text-haki-muted hover:bg-white/[0.04] hover:text-haki-white"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      </Reveal>
+
+      <motion.div
+        key={activeTab}
+        initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 0.62, ease: [0.23, 1, 0.32, 1] }}
+        className="mt-12 grid gap-4 md:grid-cols-3"
+      >
+        {items.map(([title, description, tag], index) => (
+          <motion.article
+            key={title}
+            whileHover={{ y: -8, borderColor: "rgba(255,15,51,0.5)" }}
+            transition={{ duration: 0.35 }}
+            className="group overflow-hidden rounded-xl border hairline bg-white/[0.022] transition-colors"
+          >
+            <div className="relative aspect-[4/3] overflow-hidden border-b border-white/[0.08] bg-haki-ink">
+              <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,15,51,0.24),transparent_36%),radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.1),transparent_30%)]" />
+              <div className="absolute inset-x-6 bottom-6 rounded-lg border hairline bg-black/45 p-4 backdrop-blur-xl">
+                <div className="mb-10 flex items-center justify-between">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-haki-muted">Case 0{index + 1}</span>
+                  <span className="h-2.5 w-2.5 rounded-full bg-haki-red shadow-[0_0_18px_rgba(255,15,51,0.75)]" />
+                </div>
+                <span className="text-2xl font-medium tracking-[-0.06em] text-haki-white">{title}</span>
+              </div>
+            </div>
+            <div className="p-6">
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-haki-red">{tag}</span>
+              <p className="mt-4 text-sm leading-6 text-haki-muted">{description}</p>
+            </div>
+          </motion.article>
+        ))}
+      </motion.div>
+    </section>
+  );
+}
+
+function Contact() {
+  return (
+    <section id="contato" className="container-haki border-b border-white/[0.08] py-28">
+      <Reveal>
+        <div className="overflow-hidden rounded-2xl border border-haki-red/35 bg-[radial-gradient(circle_at_50%_0%,rgba(255,15,51,0.2),transparent_34%),rgba(255,255,255,0.018)] px-6 py-12 text-center shadow-red-soft md:px-14 md:py-16">
+          <div className="mx-auto max-w-4xl">
+            <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Contato</p>
+            <h2 className="mx-auto text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-7xl">
+              Quer plugar a HAKI na sua operacao?
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl leading-7 text-haki-muted">
+              Chame para entender qual plano faz sentido para sua demanda, volume e momento da operacao.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-12 grid max-w-4xl gap-4 md:grid-cols-3">
+            {[
+              ["WhatsApp", "Falar com especialista"],
+              ["Email", "contato@studiohaki.com"],
+              ["Briefing", "Enviar demanda inicial"],
+            ].map(([label, value], index) => (
+              <a
+                key={label}
+                href={label === "Email" ? "mailto:contato@studiohaki.com" : "#"}
+                className={`group rounded-xl border p-6 transition duration-500 hover:-translate-y-1 ${
+                  index === 0 ? "border-haki-red/55 bg-haki-red/10" : "hairline bg-black/30"
+                }`}
+              >
+                <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-haki-red">{label}</span>
+                <strong className="mx-auto mt-8 block max-w-[13rem] text-xl font-medium leading-tight tracking-[-0.04em] text-haki-white">
+                  {value}
+                </strong>
+                <span className="mx-auto mt-8 grid h-10 w-10 place-items-center rounded-full border border-haki-red/40 text-haki-red transition-transform duration-500 group-hover:translate-x-1">
+                  →
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function ContactScreen() {
+  return (
+    <section id="contato" className="border-b border-white/[0.08] bg-[#2d2836] px-4 py-16 md:px-8 md:py-20">
+      <div>
+        <div className="relative mx-auto min-h-[740px] max-w-[1760px] overflow-hidden rounded-2xl border border-white/[0.08] bg-[#030306] px-5 pb-12 pt-6 text-center shadow-[0_34px_120px_rgba(0,0,0,0.48)] md:min-h-[860px] md:px-20 md:pb-20 md:pt-8">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.055),transparent_25%),radial-gradient(circle_at_50%_82%,rgba(95,82,122,0.32),transparent_34%),linear-gradient(90deg,transparent_0,rgba(255,255,255,0.04)_49.8%,rgba(255,255,255,0.04)_50.2%,transparent_50.5%)]" />
+          <div className="pointer-events-none absolute left-1/2 top-[52%] h-[920px] w-[1680px] -translate-x-1/2 rounded-[50%] border border-white/[0.09] bg-[radial-gradient(circle_at_50%_10%,transparent_0%,transparent_42%,rgba(48,43,58,0.36)_74%,rgba(48,43,58,0.62)_100%)] md:top-[48%]" />
+          <div className="pointer-events-none absolute inset-x-[15%] top-[86px] hidden h-[420px] bg-[linear-gradient(90deg,rgba(255,255,255,0.07)_1px,transparent_1px)] bg-[length:160px_100%] opacity-35 md:block" />
+          <div className="pointer-events-none absolute inset-0 opacity-45 [background-image:radial-gradient(rgba(255,255,255,0.38)_1px,transparent_1px)] [background-size:74px_74px] [mask-image:radial-gradient(circle_at_24%_20%,#000_0%,transparent_28%)]" />
+
+          <div className="relative z-10 flex items-center justify-between gap-4">
+            <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} className="h-8 w-auto md:h-9" />
+            <div className="hidden rounded-full border border-white/[0.08] bg-white/[0.035] p-1 text-sm text-haki-muted shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl lg:flex">
+              {["Home", "Planos", "Produto", "Contato", "Sobre"].map((item) => (
+                <span
+                  key={item}
+                  className={`rounded-full px-5 py-3 transition ${
+                    item === "Contato" ? "bg-white/[0.095] text-haki-white shadow-[0_0_28px_rgba(255,255,255,0.08)]" : ""
+                  }`}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+            <a
+              href="mailto:contato@studiohaki.com?subject=Quero%20plugar%20a%20HAKI%20na%20minha%20operacao"
+              className="rounded-xl border border-white/[0.1] bg-white/[0.075] px-5 py-3 text-sm font-medium text-haki-white backdrop-blur-xl transition duration-500 hover:-translate-y-0.5 hover:border-haki-red/45 hover:bg-haki-red/15"
+            >
+              Contato
+            </a>
+          </div>
+
+          <div className="relative z-10 mx-auto mt-28 max-w-3xl md:mt-36">
+            <div className="mx-auto flex w-fit overflow-hidden rounded-full border border-white/[0.08] bg-[#171322]/80 p-1 text-xs text-haki-white shadow-[0_0_34px_rgba(130,104,255,0.18)] backdrop-blur-xl">
+              <span className="flex items-center gap-2 rounded-full bg-white/[0.055] px-3 py-2">
+                <svg className="h-4 w-4 text-haki-white" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 13v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                  <path d="M5 13.5c0-1.1.9-2 2-2h1v5H7a2 2 0 0 1-2-2v-1ZM19 13.5c0-1.1-.9-2-2-2h-1v5h1a2 2 0 0 0 2-2v-1Z" stroke="currentColor" strokeWidth="1.7" />
+                </svg>
+                Suporte direto
+              </span>
+              <span className="flex items-center gap-2 px-3 py-2 text-haki-muted">
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m12 4 8 4-8 4-8-4 8-4Z" stroke="currentColor" strokeWidth="1.6" />
+                  <path d="m4 12 8 4 8-4M4 16l8 4 8-4" stroke="currentColor" strokeWidth="1.6" />
+                </svg>
+                Studio Haki
+              </span>
+            </div>
+
+            <h2 className="mx-auto mt-7 text-balance text-[clamp(3rem,6vw,5.9rem)] font-medium leading-[0.96] tracking-[-0.075em] text-haki-white">
+              Vamos conversar?
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-haki-muted md:text-lg">
+              Quer previsibilidade criativa na sua operacao? Me chama direto e eu te ajudo a entender o melhor formato para sua demanda.
+            </p>
+
+            <div className="mx-auto mt-12 max-w-2xl">
+              <a
+                href="mailto:contato@studiohaki.com?subject=Quero%20plugar%20a%20HAKI%20na%20minha%20operacao"
+                className="group flex w-full items-center justify-center gap-3 rounded-xl border border-white/[0.12] bg-[#24202e]/95 px-6 py-5 text-base font-semibold text-haki-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_60px_rgba(0,0,0,0.34)] transition duration-500 hover:-translate-y-1 hover:border-haki-red/50 hover:bg-haki-red/20"
+              >
+                Falar com Eric agora
+                <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+              </a>
+
+              <div className="mt-8 flex items-center justify-center gap-5 text-haki-muted">
+                <span className="h-px flex-1 bg-white/[0.08]" />
+                {["X", "IG", "IN"].map((item) => (
+                  <a key={item} href="#" className="font-mono text-xs transition hover:text-haki-white">
+                    {item}
+                  </a>
+                ))}
+                <span className="h-px flex-1 bg-white/[0.08]" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FinalCta() {
+  return (
+    <section id="cta" className="container-haki py-24">
+      <Reveal>
+        <div className="grid overflow-hidden rounded-xl border hairline bg-white/[0.018] lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="p-8 md:p-14">
+            <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Pronto para escalar?</p>
+            <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
+              Plugue a HAKI na sua operacao e comece hoje.
+            </h2>
+            <p className="mt-6 max-w-lg leading-7 text-haki-muted">
+              Integramos com seu fluxo atual e entregamos criatividade com velocidade e previsibilidade.
+            </p>
+          </div>
+          <div className="relative min-h-[360px] overflow-hidden">
+            <Image src="/assets/hero/grid-background.svg" alt="" fill className="object-cover opacity-55" />
+            <Image src="/assets/hero/connection-lines.svg" alt="" width={960} height={420} className="absolute right-[-8%] top-20 w-[82%] opacity-70" />
+            <div className="absolute left-[34%] top-[28%] grid h-36 w-36 place-items-center rounded-xl border hairline bg-black/60 shadow-red-soft">
+              <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} className="w-20" />
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Footer() {
+  const footerLinks = [
+    ["Solucoes", "#solucoes"],
+    ["Processo", "#processo"],
+    ["Planos", "#planos"],
+    ["Cases", "#cases"],
+    ["Sobre", "#sobre"],
+    ["Contato", "#contato"],
+  ];
+
+  return (
+    <footer className="container-haki border-t border-white/[0.08] py-12">
+      <div className="grid gap-10 md:grid-cols-[0.8fr_1fr_0.8fr]">
+        <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} className="h-8 w-fit" />
+        <p className="max-w-xs text-sm leading-6 text-haki-muted">Infraestrutura criativa para agencias e negocios digitais.</p>
+        <div className="grid grid-cols-2 gap-3 text-sm text-haki-muted md:justify-self-end">
+          {footerLinks.map(([item, href]) => (
+            <a key={item} href={href} className="transition hover:text-haki-white">
+              {item}
+            </a>
+          ))}
+        </div>
+      </div>
+      <div className="mt-12 flex flex-wrap justify-between gap-4 border-t border-white/[0.08] pt-6 text-xs text-haki-muted">
+        <span>© 2026 HAKI Studio. Todos os direitos reservados.</span>
+        <span>Termos de uso · Privacidade</span>
+      </div>
+    </footer>
+  );
+}
+
+export default function Home() {
+  return (
+    <main className="noise min-h-screen bg-haki-black">
+      <SmoothScroll />
+      <HakiPreloader />
+      <UmanoNav />
+      <UmanoHero />
+      <UmanoLogoStrip />
+      <StickyManifesto />
+      <HowItWorksRail />
+      <UmanoPlans />
+      <UmanoCases />
+      <UmanoFAQ />
+      <UmanoContact />
+      <UmanoFooter />
+    </main>
+  );
+}

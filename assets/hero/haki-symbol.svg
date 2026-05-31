@@ -1,0 +1,15 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="none"/>
+  <g fill="#F7F7F7">
+    <path d="M128 128H230V230H128V128Z"/>
+    <path d="M282 128H384V230H282V128Z"/>
+    <path d="M128 282H230V384H128V282Z"/>
+    <path d="M282 282H384V384H282V282Z"/>
+  </g>
+  <g fill="#000000">
+    <path d="M230 128C230 184.333 184.333 230 128 230V128H230Z"/>
+    <path d="M282 128C282 184.333 327.667 230 384 230V128H282Z"/>
+    <path d="M230 384C230 327.667 184.333 282 128 282V384H230Z"/>
+    <path d="M282 384C282 327.667 327.667 282 384 282V384H282Z"/>
+  </g>
+</svg>

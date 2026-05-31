@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+.chrome-debug-profile/
+.vercel/
+dist/
+coverage/
+next-dev.log
+next-dev.err.log
+npm-install.log
+npm-install.err.log
+*.log
+.env*

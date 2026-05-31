@@ -1,0 +1,12 @@
+<svg width="720" height="220" viewBox="0 0 720 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Studio Haki mono black logo</title>
+  <desc id="desc">Single color black Studio Haki logo for light backgrounds.</desc>
+  <rect width="720" height="220" rx="28" fill="#FAFAFA"/>
+  <g transform="translate(56 46)" fill="#0D0D0D">
+    <path d="M64 14C64 41.6 53.1 52.5 25.5 52.5V75.5C53.1 75.5 64 86.4 64 114C64 86.4 74.9 75.5 102.5 75.5V52.5C74.9 52.5 64 41.6 64 14Z"/>
+  </g>
+  <g fill="#0D0D0D">
+    <text x="224" y="93" font-family="Raleway, Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="8">STUDIO</text>
+    <text x="221" y="157" font-family="Raleway, Arial, sans-serif" font-size="76" font-weight="900" letter-spacing="-4">HAKI</text>
+  </g>
+</svg>
