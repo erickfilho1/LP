@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Checklist Animation</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#0a0a0a;
+}
+
+body{
+  display:flex;align-items:center;justify-content:center;
+  min-height:0;background:#0a0a0a;
+  font-family:'Manrope',sans-serif;
+}
+
+/* ── CARD ── */
+.card{
+  width:100%;height:100%;
+  background:#111111;
+  border-radius:0;
+  position:relative;overflow:hidden;
+  border:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* Grain texture */
+.card::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:0.6;pointer-events:none;z-index:0;
+}
+
+/* ── GLASS PANEL ── */
+.glass{
+  position:absolute;
+  inset:0;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  overflow:visible;
+  box-shadow:none;
+}
+
+/* ── LEFT: CHECKLIST ── */
+.checklist{
+  position:absolute;
+  left:6%;top:0;bottom:0;width:44%;
+  padding:clamp(16px,5%,24px) 0;
+  display:flex;flex-direction:column;justify-content:center;
+  gap:0;
+}
+
+.check-item{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:clamp(10px,3.8%,15px) 0;
+  position:relative;
+  transition:opacity 0.5s ease;
+}
+.check-item.dimmed{ opacity:0.35; }
+
+/* Checkbox */
+.checkbox{
+  width:26px;height:26px;flex-shrink:0;
+  border-radius:7px;
+  border:1.5px solid rgba(255,255,255,0.18);
+  background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  margin-top:2px;
+}
+.checkbox.checked{
+  background:rgba(255,255,255,0.14);
+  border-color:rgba(255,255,255,0.3);
+}
+.check-icon{
+  width:13px;height:13px;
+  stroke:rgba(255,255,255,0.85);fill:none;
+  stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+  opacity:0;
+  stroke-dasharray:16;
+  stroke-dashoffset:16;
+  transition:opacity 0.2s ease, stroke-dashoffset 0.35s ease 0.1s;
+}
+.checkbox.checked .check-icon{
+  opacity:1;stroke-dashoffset:0;
+}
+
+/* Text bars */
+.item-text{ flex:1;display:flex;flex-direction:column;gap:6px; }
+
+.bar{
+  height:18px;border-radius:6px;
+  background:rgba(255,255,255,0.12);
+  transition:all 0.45s ease;
+}
+.bar.title{
+  height:22px;
+  background:rgba(255,255,255,0.18);
+  width:min(100%, 230px);
+  min-width:0;max-width:100%;
+}
+.bar.sub{ width:50%; }
+
+/* Active item bars */
+.check-item.active .bar.title{
+  background:rgba(255,255,255,0.55);
+}
+.check-item.active .bar.sub{
+  background:rgba(255,255,255,0.28);
+  width:62%;
+}
+
+/* Label text overlay (on the bar) */
+.bar-label{
+  font-size:clamp(10px,1.9vw,12.5px);font-weight:600;letter-spacing:0.01em;
+  color:rgba(255,255,255,0.55);
+  line-height:1;
+  padding:0 12px;
+  display:flex;align-items:center;height:100%;
+  pointer-events:none;
+  white-space:nowrap;
+  transition:color 0.45s ease;
+}
+.bar.title{ position:relative;display:flex;align-items:center; }
+.check-item.active .bar-label{ color:rgba(255,255,255,0.85); }
+
+/* ── RIGHT: DETAIL CARD ── */
+.detail{
+  position:absolute;
+  right:6%;top:50%;transform:translateY(-50%);
+  width:clamp(172px,34%,210px);
+  background:#181818;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 8px 40px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.04);
+  padding:clamp(16px,3.8%,24px) clamp(14px,3.2%,20px);
+  display:flex;align-items:flex-start;gap:clamp(11px,2.4%,16px);
+  min-height:clamp(104px,38%,120px);
+  z-index:2;
+}
+
+/* Big check circle */
+.detail-icon{
+  width:clamp(42px,8vw,54px);height:clamp(42px,8vw,54px);flex-shrink:0;
+  border-radius:50%;
+  background:#242424;
+  border:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.4s ease;
+}
+.detail-icon.active{ background:#2a2a2a; }
+.detail-check{
+  width:22px;height:22px;
+  stroke:rgba(255,255,255,0.7);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:24;stroke-dashoffset:24;
+  transition:stroke-dashoffset 0.45s ease 0.2s, stroke 0.3s ease;
+}
+.detail-icon.active .detail-check{
+  stroke-dashoffset:0;
+  stroke:rgba(255,255,255,0.9);
+}
+
+/* Detail text */
+.detail-body{ flex:1;display:flex;flex-direction:column;gap:8px;padding-top:2px; }
+
+.d-title{
+  height:22px;border-radius:6px;
+  background:rgba(255,255,255,0.18);
+  width:100%;
+  display:flex;align-items:center;
+  overflow:hidden;
+  transition:all 0.4s ease;
+}
+.d-bar{
+  height:14px;border-radius:4px;
+  background:rgba(255,255,255,0.1);
+  transition:all 0.4s ease;
+}
+.d-bar:nth-child(2){ width:100%; }
+.d-bar:nth-child(3){ width:100%; }
+
+.d-label{
+  display:block;
+  padding:0 10px;
+  font-size:clamp(9px,1.65vw,11.5px);font-weight:700;
+  letter-spacing:0.03em;text-transform:uppercase;
+  color:rgba(255,255,255,0.75);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  width:100%;
+  line-height:1;
+}
+
+.d-prazo{
+  display:flex;align-items:center;gap:6px;
+  padding:0 10px;
+  overflow:hidden;
+}
+.d-bar-text{
+  font-size:clamp(8px,1.45vw,10px);font-weight:500;
+  color:rgba(255,255,255,0.4);
+  letter-spacing:0.01em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.d-sublabel{
+  font-size:11.5px;font-weight:400;letter-spacing:0.01em;
+  color:rgba(255,255,255,0.35);
+  padding:0 2px;
+  line-height:1.5;
+  transition:color 0.4s ease;
+}
+
+/* Fade transition on detail content */
+.detail-body{ transition:opacity 0.3s ease; }
+.detail-body.fading{ opacity:0; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="glass">
+
+    <!-- CHECKLIST -->
+    <div class="checklist">
+
+      <div class="check-item" id="item-0">
+        <div class="checkbox" id="cb-0">
+          <svg class="check-icon" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="item-text">
+          <div class="bar title"><span class="bar-label">Branding & Identidade</span></div>
+          <div class="bar sub"></div>
+        </div>
+      </div>
+
+      <div class="check-item" id="item-1">
+        <div class="checkbox" id="cb-1">
+          <svg class="check-icon" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="item-text">
+          <div class="bar title"><span class="bar-label">Landing Page & Web</span></div>
+          <div class="bar sub"></div>
+        </div>
+      </div>
+
+      <div class="check-item" id="item-2">
+        <div class="checkbox" id="cb-2">
+          <svg class="check-icon" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="item-text">
+          <div class="bar title"><span class="bar-label">Vídeo & Motion</span></div>
+          <div class="bar sub"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DETAIL CARD -->
+    <div class="detail">
+      <div class="detail-icon" id="d-icon">
+        <svg class="detail-check" viewBox="0 0 24 24"><polyline points="4,12 9,17 20,7"/></svg>
+      </div>
+      <div class="detail-body" id="d-body">
+        <div class="d-title"><span class="d-label" id="d-label">Branding</span></div>
+        <div class="d-bar d-prazo">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="d-bar-text">Prazo: 5 dias úteis</span>
+        </div>
+        <div class="d-bar d-prazo">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="d-bar-text" id="d-sub">Identidade visual completa</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var ITEMS = [
+    { label:'Branding', sub:'Identidade visual completa' },
+    { label:'Landing Page', sub:'Design e desenvolvimento' },
+    { label:'Motion', sub:'Vídeo, animação e conteúdo' },
+  ];
+
+  var N      = ITEMS.length;
+  var HOLD   = 2400;  /* ms ativo */
+  var TRANS  = 400;   /* ms transição */
+  var current = -1;
+
+  var dIcon  = document.getElementById('d-icon');
+  var dBody  = document.getElementById('d-body');
+  var dLabel = document.getElementById('d-label');
+  var dSub   = document.getElementById('d-sub');
+
+  function activate(idx){
+    /* Dim all, then set active */
+    for(var i=0;i<N;i++){
+      var item = document.getElementById('item-'+i);
+      var cb   = document.getElementById('cb-'+i);
+      item.classList.remove('active','dimmed');
+      cb.classList.remove('checked');
+    }
+
+    var activeItem = document.getElementById('item-'+idx);
+    var activeCb   = document.getElementById('cb-'+idx);
+
+    /* Dim others */
+    for(var i=0;i<N;i++){
+      if(i!==idx) document.getElementById('item-'+i).classList.add('dimmed');
+    }
+
+    /* Activate item */
+    activeItem.classList.add('active');
+    activeCb.classList.add('checked');
+
+    /* Update detail card with fade */
+    dBody.classList.add('fading');
+    dIcon.classList.remove('active');
+
+    setTimeout(function(){
+      dLabel.textContent = ITEMS[idx].label;
+      dSub.textContent   = ITEMS[idx].sub;
+      dBody.classList.remove('fading');
+      dIcon.classList.add('active');
+    }, TRANS);
+
+    current = idx;
+  }
+
+  function cycle(){
+    var next = (current + 1) % N;
+    activate(next);
+    setTimeout(cycle, HOLD + TRANS);
+  }
+
+  /* Start */
+  setTimeout(cycle, 300);
+})();
+</script>
+</body>
+</html>

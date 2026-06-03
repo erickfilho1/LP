@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kanban</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0a0a;font-family:'Manrope',sans-serif;}
+
+.wrap{
+  width:609px;height:397px;
+  background:#131313;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.07);
+  box-shadow:0 32px 100px rgba(0,0,0,0.85);
+  overflow:hidden;
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:auto 1fr 1fr;
+  gap:0;
+  padding:34px 24px 24px;
+  column-gap:14px;
+  row-gap:12px;
+}
+
+/* ── HEADERS ── */
+.col-head{
+  font-size:15px;font-weight:700;
+  color:rgba(255,255,255,0.68);
+  letter-spacing:0.01em;
+  padding-bottom:4px;
+  align-self:start;
+}
+
+/* ── TASK CARD ── */
+.tcard{
+  background:#1d1d1d;
+  border-radius:11px;
+  border:1px solid rgba(255,255,255,0.07);
+  padding:14px 14px 13px;
+  display:flex;flex-direction:column;gap:9px;
+  position:relative;
+  transition:border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+  margin-bottom:12px;
+}
+.tcard.hl{
+  background:#202020;
+  border-color:rgba(255,255,255,0.16);
+  box-shadow:0 0 0 1px rgba(255,255,255,0.07),0 8px 28px rgba(0,0,0,0.5);
+}
+.tcard.done{border-color:rgba(255,255,255,0.1);}
+
+/* bars */
+.tbars{display:flex;flex-direction:column;gap:6px;}
+.tbar{
+  height:10px;border-radius:5px;
+  background:rgba(255,255,255,0.09);
+  display:flex;align-items:center;
+  transition:all 0.4s ease;
+}
+.tbar.t{height:13px;width:78%;background:rgba(255,255,255,0.15);}
+.tbar.s1{width:58%;}
+.tbar.s2{width:42%;}
+.tcard.hl .tbar.t{width:90%;background:rgba(255,255,255,0.52);}
+.tcard.hl .tbar.s1{width:68%;background:rgba(255,255,255,0.18);}
+.tcard.hl .tbar.s2{width:50%;background:rgba(255,255,255,0.12);}
+.tbar-lbl{
+  font-size:10px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;
+  color:rgba(255,255,255,0.5);padding:0 9px;white-space:nowrap;overflow:hidden;
+  transition:color 0.4s ease;line-height:1;
+}
+.tcard.hl .tbar-lbl{color:rgba(255,255,255,0.78);}
+
+/* foot */
+.tfoot{display:flex;align-items:center;gap:7px;margin-top:1px;}
+.av{
+  width:22px;height:22px;border-radius:50%;
+  background:#272727;border:1px solid rgba(255,255,255,0.09);
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.4s ease;flex-shrink:0;
+}
+.tcard.hl .av{background:#2e2e2e;border-color:rgba(255,255,255,0.18);}
+.av svg{width:11px;height:11px;fill:rgba(255,255,255,0.32);}
+.tcard.hl .av svg{fill:rgba(255,255,255,0.62);}
+.pill{
+  font-size:9px;font-weight:700;letter-spacing:0.035em;text-transform:uppercase;
+  padding:3px 8px;border-radius:4px;
+  background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.28);
+  transition:all 0.4s ease;
+}
+.tcard.hl .pill{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.55);}
+
+/* done badge */
+.dbadge{
+  position:absolute;top:10px;right:10px;
+  width:17px;height:17px;border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(0.4);
+  transition:opacity 0.4s ease,transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.tcard.done .dbadge{opacity:1;transform:scale(1);}
+.dbadge svg{width:8px;height:8px;stroke:rgba(255,255,255,0.8);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── ADD CARD — fills remaining space ── */
+.add{
+  border:1.5px dashed rgba(255,255,255,0.09);
+  border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  height:100%;
+  min-height:60px;
+}
+.add span{
+  font-size:20px;font-weight:300;
+  color:rgba(255,255,255,0.12);line-height:1;
+}
+
+/* Grid slot helpers */
+.slot-add{display:flex;flex-direction:column;}
+
+/* ── GHOST MOVER ── */
+#mv{
+  position:absolute;z-index:50;pointer-events:none;
+  border-radius:11px;background:#202020;
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:0 0 0 1px rgba(255,255,255,0.08),0 14px 44px rgba(0,0,0,0.7);
+  padding:13px 14px 12px;
+  display:flex;flex-direction:column;gap:9px;
+  opacity:0;transition:opacity 0.3s ease;
+}
+#mv.on{opacity:1;}
+.mbars{display:flex;flex-direction:column;gap:6px;}
+.mbar{height:10px;border-radius:5px;background:rgba(255,255,255,0.42);}
+.mbar.mt{height:13px;width:90%;background:rgba(255,255,255,0.55);}
+.mbar.ms1{width:66%;}
+.mbar.ms2{width:48%;}
+.mbar.mt{display:flex;align-items:center;}
+.mlbl{font-size:10px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;color:rgba(255,255,255,0.78);padding:0 9px;white-space:nowrap;}
+.mfoot{display:flex;align-items:center;gap:7px;margin-top:1px;}
+.mav{width:22px;height:22px;border-radius:50%;background:#2e2e2e;border:1px solid rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mav svg{width:11px;height:11px;fill:rgba(255,255,255,0.62);}
+.mpill{font-size:9px;font-weight:700;letter-spacing:0.035em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.55);}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="wrap">
+
+  <!-- Ghost mover -->
+  <div id="mv">
+    <div class="mbars">
+      <div class="mbar mt"><span class="mlbl" id="mlbl">Branding</span></div>
+      <div class="mbar ms1"></div>
+      <div class="mbar ms2"></div>
+    </div>
+    <div class="mfoot">
+      <div class="mav"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <span class="mpill" id="mpill">Design</span>
+    </div>
+  </div>
+
+  <!-- ROW 1: headers -->
+  <div class="col-head">A demanda</div>
+  <div class="col-head">Vira card</div>
+  <div class="col-head">Em andamento</div>
+  <div class="col-head">Concluído</div>
+
+  <!-- ROW 2: top cards -->
+  <!-- Col 0 top -->
+  <div class="tcard" id="c00">
+    <div class="dbadge"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    <div class="tbars">
+      <div class="tbar t"><span class="tbar-lbl">Branding</span></div>
+      <div class="tbar s1"></div>
+      <div class="tbar s2"></div>
+    </div>
+    <div class="tfoot">
+      <div class="av"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <span class="pill">Design</span>
+    </div>
+  </div>
+  <!-- Col 1 top -->
+  <div class="tcard" id="c10">
+    <div class="dbadge"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    <div class="tbars">
+      <div class="tbar t"><span class="tbar-lbl">Motion</span></div>
+      <div class="tbar s1"></div>
+      <div class="tbar s2"></div>
+    </div>
+    <div class="tfoot">
+      <div class="av"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <span class="pill">Vídeo</span>
+    </div>
+  </div>
+  <!-- Col 2 top -->
+  <div class="tcard" id="c20">
+    <div class="dbadge"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    <div class="tbars">
+      <div class="tbar t"><span class="tbar-lbl">Social Media</span></div>
+      <div class="tbar s1"></div>
+      <div class="tbar s2"></div>
+    </div>
+    <div class="tfoot">
+      <div class="av"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <span class="pill">Conteúdo</span>
+    </div>
+  </div>
+  <!-- Col 3 top -->
+  <div class="tcard" id="c30">
+    <div class="dbadge"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    <div class="tbars">
+      <div class="tbar t"><span class="tbar-lbl">UI Kit</span></div>
+      <div class="tbar s1"></div>
+      <div class="tbar s2"></div>
+    </div>
+    <div class="tfoot">
+      <div class="av"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <span class="pill">Design</span>
+    </div>
+  </div>
+
+  <!-- ROW 3: bottom cards / add -->
+  <!-- Col 0 bottom -->
+  <div class="tcard" id="c01">
+    <div class="dbadge"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    <div class="tbars">
+      <div class="tbar t"><span class="tbar-lbl">Landing Page</span></div>
+      <div class="tbar s1"></div>
+    </div>
+    <div class="tfoot">
+      <div class="av"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <span class="pill">Web</span>
+    </div>
+  </div>
+  <!-- Col 1 add -->
+  <div class="add"><span>+</span></div>
+  <!-- Col 2 add -->
+  <div class="add"><span>+</span></div>
+  <!-- Col 3 add -->
+  <div class="add"><span>+</span></div>
+
+</div>
+
+<script>
+(function(){
+  var TASKS=[
+    {label:'Branding',pill:'Design'},
+    {label:'Landing Page',pill:'Web'},
+    {label:'Motion',pill:'Vídeo'},
+  ];
+  var COLS=['c00','c10','c20','c30'];
+  var STEP=2600, PAUSE=700, HOLD=2000, RESET=500;
+  var wrap=document.getElementById('wrap');
+  var mv=document.getElementById('mv');
+  var mlbl=document.getElementById('mlbl');
+  var mpill=document.getElementById('mpill');
+  var ti=0;
+
+  function pos(id){
+    var wr=wrap.getBoundingClientRect();
+    var er=document.getElementById(id).getBoundingClientRect();
+    return{x:er.left-wr.left,y:er.top-wr.top,w:er.width,h:er.height};
+  }
+
+  function fly(x0,y0,x1,y1,dur,cb){
+    var t0=performance.now();
+    function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+    (function fr(now){
+      var t=Math.min((now-t0)/dur,1),e=ease(t);
+      mv.style.left=(x0+(x1-x0)*e)+'px';
+      mv.style.top=(y0+(y1-y0)*e)+'px';
+      t<1?requestAnimationFrame(fr):cb&&cb();
+    })(t0);
+  }
+
+  function run(n){
+    var task=TASKS[n%TASKS.length];
+    mlbl.textContent=task.label;
+    mpill.textContent=task.pill;
+
+    var src=document.getElementById(COLS[0]);
+    src.classList.add('hl');
+    var p=pos(COLS[0]);
+    mv.style.width=p.w+'px';
+    mv.style.left=p.x+'px';
+    mv.style.top=p.y+'px';
+
+    setTimeout(function(){
+      mv.classList.add('on');
+      src.style.opacity='0.22';
+      var step=0;
+
+      function next(){
+        step++;
+        if(step>3){
+          document.getElementById(COLS[3]).classList.add('done');
+          setTimeout(function(){
+            mv.classList.remove('on');
+            setTimeout(function(){
+              src.style.opacity='';
+              src.classList.remove('hl');
+              document.getElementById(COLS[3]).classList.remove('done');
+              COLS.forEach(function(id){document.getElementById(id).classList.remove('hl');});
+              run(n+1);
+            },RESET);
+          },HOLD);
+          return;
+        }
+        var dst=document.getElementById(COLS[step]);
+        dst.classList.add('hl');
+        var dp=pos(COLS[step]);
+        var cx=parseFloat(mv.style.left),cy=parseFloat(mv.style.top);
+        fly(cx,cy,dp.x,dp.y,STEP,function(){
+          setTimeout(next,PAUSE);
+        });
+      }
+      setTimeout(next,PAUSE);
+    },400);
+  }
+
+  setTimeout(function(){run(0);},500);
+})();
+</script>
+</body>
+</html>

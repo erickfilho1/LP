@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wave Lens</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#050505;display:block;overflow:hidden;}
+.wave-wrap{width:100%;height:100%;position:relative;overflow:hidden;background:#050505;}
+.wave-wrap svg{width:100%;height:100%;display:block;}
+</style>
+</head>
+<body>
+
+<div class="wave-wrap">
+  <svg id="wsvg" viewBox="0 0 100 500" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="wg" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="rgba(255,15,51,0.08)"/>
+        <stop offset="12%"  stop-color="rgba(255,15,51,0.35)"/>
+        <stop offset="32%"  stop-color="rgba(200,20,20,1)"/>
+        <stop offset="50%"  stop-color="rgba(255,90,90,1)"/>
+        <stop offset="69%"  stop-color="rgba(210,40,40,1)"/>
+        <stop offset="88%"  stop-color="rgba(255,15,51,0.35)"/>
+        <stop offset="100%" stop-color="rgba(255,15,51,0.08)"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>
+
+<script>
+(function(){
+
+  /* ══════════════════════════════════════════════════════════════════════════
+     6 ondas — parâmetros extraídos dos paths originais
+     A    = amplitude máxima em unidades do viewBox (centro = 250)
+            negativo = sobe (y diminui), positivo = desce (y aumenta)
+     p0   = phase offset inicial (rad) — define onde começa a onda
+     sp   = velocidade de animação (rad/frame)
+     expo = formato do envelope (0.5=plano, 1.0=côncavo)
+  ══════════════════════════════════════════════════════════════════════════ */
+  var WAVES = [
+    { A: -48,  p0: 0.10, sp: 0.0080, expo: 0.65 },
+    { A: -62,  p0: 1.30, sp: 0.0068, expo: 0.72 },
+    { A:  88,  p0: 2.10, sp: 0.0063, expo: 0.80 },
+    { A:  98,  p0: 2.92, sp: 0.0075, expo: 0.85 },
+    { A:  52,  p0: 3.72, sp: 0.0058, expo: 0.70 },
+    { A:  14,  p0: 0.65, sp: 0.0052, expo: 0.55 },
+  ];
+
+  /* Região ativa x=0→100 no espaço 0→100 */
+  var XS = 0, XE = 100, N = 100;
+  var svg = document.getElementById('wsvg');
+
+  /* Cria paths SVG */
+  var paths = WAVES.map(function(){
+    var p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('fill','none');
+    p.setAttribute('stroke','url(#wg)');
+    p.setAttribute('stroke-width','2');
+    p.setAttribute('style','vector-effect:non-scaling-stroke');
+    svg.appendChild(p);
+    return p;
+  });
+
+  /* Inicializa tempo por onda */
+  WAVES.forEach(function(w){ w.t = w.p0; });
+
+  /* Gera string "d" para uma onda no instante w.t */
+  var pointer = {
+    x: 50,
+    y: 250,
+    power: 0,
+    targetPower: 0
+  };
+
+  function updatePointer(event){
+    var rect = svg.getBoundingClientRect();
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 100;
+    pointer.y = ((event.clientY - rect.top) / rect.height) * 500;
+    pointer.targetPower = 1;
+  }
+
+  function updatePointerFromParent(data){
+    pointer.x = (data.x / Math.max(data.width, 1)) * 100;
+    pointer.y = (data.y / Math.max(data.height, 1)) * 500;
+    pointer.targetPower = data.active ? 1 : 0;
+  }
+
+  svg.addEventListener('pointermove', updatePointer);
+  svg.addEventListener('pointerenter', updatePointer);
+  svg.addEventListener('pointerleave', function(){
+    pointer.targetPower = 0;
+  });
+
+  window.addEventListener('message', function(event){
+    if(!event.data || event.data.type !== 'haki-wave-pointer') return;
+    updatePointerFromParent(event.data);
+  });
+
+  function buildD(w, waveIndex){
+    var d = '';
+    for(var x=0; x<=N; x++){
+      var y;
+      if(x <= XS || x >= XE){
+        y = 250;
+      } else {
+        var u   = (x - XS) / (XE - XS);
+        var env = Math.pow(Math.sin(u * Math.PI), w.expo);
+        y = 250 + w.A * env * Math.sin(Math.PI * 2 * u + w.t);
+        if(pointer.power > 0.001){
+          var dx = (x - pointer.x) / 17;
+          var influence = Math.exp(-(dx * dx));
+          var pull = (pointer.y - 250) * 0.44 * influence * pointer.power;
+          var ripple = Math.sin((x - pointer.x) * 0.26 + w.t * 2.4 + waveIndex * 0.9) * 16 * influence * pointer.power;
+          y += pull + ripple;
+        }
+      }
+      d += (x===0 ? 'M ' : ' L ') + x + ',' + y.toFixed(3);
+    }
+    return d;
+  }
+
+  /* Animação */
+  function frame(){
+    pointer.power += (pointer.targetPower - pointer.power) * 0.095;
+    WAVES.forEach(function(w, i){
+      paths[i].setAttribute('d', buildD(w, i));
+      w.t += w.sp;
+    });
+    requestAnimationFrame(frame);
+  }
+
+  frame();
+
+})();
+</script>
+</body>
+</html>

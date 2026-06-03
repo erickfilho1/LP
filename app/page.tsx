@@ -4,13 +4,13 @@ import { AnimatePresence, motion, type MotionValue, useReducedMotion, useScroll,
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const navItems = [
-  ["Solucoes", "#solucoes"],
+  ["Soluções", "#solucoes"],
   ["Processo", "#processo"],
   ["Planos", "#planos"],
   ["Cases", "#cases"],
@@ -21,20 +21,20 @@ const navItems = [
 const services = [
   "Landing Pages",
   "Ads & Creatives",
-  "Videos",
+  "Vídeos",
   "Design Systems",
   "Web Elements",
 ];
 
-const heroWords = ["Landing Pages", "Criativos", "Videos", "Design Systems"];
+const heroWords = ["Landing pages", "Artes", "Vídeos", "Sites"];
 
 const metrics = [
   ["+100", "Landing pages entregues"],
-  ["+30", "Agencias atendidas"],
-  ["+10", "Lancamentos suportados"],
+  ["+30", "Agências atendidas"],
+  ["+10", "Lançamentos suportados"],
   ["98%", "Entregas no prazo"],
-  ["3 dias", "Prazo medio de entrega"],
-  ["5", "Solicitacoes diarias"],
+  ["3 dias", "Prazo médio de entrega"],
+  ["5", "Solicitações diárias"],
 ];
 
 const clients = [
@@ -50,48 +50,48 @@ const boardColumns = [
   {
     title: "Backlog",
     count: "3",
-    cards: ["Landing Page", "Anuncio", "Video Edit"],
+    cards: ["Landing Page", "Anúncio", "Video Edit"],
   },
   {
     title: "Em andamento",
     count: "2",
-    cards: ["Pagina de Vendas", "VSL"],
+    cards: ["Página de Vendas", "VSL"],
   },
   {
-    title: "Revisao",
+    title: "Revisão",
     count: "1",
-    cards: ["Pagina Obrigado"],
+    cards: ["Página Obrigado"],
   },
   {
-    title: "Concluido",
+    title: "Concluído",
     count: "4",
-    cards: ["Anuncio", "Landing Page", "Email Design", "Video Edit"],
+    cards: ["Anúncio", "Landing Page", "Email Design", "Video Edit"],
   },
 ];
 
 const processSteps = [
   {
     step: "01",
-    title: "Solicitacao",
-    text: "Voce envia a demanda pelo Trello com briefing simples e objetivo.",
+    title: "Solicitação",
+    text: "Você envia a demanda pelo Trello com briefing simples e objetivo.",
     icon: "request",
   },
   {
     step: "02",
-    title: "Producao",
-    text: "Entramos em acao com nosso fluxo operacional organizado.",
+    title: "Produção",
+    text: "Entramos em ação com nosso fluxo operacional organizado.",
     icon: "progress",
   },
   {
     step: "03",
-    title: "Revisao",
-    text: "Voce revisa e solicita ajustes com agilidade e clareza.",
+    title: "Revisão",
+    text: "Você revisa e solicita ajustes com agilidade e clareza.",
     icon: "review",
   },
   {
     step: "04",
     title: "Entrega",
-    text: "Arquivos entregues com prazo, qualidade e consistencia.",
+    text: "Arquivos entregues com prazo, qualidade e consistência.",
     icon: "delivered",
   },
 ];
@@ -99,46 +99,52 @@ const processSteps = [
 const plans = [
   {
     name: "Essencial",
-    price: "R$ 997",
-    description: "Suporte criativo diario para demandas continuas.",
-    features: ["2 demandas por dia", "Entregas em 3 dias", "Revisoes limitadas", "Acompanhamento Trello"],
+    price: "R$ 1.500",
+    description: "Suporte criativo diário para demandas contínuas.",
+    included: ["Artes"],
+    features: ["3 pedidos por dia", "Entregas em 3 dias", "Revisões limitadas", "Acompanhamento Trello"],
   },
   {
     name: "Growth",
-    price: "R$ 1.497",
-    description: "Ideal para agencias em crescimento.",
+    price: "R$ 2.000",
+    description: "Ideal para agências em crescimento.",
     tag: "Mais escolhido",
     featured: true,
-    features: ["5 demandas por dia", "Entregas em 72h", "Revisoes ilimitadas", "Acompanhamento Trello"],
+    included: ["Artes", "Vídeos", "LPs"],
+    features: ["5 demandas por dia", "Entregas em 72h", "Revisões ilimitadas", "Acompanhamento Trello"],
   },
   {
     name: "Scale",
-    price: "R$ 2.497",
-    description: "Producao criativa em alta escala.",
-    features: ["10+ demandas por dia", "Entregas prioritarias", "Revisoes ilimitadas", "Acompanhamento Trello"],
+    price: "R$ 2.997",
+    description: "Produção criativa em alta escala.",
+    included: ["Artes", "Vídeos", "LPs", "Prazo prioritário"],
+    features: ["10+ demandas por dia", "Entregas prioritárias", "Revisões ilimitadas", "Acompanhamento Trello"],
   },
   {
     name: "Enterprise",
     price: "Sob consulta",
     description: "Infraestrutura criativa personalizada.",
-    features: ["Demandas ilimitadas", "Entrega prioritaria", "Suporte dedicado", "Fluxo personalizado"],
+    included: ["Tudo incluso"],
+    features: ["Demandas ilimitadas", "Entrega prioritária", "Suporte dedicado", "Fluxo personalizado"],
   },
 ];
 
+const briefingHref = (plan?: string) => `/briefing${plan ? `?plano=${encodeURIComponent(plan)}` : ""}`;
+
 const portfolio = {
   "Landing pages": [
-    ["Launch Sprint", "Pagina de vendas para lancamento digital", "Conversao"],
-    ["Med Scale", "Landing page para captacao de pacientes", "Performance"],
-    ["Expert OS", "Pagina institucional para expert", "Autoridade"],
+    ["Launch Sprint", "Página de vendas para lançamento digital", "Conversão"],
+    ["Med Scale", "Landing page para captação de pacientes", "Performance"],
+    ["Expert OS", "Página institucional para expert", "Autoridade"],
   ],
-  Criativos: [
+  "Criativos": [
     ["Ad Pack 01", "Pacote de criativos para teste de oferta", "Ads"],
-    ["Reels System", "Linha visual para conteudo diario", "Social"],
-    ["Launch Assets", "Pecas para aquecimento e abertura", "Lançamento"],
+    ["Reels System", "Linha visual para conteúdo diário", "Social"],
+    ["Launch Assets", "Peças para aquecimento e abertura", "Lançamento"],
   ],
-  Videos: [
-    ["VSL Cut", "Edicao objetiva para pagina de vendas", "VSL"],
-    ["Shorts Engine", "Cortes recorrentes para especialistas", "Conteudo"],
+  "Vídeos": [
+    ["VSL Cut", "Edição objetiva para página de vendas", "VSL"],
+    ["Shorts Engine", "Cortes recorrentes para especialistas", "Conteúdo"],
     ["Offer Motion", "Motion simples para criativos pagos", "Motion"],
   ],
 };
@@ -240,6 +246,9 @@ function UmanoNav() {
       return;
     }
 
+    let railModeActive = false;
+    let casesModeActive = false;
+    const syncRailMode = () => setIsRailMode(railModeActive || casesModeActive);
     const getDistance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
     const deliveryCard = document.querySelector<HTMLElement>(".is-delivery-card");
     const getFocusDistance = () => {
@@ -250,14 +259,26 @@ function UmanoNav() {
       const targetX = window.innerWidth / 2 - (deliveryCard.offsetLeft + deliveryCard.offsetWidth / 2);
       return Math.abs(targetX);
     };
-    const trigger = ScrollTrigger.create({
+    const railTrigger = ScrollTrigger.create({
       trigger: section,
       start: "top top",
       end: () => `+=${getFocusDistance() * 0.62 + window.innerHeight * 0.16}`,
-      onEnter: () => setIsRailMode(true),
-      onEnterBack: () => setIsRailMode(true),
-      onLeave: () => setIsRailMode(false),
-      onLeaveBack: () => setIsRailMode(false),
+      onEnter: () => {
+        railModeActive = true;
+        syncRailMode();
+      },
+      onEnterBack: () => {
+        railModeActive = true;
+        syncRailMode();
+      },
+      onLeave: () => {
+        railModeActive = false;
+        syncRailMode();
+      },
+      onLeaveBack: () => {
+        railModeActive = false;
+        syncRailMode();
+      },
       onUpdate: (self) => {
         const carouselProgress = Math.min(1, self.progress / 0.52);
         const nextIndex = Math.min(3, Math.max(0, Math.round(carouselProgress * 3)));
@@ -266,20 +287,36 @@ function UmanoNav() {
       invalidateOnRefresh: true,
     });
 
+    const handleCasesRail = (event: Event) => {
+      casesModeActive = Boolean((event as CustomEvent<{ active: boolean }>).detail?.active);
+      syncRailMode();
+    };
+    const handleCasesIndex = (event: Event) => {
+      const nextIndex = (event as CustomEvent<{ index: number }>).detail?.index ?? 0;
+      setRailIndex((current) => (current === nextIndex ? current : nextIndex));
+    };
+
+    window.addEventListener("haki:cases-rail", handleCasesRail);
+    window.addEventListener("haki:cases-index", handleCasesIndex);
+
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
-    return () => trigger.kill();
+    return () => {
+      railTrigger.kill();
+      window.removeEventListener("haki:cases-rail", handleCasesRail);
+      window.removeEventListener("haki:cases-index", handleCasesIndex);
+    };
   }, []);
 
   return (
-    <header className={`umano-nav ${isRailMode ? "is-rail-mode" : ""}`} aria-label="Navegacao principal">
+    <header className={`umano-nav ${isRailMode ? "is-rail-mode" : ""}`} aria-label="Navegação principal">
       <a href="#top" className="umano-nav-logo" aria-label="Studio Haki">
         <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} priority />
       </a>
 
       <div className="umano-nav-center">
-        <nav className="umano-nav-links" aria-label="Secoes">
-          <a href="#solucoes">Solucoes</a>
+        <nav className="umano-nav-links" aria-label="Seções">
+          <a href="#solucoes">Soluções</a>
           <a href="#processo">Processo</a>
           <a href="#cases">Cases</a>
           <a href="#planos">Planos</a>
@@ -292,7 +329,7 @@ function UmanoNav() {
         </div>
       </div>
 
-      <a className="umano-nav-cta" href="#contato">
+      <a className="umano-nav-cta" href="#planos">
         Plugar HAKI
       </a>
     </header>
@@ -312,27 +349,31 @@ function DynamicHeroWord() {
   }, []);
 
   return (
-    <span className="umano-hero-word-shell">
+    <motion.span
+      layout
+      className="umano-hero-word-shell"
+      transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+    >
       <AnimatePresence mode="wait">
         <motion.span
           key={heroWords[activeIndex]}
-          initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 16, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -14, filter: "blur(8px)" }}
-          transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+          initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 14, scale: 0.98, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.98, filter: "blur(8px)" }}
+          transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
         >
           {heroWords[activeIndex]}
         </motion.span>
       </AnimatePresence>
-    </span>
+    </motion.span>
   );
 }
 
 function HeroWireframe() {
   const heroCards = [
     ["hero-dashboard-preview", "Dashboard operacional", "Fluxo Trello + entregas"],
-    ["case-video-01", "Video criativo", "Area para VSL / cortes"],
-    ["case-image-01", "Landing page", "Area para print do projeto"],
+    ["case-video-01", "V?deo criativo", "?rea para VSL / cortes"],
+    ["case-image-01", "Landing page", "?rea para print do projeto"],
   ];
 
   return (
@@ -355,7 +396,7 @@ function HeroWireframe() {
             <div className="umano-wireframe-media" data-slot="hero-video">
               <span>hero-video</span>
               <strong>1920 x 800</strong>
-              <em>Substituir pelo video hero final</em>
+              <em>Substituir pelo v?deo hero final</em>
             </div>
 
             <div className="umano-wireframe-core">
@@ -381,9 +422,9 @@ function HeroWireframe() {
           </div>
 
           <div className="umano-wireframe-footer">
-            <span>3 dias uteis</span>
-            <span>5 solicitacoes/dia</span>
-            <span>Fluxo previsivel</span>
+            <span>3 dias ?teis</span>
+            <span>5 solicita??es/dia</span>
+            <span>Fluxo previs?vel</span>
           </div>
         </div>
       </div>
@@ -392,36 +433,27 @@ function HeroWireframe() {
 }
 
 function UmanoHero() {
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 0.22], [0, -96]);
-  const scale = useTransform(scrollYProgress, [0, 0.22], [1, 0.94]);
-
   return (
     <section id="top" className="umano-hero">
-      <div className="umano-cursor-orbit" />
       <div className="umano-hero-inner">
         <Reveal className="umano-hero-copy">
           <div className="umano-hero-kicker">
             <span />
-            Studio Haki / creative ops
+            Para agências e profissionais de marketing
           </div>
           <h1 className="umano-hero-title">
             Pare de depender de freelancer.
             <br />
-            Plugue a HAKI na sua operacao.
+            Plugue a HAKI na sua operação.
           </h1>
           <p className="umano-hero-subtitle">
-            A HAKI entrega <DynamicHeroWord /> para sua operacao, sem depender de freelancer solto.
+            A HAKI entrega <DynamicHeroWord /> para sua operação, sem depender de freelancer solto.
           </p>
           <div className="umano-hero-actions">
-            <a href="#contato">Plugar a HAKI</a>
+            <a href="#planos">Plugar a HAKI</a>
             <a href="#processo">Ver processo</a>
           </div>
         </Reveal>
-
-        <motion.div style={{ x: "-50%", y, scale }} className="umano-hero-device">
-          <HeroWireframe />
-        </motion.div>
       </div>
     </section>
   );
@@ -430,7 +462,7 @@ function UmanoHero() {
 function UmanoLogoStrip() {
   return (
     <section className="umano-logo-strip" aria-label="Clientes e parceiros">
-      <p>Trusted by agencies and infoproduct businesses</p>
+      <p>Agências e negócios digitais que confiam no nosso fluxo</p>
       <div>
         {clients.map(([name, icon]) => (
           <span key={name}>
@@ -474,8 +506,8 @@ function StickyManifesto() {
   const y = useTransform(smoothProgress, [0, 0.5, 1], [18, 0, -18]);
   const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.985, 1, 0.992]);
   const progressScale = useTransform(smoothProgress, [0.06, 0.9], [0, 1]);
-  const firstLine = ["Um", "estudio", "dentro", "da", "sua", "operacao,"];
-  const secondLine = ["com", "ritmo", "de", "produto", "e", "prazo", "de", "lancamento."];
+  const firstLine = ["Um", "estúdio", "dentro", "da", "sua", "operação,"];
+  const secondLine = ["com", "ritmo", "de", "produto", "e", "prazo", "de", "lançamento."];
   const words = [...firstLine, ...secondLine];
 
   useEffect(() => {
@@ -584,16 +616,19 @@ function HowItWorksRail() {
     title: string;
     text: string;
     label: string;
+    isSystem?: boolean;
+    isRequest?: boolean;
+    isProduction?: boolean;
     isDelivery?: boolean;
   };
   const steps: RailStep[] = [
-    { icon: "queue", title: "Pedido entra", text: "Briefing simples, prioridade clara e tudo rastreado.", label: "trello-request" },
-    { icon: "system", title: "Fluxo organiza", text: "A demanda vira card, prazo e fila operacional.", label: "ops-board" },
-    { icon: "production", title: "Producao roda", text: "Design, video e landing page seguem sem travar seu time.", label: "creative-sprint" },
+    { icon: "queue", title: "Pedido entra", text: "Briefing simples, prioridade clara e tudo rastreado.", label: "trello-request", isRequest: true },
+    { icon: "system", title: "Fluxo organiza", text: "A demanda vira card, prazo e fila operacional.", label: "ops-board", isSystem: true },
+    { icon: "production", title: "Produção roda", text: "Design, vídeo e landing page seguem sem travar seu time.", label: "creative-sprint", isProduction: true },
     {
       icon: "delivery",
       title: "Entrega volta",
-      text: "Arquivos prontos, revisao objetiva e historico no Trello.",
+      text: "Arquivos prontos, revisão objetiva e histórico no Trello.",
       label: "delivery-pack",
       isDelivery: true,
     },
@@ -735,13 +770,43 @@ function HowItWorksRail() {
               whileHover={step.isDelivery ? undefined : { y: -8, rotate: index % 2 === 0 ? -0.45 : 0.45 }}
               className={`umano-rail-card ${step.isDelivery ? "is-delivery-card" : ""}`}
             >
-              <div className={`umano-card-wire ${step.isDelivery ? "delivery-card-scene" : ""}`}>
+              <div className={`umano-card-wire ${step.isDelivery ? "delivery-card-scene" : ""} ${step.isRequest ? "request-card-scene" : ""} ${step.isSystem ? "system-card-scene" : ""} ${step.isProduction ? "production-card-scene" : ""}`}>
                 {step.isDelivery ? (
                   <>
                     <img src="/assets/cards/delivery/background.svg" alt="" className="delivery-card-bg" />
                     <div className="delivery-card-glow" aria-hidden="true" />
                     <img src="/assets/cards/delivery/logo.svg" alt="" className="delivery-card-logo" />
                   </>
+                ) : step.isRequest ? (
+                  <div className="request-bento-crop">
+                    <iframe
+                      src="/assets/cards/request/bento.html"
+                      title="Bento Pedido entra"
+                      className="request-bento-frame"
+                      loading="lazy"
+                      scrolling="no"
+                    />
+                  </div>
+                ) : step.isSystem ? (
+                  <div className="system-bento-crop">
+                    <iframe
+                      src="/assets/cards/ops-board/bento.html"
+                      title="Bento Fluxo organiza"
+                      className="system-bento-frame"
+                      loading="lazy"
+                      scrolling="no"
+                    />
+                  </div>
+                ) : step.isProduction ? (
+                  <div className="production-bento-crop">
+                    <iframe
+                      src="/assets/cards/production/bento.html"
+                      title="Bento Produ??o roda"
+                      className="production-bento-frame"
+                      loading="lazy"
+                      scrolling="no"
+                    />
+                  </div>
                 ) : (
                   <span>{step.label}</span>
                 )}
@@ -1112,7 +1177,7 @@ function FullscreenNav() {
   }, [closeMenu, resetMenuItems]);
 
   return (
-    <nav ref={navRef} className="fullscreen-nav" aria-label="Navegacao principal">
+    <nav ref={navRef} className="fullscreen-nav" aria-label="Navega??o principal">
       <div className="container-haki fullscreen-nav-bar">
         <a href="#top" className="nav-logo" aria-label="Voltar para o inicio" onClick={closeMenu}>
           <Image
@@ -1232,15 +1297,15 @@ function Hero() {
             Infraestrutura criativa
           </div>
           <h1 className="max-w-[620px] text-balance text-[clamp(2.45rem,4.9vw,5.9rem)] font-medium leading-[0.94] tracking-[-0.07em] text-haki-white max-sm:max-w-[calc(100vw-40px)] max-sm:text-[2.05rem] max-sm:leading-[1.02] max-sm:tracking-[-0.055em]">
-            Plugamos um estudio criativo na sua operacao.
+            Plugamos um est?dio criativo na sua opera??o.
           </h1>
           <p className="mt-6 max-w-[calc(100vw-32px)] text-base leading-7 text-haki-muted md:max-w-lg md:text-lg md:leading-8">
-            Entregamos landing pages, videos e criativos com velocidade, consistencia e previsibilidade
-            para agencias e negocios digitais que querem crescer.
+            Entregamos landing pages, v?deos e criativos com velocidade, consist?ncia e previsibilidade
+            para ag?ncias e neg?cios digitais que querem crescer.
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <a className="group inline-flex w-full items-center justify-center gap-4 rounded-md bg-haki-red px-5 py-4 text-sm font-semibold text-white shadow-red-soft transition duration-500 ease-mass hover:-translate-y-1 sm:w-auto sm:px-7 sm:text-base" href="#planos">
-              Plugar HAKI na operacao
+              Plugar HAKI na opera??o
               <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
             </a>
             <a className="inline-flex w-full items-center justify-center rounded-md border hairline bg-white/[0.025] px-5 py-4 text-sm font-semibold text-haki-muted transition duration-500 ease-mass hover:-translate-y-1 hover:text-haki-white sm:w-auto sm:px-7 sm:text-base" href="#processo">
@@ -1380,7 +1445,7 @@ function Workflow() {
           Integramos seus fluxos e entregamos criacoes de alto volume com qualidade e previsibilidade.
         </p>
         <ul className="mt-8 space-y-3 text-sm text-haki-muted">
-          {["Demandas ilimitadas", "Entregas diarias", "Fluxo previsivel", "Acompanhamento no Trello"].map((item) => (
+          {["Demandas ilimitadas", "Entregas di?rias", "Fluxo previs?vel", "Acompanhamento no Trello"].map((item) => (
             <li key={item} className="flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-haki-red" />
               {item}
@@ -1470,7 +1535,7 @@ function Process() {
       <Reveal>
         <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Nosso processo</p>
         <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
-          Um sistema para fluxo criativo previsivel.
+          Um sistema para fluxo criativo previs?vel.
         </h2>
         <p className="mt-6 max-w-md leading-7 text-haki-muted">
           Do pedido a entrega, tudo rastreado, organizado e otimizado para maxima performance.
@@ -1531,10 +1596,10 @@ function Plans() {
       <Reveal className="mx-auto max-w-3xl text-center">
         <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Planos recorrentes</p>
         <h2 className="mx-auto text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
-          Planos que escalam com a sua operacao.
+          Planos que escalam com a sua opera??o.
         </h2>
         <p className="mx-auto mt-6 max-w-xl leading-7 text-haki-muted">
-          Escolha o plano ideal para o volume de demandas da sua agencia ou negocio digital.
+          Escolha o plano ideal para o volume de demandas da sua ag?ncia ou neg?cio digital.
         </p>
       </Reveal>
 
@@ -1587,29 +1652,99 @@ function Plans() {
 }
 
 const faqItems = [
-  ["Como a HAKI entra na minha operacao?", "Voce assina o plano, entra no Trello e passa a solicitar demandas por cards com prazo, briefing e status claros."],
-  ["As entregas sao realmente previsiveis?", "A proposta e manter uma esteira recorrente com limite de demandas, prioridade e prazo combinado para nao quebrar seu fluxo."],
-  ["Consigo usar em lancamentos?", "Sim. A HAKI funciona bem para paginas, criativos, cortes e pecas de suporte durante aquecimento, abertura e carrinho."],
-  ["E se eu ja tiver designer interno?", "A HAKI pode entrar como extensao operacional para tirar gargalo, absorver volume e manter seu time focado no que e mais estrategico."],
+  ["Como a HAKI entra na minha operação?", "Você assina o plano, entra no Trello e passa a solicitar demandas por cards com prazo, briefing e status claros."],
+  ["As entregas são realmente previsíveis?", "A proposta é manter uma esteira recorrente com limite de demandas, prioridade e prazo combinado para não quebrar seu fluxo."],
+  ["Consigo usar em lançamentos?", "Sim. A HAKI funciona bem para páginas, criativos, cortes e peças de suporte durante aquecimento, abertura e carrinho."],
+  ["E se eu já tiver designer interno?", "A HAKI pode entrar como extensão operacional para tirar gargalo, absorver volume e manter seu time focado no que é mais estratégico."],
 ];
 
 const caseTabs = {
   "Landing pages": [
-    ["case-image-01", "Launch OS", "Pagina de vendas para lancamento com estrutura de conversao."],
+    ["case-image-01", "Launch OS", "Página de vendas para lançamento com estrutura de conversão."],
     ["case-image-02", "Expert Authority", "Landing institucional para expert com prova e oferta clara."],
-    ["case-video-01", "VSL Page", "Espaco para video + pagina de conversao em uma experiencia unica."],
+    ["case-video-01", "VSL Page", "Espaço para vídeo + página de conversão em uma experiência única."],
   ],
-  Criativos: [
-    ["case-image-03", "Ads Sprint", "Pacote visual para testar angulos de oferta em trafego pago."],
-    ["case-video-02", "Reels Engine", "Linha visual para cortes, anuncios e conteudo diario."],
-    ["case-image-04", "Launch Kit", "Pecas de aquecimento, abertura e remarketing."],
+  "Criativos": [
+    ["case-image-03", "Ads Sprint", "Pacote visual para testar ângulos de oferta em tráfego pago."],
+    ["case-video-02", "Reels Engine", "Linha visual para cortes, anúncios e conteúdo diário."],
+    ["case-image-04", "Launch Kit", "Peças de aquecimento, abertura e remarketing."],
   ],
-  Operacao: [
-    ["hero-dashboard-preview", "Trello Flow", "Quadro operacional com backlog, producao, revisao e entrega."],
-    ["founder-photo", "Founder Layer", "Espaco para foto do Eric ou bastidores do estudio."],
-    ["contact-bg", "Client Room", "Espaco visual para depoimentos, reunioes ou prints de entrega."],
+  "Operação": [
+    ["hero-dashboard-preview", "Trello Flow", "Quadro operacional com backlog, produção, revisão e entrega."],
+    ["founder-photo", "Founder Layer", "Espaço para foto do Eric ou bastidores do estúdio."],
+    ["contact-bg", "Client Room", "Espaço visual para depoimentos, reuniões ou prints de entrega."],
   ],
 };
+
+const deliveryCases = [
+  {
+    slug: "agencia-astronauta",
+    title: "Agência Astronauta",
+    description: "Parceiro desde 2024. Landing pages, criativos e peças de lançamento para campanhas de alta demanda.",
+    marker: "LP / ADS",
+    theme: "red",
+  },
+  {
+    slug: "resolve-digital",
+    title: "Resolve Digital",
+    description: "Esteira criativa para nicho pet e veterinário, com volume recorrente e visual consistente.",
+    marker: "SOCIAL / WEB",
+    theme: "violet",
+  },
+  {
+    slug: "engage-digital",
+    title: "Engage Digital",
+    description: "Operação mensal com criativos, landing pages e materiais de suporte para funis de performance.",
+    marker: "FUNIL / CRIATIVOS",
+    theme: "blue",
+  },
+  {
+    slug: "criarte-propaganda",
+    title: "Criarte Propaganda",
+    description: "Pacotes de social media e assets comerciais para clientes locais com ritmo de entrega recorrente.",
+    marker: "SOCIAL / RECORRÊNCIA",
+    theme: "cyan",
+  },
+];
+
+function PlanIncluded({ planName, items }: { planName: string; items: string[] }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className={`umano-plan-included ${isOpen ? "is-open" : ""}`}>
+      <button
+        type="button"
+        className="umano-plan-included-trigger"
+        aria-expanded={isOpen}
+        aria-controls={`included-${planName}`}
+        onClick={() => setIsOpen((current) => !current)}
+      >
+        <span>Incluso</span>
+        <em>{isOpen ? "Ocultar" : "Ver itens"}</em>
+        <i aria-hidden="true" />
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen ? (
+          <motion.div
+            id={`included-${planName}`}
+            className="umano-plan-included-panel"
+            initial={{ height: 0, opacity: 0, y: -8 }}
+            animate={{ height: "auto", opacity: 1, y: 0 }}
+            exit={{ height: 0, opacity: 0, y: -8 }}
+            transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div>
+              {items.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 function UmanoPlans() {
   return (
@@ -1617,7 +1752,7 @@ function UmanoPlans() {
       <Reveal className="umano-section-header">
         <p>Planos recorrentes</p>
         <h2>Escolha o tamanho da infraestrutura.</h2>
-        <span>Planos para agencias e infoprodutos que precisam de volume sem criar caos operacional.</span>
+        <span>Planos para agências e infoprodutos que precisam de volume sem criar caos operacional.</span>
       </Reveal>
 
       <div className="umano-pricing-grid">
@@ -1628,18 +1763,18 @@ function UmanoPlans() {
               className={`umano-price-card ${plan.featured ? "is-featured" : ""}`}
             >
               <div className="umano-price-card-top">
-                <span>0{index + 1}</span>
                 {plan.tag ? <em>{plan.tag}</em> : null}
               </div>
               <h3>{plan.name}</h3>
               <p>{plan.description}</p>
+              <PlanIncluded planName={plan.name} items={plan.included} />
               <strong>{plan.price}</strong>
               <ul>
                 {plan.features.map((feature) => (
                   <li key={feature}>{feature}</li>
                 ))}
               </ul>
-              <a href="#contato">{plan.name === "Enterprise" ? "Falar com especialista" : "Escolher plano"}</a>
+              <a href={briefingHref(plan.name)}>{plan.name === "Enterprise" ? "Falar com especialista" : "Escolher plano"}</a>
             </motion.article>
           </Reveal>
         ))}
@@ -1649,53 +1784,211 @@ function UmanoPlans() {
 }
 
 function UmanoCases() {
-  const [activeCaseTab, setActiveCaseTab] = useState<keyof typeof caseTabs>("Landing pages");
-  const cases = caseTabs[activeCaseTab];
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const [activeCase, setActiveCase] = useState(0);
+  const [caseCursor, setCaseCursor] = useState({ x: 0, y: 0, visible: false });
+  const reduceMotion = useReducedMotion();
+
+  const showCaseCursor = useCallback((event: MouseEvent) => {
+    setCaseCursor({ x: event.clientX, y: event.clientY, visible: true });
+  }, []);
+
+  const hideCaseCursor = useCallback(() => {
+    setCaseCursor((cursor) => ({ ...cursor, visible: false }));
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+
+    if (!section || !viewport || !track || reduceMotion) {
+      return;
+    }
+
+    const media = gsap.matchMedia();
+
+    media.add("(min-width: 768px)", () => {
+      const updateEdgeSpacer = () => {
+        const firstSlide = track.querySelector<HTMLElement>(".umano-case-slide");
+        if (!firstSlide) {
+          return;
+        }
+
+        const viewportStyle = window.getComputedStyle(viewport);
+        const viewportPaddingLeft = Number.parseFloat(viewportStyle.paddingLeft) || 0;
+        const spacer = Math.max(24, viewport.clientWidth / 2 - viewportPaddingLeft - firstSlide.offsetWidth / 2);
+        track.style.setProperty("--case-edge-spacer", `${spacer}px`);
+      };
+      const getDistance = () => {
+        updateEdgeSpacer();
+        return Math.max(0, track.scrollWidth - viewport.clientWidth);
+      };
+      let lastDispatchedIndex = -1;
+      const dispatchRailMode = (active: boolean) => {
+        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active } }));
+      };
+      const updateActiveCase = (progress = 0) => {
+        const x = -getDistance() * progress;
+        const viewportCenter = viewport.clientWidth / 2;
+        const slides = Array.from(track.querySelectorAll<HTMLElement>(".umano-case-slide"));
+        let nextIndex = 0;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+
+        slides.forEach((slide, index) => {
+          const center = slide.offsetLeft + slide.offsetWidth / 2 + x;
+          const distance = Math.abs(center - viewportCenter);
+
+          if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nextIndex = index;
+          }
+        });
+
+        setActiveCase(nextIndex);
+        if (lastDispatchedIndex !== nextIndex) {
+          lastDispatchedIndex = nextIndex;
+          window.dispatchEvent(new CustomEvent("haki:cases-index", { detail: { index: nextIndex } }));
+        }
+      };
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: viewport,
+          start: "top 16%",
+          end: () => `+=${getDistance() + window.innerHeight * 0.7}`,
+          pin: true,
+          scrub: 0.34,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onEnter: () => dispatchRailMode(true),
+          onEnterBack: () => dispatchRailMode(true),
+          onLeave: () => dispatchRailMode(false),
+          onLeaveBack: () => dispatchRailMode(false),
+          onRefresh: (self) => {
+            updateEdgeSpacer();
+            updateActiveCase(self.progress);
+          },
+          onUpdate: (self) => updateActiveCase(self.progress),
+        },
+      });
+
+      tl.to(track, { x: () => -getDistance(), ease: "none", duration: 1 }, 0);
+      updateActiveCase(0);
+
+      return () => {
+        dispatchRailMode(false);
+        tl.kill();
+      };
+    });
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+
+    return () => media.revert();
+  }, [reduceMotion]);
 
   return (
-    <section id="cases" className="umano-cases-section">
-      <Reveal className="umano-section-header">
-        <p>Cases / portfolio</p>
-        <h2>Uma vitrine operacional, nao um mural de Behance.</h2>
-        <span>Espacos nomeados para voce substituir depois por imagens, videos e prints reais.</span>
+    <section ref={sectionRef} id="cases" className="umano-cases-section">
+      <Reveal className="umano-cases-hero">
+        <h2>Conheça<br />nossa entrega.</h2>
+        <p>
+          Veja como a HAKI organiza landing pages, criativos e vídeos em um fluxo visual claro para a sua operação.
+        </p>
       </Reveal>
 
-      <Reveal className="umano-case-tabs">
-        {(Object.keys(caseTabs) as Array<keyof typeof caseTabs>).map((tab) => (
-          <button key={tab} type="button" onClick={() => setActiveCaseTab(tab)} className={activeCaseTab === tab ? "is-active" : ""}>
-            {tab}
-          </button>
-        ))}
-      </Reveal>
+      <div ref={viewportRef} className="umano-case-carousel-viewport">
+        <div ref={trackRef} className="umano-case-carousel-track">
+          <span className="umano-case-carousel-spacer" aria-hidden="true" />
+          {deliveryCases.map((project, index) => (
+            <motion.a
+              key={project.slug}
+              href={`/cases/${project.slug}`}
+              className={`umano-case-slide is-${project.theme} ${activeCase === index ? "is-active" : "is-muted"}`}
+              initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.72, delay: index * 0.06, ease: [0.23, 1, 0.32, 1] }}
+              onMouseEnter={showCaseCursor}
+              onMouseMove={showCaseCursor}
+              onMouseLeave={hideCaseCursor}
+            >
+              <div className="umano-case-slide-media" aria-hidden="true">
+                <span>{project.marker}</span>
+                <div className="umano-case-mosaic">
+                  {Array.from({ length: 10 }).map((_, tileIndex) => (
+                    <i key={tileIndex} />
+                  ))}
+                </div>
+                <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} />
+              </div>
+              <div className="umano-case-slide-copy">
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+              </div>
+              <span className="umano-case-hover-cue" aria-hidden="true">
+                Abrir
+                <b>→</b>
+              </span>
+            </motion.a>
+          ))}
+          <span className="umano-case-carousel-spacer" aria-hidden="true" />
+        </div>
+      </div>
 
       <motion.div
-        key={activeCaseTab}
-        className="umano-case-stage"
-        initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.72, ease: [0.23, 1, 0.32, 1] }}
+        className="umano-case-cursor"
+        aria-hidden="true"
+        animate={{
+          x: caseCursor.x,
+          y: caseCursor.y,
+          opacity: caseCursor.visible ? 1 : 0,
+          scale: caseCursor.visible ? 1 : 0.84,
+        }}
+        transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.55 }}
       >
-        {cases.map(([slot, title, text], index) => (
-          <motion.article
-            key={slot}
-            className={`umano-case-card case-${index + 1}`}
-            data-slot={slot}
-            whileHover={{ y: -12, rotate: 0 }}
-            transition={{ duration: 0.36 }}
-          >
-            <div className="umano-case-media">
-              <span>{slot}</span>
-              <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} />
-            </div>
-            <div className="umano-case-content">
-              <small>Case 0{index + 1}</small>
-              <h3>{title}</h3>
-              <p>{text}</p>
-              <a href="#contato">Quero algo assim</a>
-            </div>
-          </motion.article>
-        ))}
+        <span>Abrir</span>
+        <b>→</b>
       </motion.div>
+    </section>
+  );
+}
+
+function WaveLensBridge() {
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+
+  const sendWavePointer = useCallback((event: MouseEvent<HTMLElement>, active = true) => {
+    const frame = iframeRef.current?.contentWindow;
+    if (!frame) return;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    frame.postMessage(
+      {
+        type: "haki-wave-pointer",
+        active,
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+        width: rect.width,
+        height: rect.height,
+      },
+      window.location.origin,
+    );
+  }, []);
+
+  const releaseWavePointer = useCallback((event: MouseEvent<HTMLElement>) => {
+    sendWavePointer(event, false);
+  }, [sendWavePointer]);
+
+  return (
+    <section className="wave-lens-bridge" aria-label="Transição visual HAKI">
+      <div
+        className="wave-lens-hitbox"
+        onPointerEnter={sendWavePointer}
+        onPointerMove={sendWavePointer}
+        onPointerLeave={releaseWavePointer}
+      />
+      <iframe ref={iframeRef} src="/assets/wave-lens.html" title="Wave Lens" loading="lazy" scrolling="no" />
     </section>
   );
 }
@@ -1740,16 +2033,16 @@ function UmanoFAQ() {
   );
 }
 
-function UmanoContact() {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const cardRef = useRef<HTMLDivElement | null>(null);
+function UmanoFinalStack() {
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const card = cardRef.current;
+    const stage = stageRef.current;
+    const panel = panelRef.current;
 
-    if (!section || !card || reduceMotion) {
+    if (!stage || !panel || reduceMotion) {
       return;
     }
 
@@ -1757,22 +2050,85 @@ function UmanoContact() {
 
     media.add("(min-width: 768px)", () => {
       const ctx = gsap.context(() => {
-        gsap.set(card, {
+        gsap.set(panel, {
+          clipPath: "inset(0% 0% 0% 0% round 0px)",
+          transformOrigin: "top center",
+          willChange: "transform, clip-path, border-radius, box-shadow",
+        });
+
+        gsap.to(panel, {
+          y: () => -Math.min(panel.offsetHeight * 0.92, window.innerHeight * 1.08),
+          clipPath: "inset(0% 2.4% 0% 2.4% round 0px 0px 58px 58px)",
+          borderBottomLeftRadius: 58,
+          borderBottomRightRadius: 58,
+          boxShadow: "0 34px 130px rgba(0, 0, 0, 0.58)",
+          ease: "none",
+          scrollTrigger: {
+            trigger: panel,
+            start: "bottom bottom",
+            end: "+=720",
+            pin: panel,
+            pinSpacing: false,
+            scrub: 0.9,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+      }, stage);
+
+      return () => ctx.revert();
+    });
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+
+    return () => media.revert();
+  }, [reduceMotion]);
+
+  return (
+    <div ref={stageRef} className="umano-final-stack">
+      <div ref={panelRef} className="umano-final-panel">
+        <UmanoFAQ />
+      </div>
+      <UmanoFooter />
+    </div>
+  );
+}
+
+function UmanoContact() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const section = sectionRef.current;
+
+    if (!section || reduceMotion) {
+      return;
+    }
+
+    const media = gsap.matchMedia();
+
+    media.add("(min-width: 768px)", () => {
+      const ctx = gsap.context(() => {
+        gsap.set(section, {
           transformOrigin: "top center",
           willChange: "transform, border-radius, box-shadow",
         });
 
-        gsap.to(card, {
-          scale: 0.72,
-          y: -18,
-          borderRadius: 32,
-          boxShadow: "0 20px 90px rgba(0, 0, 0, 0.42)",
+        gsap.to(section, {
+          scale: 0.92,
+          y: -72,
+          borderBottomLeftRadius: 42,
+          borderBottomRightRadius: 42,
+          boxShadow: "0 26px 110px rgba(0, 0, 0, 0.5)",
           ease: "none",
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "bottom top",
-            scrub: 0.75,
+            end: "+=620",
+            pin: true,
+            pinSpacing: false,
+            scrub: 0.85,
+            anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
@@ -1788,13 +2144,13 @@ function UmanoContact() {
 
   return (
     <section ref={sectionRef} id="contato" className="umano-contact-section">
-      <div ref={cardRef} className="umano-contact-card" data-slot="contact-bg">
+      <div className="umano-contact-card" data-slot="contact-bg">
         <div className="umano-contact-orbit" />
         <Reveal className="umano-contact-content">
           <p>Pronto para escalar?</p>
-          <h2>Plugue a HAKI na sua operacao e comece com fluxo claro.</h2>
-          <span>Sem formulario. Chame direto e a gente entende volume, gargalo e melhor plano.</span>
-          <a href="mailto:contato@studiohaki.com?subject=Quero%20plugar%20a%20HAKI%20na%20minha%20operacao">
+          <h2>Plugue a HAKI na sua operação e comece com fluxo claro.</h2>
+          <span>Sem formulário. Chame direto e a gente entende volume, gargalo e melhor plano.</span>
+          <a href="#planos">
             Falar com Eric agora
           </a>
         </Reveal>
@@ -1802,7 +2158,7 @@ function UmanoContact() {
         <motion.div className="umano-founder-placeholder" data-slot="founder-photo" whileHover={{ y: -8 }}>
           <span>founder-photo</span>
           <strong>Eric Filho</strong>
-          <p>Espaco para foto, video curto ou bastidor do Studio Haki.</p>
+          <p>Espaço para foto, vídeo curto ou bastidor do Studio Haki.</p>
         </motion.div>
       </div>
     </section>
@@ -1815,17 +2171,24 @@ function UmanoFooter() {
       <div className="umano-footer-grid">
         <div className="umano-footer-brand">
           <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} />
-          <p>Infraestrutura criativa para agencias e negocios digitais.</p>
+          <p>Infraestrutura criativa para agências e negócios digitais.</p>
         </div>
         <div className="umano-footer-links">
-          {["Solucoes", "Processo", "Planos", "Cases", "FAQ", "Contato"].map((item) => (
-            <a key={item} href={`#${item === "FAQ" ? "faq" : item.toLowerCase()}`}>
-              {item}
+          {[
+            ["Soluções", "#solucoes"],
+            ["Processo", "#processo"],
+            ["Planos", "#planos"],
+            ["Cases", "#cases"],
+            ["FAQ", "#faq"],
+            ["Contato", "#planos"],
+          ].map(([label, href]) => (
+            <a key={label} href={href}>
+              {label}
             </a>
           ))}
         </div>
-        <a className="umano-footer-cta" href="mailto:contato@studiohaki.com">
-          contato@studiohaki.com
+        <a className="umano-footer-cta" href="#planos">
+          Iniciar briefing
         </a>
       </div>
       <strong>studiohaki.com</strong>
@@ -1839,9 +2202,9 @@ function UmanoFooter() {
 
 function About() {
   const aboutBullets = [
-    ["Operacao", "Eu entro como uma extensao criativa da sua agencia, sem criar mais uma camada de gestao."],
-    ["Velocidade", "Meu foco e manter demanda andando com prazo claro, prioridade e previsibilidade."],
-    ["Parceria", "Nao busco relacao transacional. A ideia e construir um fluxo onde os dois lados crescem."],
+    ["Opera??o", "Eu entro como uma extens?o criativa da sua ag?ncia, sem criar mais uma camada de gest?o."],
+    ["Velocidade", "Meu foco ? manter a demanda andando com prazo claro, prioridade e previsibilidade."],
+    ["Parceria", "N?o busco rela??o transacional. A ideia ? construir um fluxo onde os dois lados crescem."],
   ];
 
   return (
@@ -1880,15 +2243,15 @@ function About() {
 
         <Reveal delay={0.12}>
           <div className="rounded-2xl border hairline bg-white/[0.018] p-8 md:p-12">
-            <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Sobre nos</p>
+            <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Sobre n?s</p>
             <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
-              Por tras da HAKI esta Eric Filho.
+              Por tr?s da HAKI est? Eric Filho.
             </h2>
             <p className="mt-7 text-lg leading-8 text-haki-muted">
-              Eu criei a HAKI para plugar um estudio criativo dentro da operacao de agencias e negocios digitais que precisam de consistencia, prazo e execucao sem depender de freelancers soltos.
+              Eu criei a HAKI para plugar um est?dio criativo dentro da opera??o de ag?ncias e neg?cios digitais que precisam de consist?ncia, prazo e execu??o sem depender de freelancers soltos.
             </p>
             <p className="mt-5 leading-7 text-haki-muted">
-              Minha funcao e transformar demanda em fluxo: landing pages, criativos e videos organizados em uma rotina clara, com acompanhamento e entregas que nao quebram o ritmo do seu time.
+              Minha fun??o ? transformar demanda em fluxo: landing pages, criativos e v?deos organizados em uma rotina clara, com acompanhamento e entregas que n?o quebram o ritmo do seu time.
             </p>
 
             <div className="mt-10 space-y-4">
@@ -1925,7 +2288,7 @@ function Portfolio() {
           Trabalhos separados por tipo de demanda.
         </h2>
         <p className="mx-auto mt-6 max-w-xl leading-7 text-haki-muted">
-          Por enquanto com cases genericos. Depois substituimos pelos seus projetos reais e pelos designs finais.
+          Por enquanto, com cases gen?ricos. Depois, substitu?mos pelos seus projetos reais e pelos designs finais.
         </p>
       </Reveal>
 
@@ -1991,10 +2354,10 @@ function Contact() {
           <div className="mx-auto max-w-4xl">
             <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Contato</p>
             <h2 className="mx-auto text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-7xl">
-              Quer plugar a HAKI na sua operacao?
+              Quer plugar a HAKI na sua opera??o?
             </h2>
             <p className="mx-auto mt-6 max-w-2xl leading-7 text-haki-muted">
-              Chame para entender qual plano faz sentido para sua demanda, volume e momento da operacao.
+              Chame para entender qual plano faz sentido para sua demanda, volume e momento da opera??o.
             </p>
           </div>
 
@@ -2052,7 +2415,7 @@ function ContactScreen() {
               ))}
             </div>
             <a
-              href="mailto:contato@studiohaki.com?subject=Quero%20plugar%20a%20HAKI%20na%20minha%20operacao"
+              href="mailto:contato@studiohaki.com?subject=Quero%20plugar%20a%20HAKI%20na%20minha%20opera%C3%A7%C3%A3o"
               className="rounded-xl border border-white/[0.1] bg-white/[0.075] px-5 py-3 text-sm font-medium text-haki-white backdrop-blur-xl transition duration-500 hover:-translate-y-0.5 hover:border-haki-red/45 hover:bg-haki-red/15"
             >
               Contato
@@ -2081,12 +2444,12 @@ function ContactScreen() {
               Vamos conversar?
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-haki-muted md:text-lg">
-              Quer previsibilidade criativa na sua operacao? Me chama direto e eu te ajudo a entender o melhor formato para sua demanda.
+              Quer previsibilidade criativa na sua opera??o? Me chama direto e eu te ajudo a entender o melhor formato para sua demanda.
             </p>
 
             <div className="mx-auto mt-12 max-w-2xl">
               <a
-                href="mailto:contato@studiohaki.com?subject=Quero%20plugar%20a%20HAKI%20na%20minha%20operacao"
+                href="mailto:contato@studiohaki.com?subject=Quero%20plugar%20a%20HAKI%20na%20minha%20opera%C3%A7%C3%A3o"
                 className="group flex w-full items-center justify-center gap-3 rounded-xl border border-white/[0.12] bg-[#24202e]/95 px-6 py-5 text-base font-semibold text-haki-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_60px_rgba(0,0,0,0.34)] transition duration-500 hover:-translate-y-1 hover:border-haki-red/50 hover:bg-haki-red/20"
               >
                 Falar com Eric agora
@@ -2118,7 +2481,7 @@ function FinalCta() {
           <div className="p-8 md:p-14">
             <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Pronto para escalar?</p>
             <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
-              Plugue a HAKI na sua operacao e comece hoje.
+              Plugue a HAKI na sua opera??o e comece hoje.
             </h2>
             <p className="mt-6 max-w-lg leading-7 text-haki-muted">
               Integramos com seu fluxo atual e entregamos criatividade com velocidade e previsibilidade.
@@ -2139,7 +2502,7 @@ function FinalCta() {
 
 function Footer() {
   const footerLinks = [
-    ["Solucoes", "#solucoes"],
+    ["Solu??es", "#solucoes"],
     ["Processo", "#processo"],
     ["Planos", "#planos"],
     ["Cases", "#cases"],
@@ -2151,7 +2514,7 @@ function Footer() {
     <footer className="container-haki border-t border-white/[0.08] py-12">
       <div className="grid gap-10 md:grid-cols-[0.8fr_1fr_0.8fr]">
         <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} className="h-8 w-fit" />
-        <p className="max-w-xs text-sm leading-6 text-haki-muted">Infraestrutura criativa para agencias e negocios digitais.</p>
+        <p className="max-w-xs text-sm leading-6 text-haki-muted">Infraestrutura criativa para ag?ncias e neg?cios digitais.</p>
         <div className="grid grid-cols-2 gap-3 text-sm text-haki-muted md:justify-self-end">
           {footerLinks.map(([item, href]) => (
             <a key={item} href={href} className="transition hover:text-haki-white">
@@ -2179,10 +2542,10 @@ export default function Home() {
       <StickyManifesto />
       <HowItWorksRail />
       <UmanoPlans />
+      <WaveLensBridge />
       <UmanoCases />
-      <UmanoFAQ />
-      <UmanoContact />
-      <UmanoFooter />
+      <UmanoFinalStack />
     </main>
   );
 }
+

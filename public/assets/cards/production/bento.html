@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bento</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{min-height:100%;display:flex;align-items:center;justify-content:center;background:#EFEFEF;}
+.bc{
+  width:100%;height:100%;background:#EFEFEF;
+  border-radius:24px;position:relative;overflow:hidden;flex-shrink:0;cursor:none;
+}
+.bc svg{position:absolute;inset:0;width:100%;height:100%;}
+#cur{
+  position:absolute;width:32px;height:32px;border-radius:50%;
+  border:1.5px solid rgba(28,28,28,0.45);pointer-events:none;z-index:20;
+  transform:translate(-50%,-50%) scale(0);
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.bc.in #cur{transform:translate(-50%,-50%) scale(1);}
+</style>
+</head>
+<body>
+<div class="bc" id="card">
+  <div id="cur"></div>
+  <svg viewBox="0 0 609 397" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="72.0" cy="50.0" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a0" cx="72.0" cy="50.0" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="188.25" cy="50.0" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a1" cx="188.25" cy="50.0" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="304.5" cy="50.0" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a2" cx="304.5" cy="50.0" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="420.75" cy="50.0" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a3" cx="420.75" cy="50.0" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="537.0" cy="50.0" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a4" cx="537.0" cy="50.0" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle id="g5" cx="72.0" cy="124.25" r="9.5" fill="#1C1C1C" style="opacity:0.15;transition:opacity 0.4s ease"/><g id="a5" transform="translate(54.98,108.38) scale(0.46)" style="opacity:0;transition:opacity 0.4s ease"><path d="M4.11108 7.27881C4.11108 6.17424 5.00651 5.27881 6.11108 5.27881H31.5795C32.0962 5.27881 32.5151 5.69771 32.5151 6.21445C32.5151 19.6497 21.6237 30.5411 8.18849 30.5411H5.16308C4.58208 30.5411 4.11108 30.0701 4.11108 29.4891V7.27881Z" fill="#E53935"/><path d="M4.11108 63.2087C4.11108 64.3133 5.00651 65.2087 6.11108 65.2087H31.5795C32.0962 65.2087 32.5151 64.7898 32.5151 64.2731C32.5151 50.8379 21.6237 39.9464 8.18849 39.9464H5.16308C4.58208 39.9464 4.11108 40.4174 4.11108 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 63.2087C64.6566 64.3133 63.7612 65.2087 62.6566 65.2087H37.1882C36.6715 65.2087 36.2526 64.7898 36.2526 64.2731C36.2526 50.8379 47.144 39.9464 60.5792 39.9464H63.6046C64.1856 39.9464 64.6566 40.4174 64.6566 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 7.27857C64.6566 6.174 63.7612 5.27856 62.6566 5.27856H37.1882C36.6715 5.27856 36.2526 5.69747 36.2526 6.21421C36.2526 19.6494 47.144 30.5409 60.5792 30.5409H63.6046C64.1856 30.5409 64.6566 30.0699 64.6566 29.4889V7.27857Z" fill="#E53935"/></g>
+    <circle cx="188.25" cy="124.25" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a6" cx="188.25" cy="124.25" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="304.5" cy="124.25" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a7" cx="304.5" cy="124.25" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="420.75" cy="124.25" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a8" cx="420.75" cy="124.25" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle id="g9" cx="537.0" cy="124.25" r="9.5" fill="#1C1C1C" style="opacity:0.15;transition:opacity 0.4s ease"/><g id="a9" transform="translate(519.98,108.38) scale(0.46)" style="opacity:0;transition:opacity 0.4s ease"><path d="M4.11108 7.27881C4.11108 6.17424 5.00651 5.27881 6.11108 5.27881H31.5795C32.0962 5.27881 32.5151 5.69771 32.5151 6.21445C32.5151 19.6497 21.6237 30.5411 8.18849 30.5411H5.16308C4.58208 30.5411 4.11108 30.0701 4.11108 29.4891V7.27881Z" fill="#E53935"/><path d="M4.11108 63.2087C4.11108 64.3133 5.00651 65.2087 6.11108 65.2087H31.5795C32.0962 65.2087 32.5151 64.7898 32.5151 64.2731C32.5151 50.8379 21.6237 39.9464 8.18849 39.9464H5.16308C4.58208 39.9464 4.11108 40.4174 4.11108 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 63.2087C64.6566 64.3133 63.7612 65.2087 62.6566 65.2087H37.1882C36.6715 65.2087 36.2526 64.7898 36.2526 64.2731C36.2526 50.8379 47.144 39.9464 60.5792 39.9464H63.6046C64.1856 39.9464 64.6566 40.4174 64.6566 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 7.27857C64.6566 6.174 63.7612 5.27856 62.6566 5.27856H37.1882C36.6715 5.27856 36.2526 5.69747 36.2526 6.21421C36.2526 19.6494 47.144 30.5409 60.5792 30.5409H63.6046C64.1856 30.5409 64.6566 30.0699 64.6566 29.4889V7.27857Z" fill="#E53935"/></g>
+    <circle cx="72.0" cy="198.5" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a10" cx="72.0" cy="198.5" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="188.25" cy="198.5" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a11" cx="188.25" cy="198.5" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle id="g12" cx="304.5" cy="198.5" r="9.5" fill="#1C1C1C" style="opacity:0.15;transition:opacity 0.4s ease"/><g id="a12" transform="translate(287.48,182.63) scale(0.46)" style="opacity:0;transition:opacity 0.4s ease"><path d="M4.11108 7.27881C4.11108 6.17424 5.00651 5.27881 6.11108 5.27881H31.5795C32.0962 5.27881 32.5151 5.69771 32.5151 6.21445C32.5151 19.6497 21.6237 30.5411 8.18849 30.5411H5.16308C4.58208 30.5411 4.11108 30.0701 4.11108 29.4891V7.27881Z" fill="#E53935"/><path d="M4.11108 63.2087C4.11108 64.3133 5.00651 65.2087 6.11108 65.2087H31.5795C32.0962 65.2087 32.5151 64.7898 32.5151 64.2731C32.5151 50.8379 21.6237 39.9464 8.18849 39.9464H5.16308C4.58208 39.9464 4.11108 40.4174 4.11108 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 63.2087C64.6566 64.3133 63.7612 65.2087 62.6566 65.2087H37.1882C36.6715 65.2087 36.2526 64.7898 36.2526 64.2731C36.2526 50.8379 47.144 39.9464 60.5792 39.9464H63.6046C64.1856 39.9464 64.6566 40.4174 64.6566 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 7.27857C64.6566 6.174 63.7612 5.27856 62.6566 5.27856H37.1882C36.6715 5.27856 36.2526 5.69747 36.2526 6.21421C36.2526 19.6494 47.144 30.5409 60.5792 30.5409H63.6046C64.1856 30.5409 64.6566 30.0699 64.6566 29.4889V7.27857Z" fill="#E53935"/></g>
+    <circle cx="420.75" cy="198.5" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a13" cx="420.75" cy="198.5" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="537.0" cy="198.5" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a14" cx="537.0" cy="198.5" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="72.0" cy="272.75" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a15" cx="72.0" cy="272.75" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle id="g16" cx="188.25" cy="272.75" r="9.5" fill="#1C1C1C" style="opacity:0.15;transition:opacity 0.4s ease"/><g id="a16" transform="translate(171.23,256.88) scale(0.46)" style="opacity:0;transition:opacity 0.4s ease"><path d="M4.11108 7.27881C4.11108 6.17424 5.00651 5.27881 6.11108 5.27881H31.5795C32.0962 5.27881 32.5151 5.69771 32.5151 6.21445C32.5151 19.6497 21.6237 30.5411 8.18849 30.5411H5.16308C4.58208 30.5411 4.11108 30.0701 4.11108 29.4891V7.27881Z" fill="#E53935"/><path d="M4.11108 63.2087C4.11108 64.3133 5.00651 65.2087 6.11108 65.2087H31.5795C32.0962 65.2087 32.5151 64.7898 32.5151 64.2731C32.5151 50.8379 21.6237 39.9464 8.18849 39.9464H5.16308C4.58208 39.9464 4.11108 40.4174 4.11108 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 63.2087C64.6566 64.3133 63.7612 65.2087 62.6566 65.2087H37.1882C36.6715 65.2087 36.2526 64.7898 36.2526 64.2731C36.2526 50.8379 47.144 39.9464 60.5792 39.9464H63.6046C64.1856 39.9464 64.6566 40.4174 64.6566 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 7.27857C64.6566 6.174 63.7612 5.27856 62.6566 5.27856H37.1882C36.6715 5.27856 36.2526 5.69747 36.2526 6.21421C36.2526 19.6494 47.144 30.5409 60.5792 30.5409H63.6046C64.1856 30.5409 64.6566 30.0699 64.6566 29.4889V7.27857Z" fill="#E53935"/></g>
+    <circle cx="304.5" cy="272.75" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a17" cx="304.5" cy="272.75" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="420.75" cy="272.75" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a18" cx="420.75" cy="272.75" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="537.0" cy="272.75" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a19" cx="537.0" cy="272.75" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle id="g20" cx="72.0" cy="347.0" r="9.5" fill="#1C1C1C" style="opacity:0.15;transition:opacity 0.4s ease"/><g id="a20" transform="translate(54.98,331.13) scale(0.46)" style="opacity:0;transition:opacity 0.4s ease"><path d="M4.11108 7.27881C4.11108 6.17424 5.00651 5.27881 6.11108 5.27881H31.5795C32.0962 5.27881 32.5151 5.69771 32.5151 6.21445C32.5151 19.6497 21.6237 30.5411 8.18849 30.5411H5.16308C4.58208 30.5411 4.11108 30.0701 4.11108 29.4891V7.27881Z" fill="#E53935"/><path d="M4.11108 63.2087C4.11108 64.3133 5.00651 65.2087 6.11108 65.2087H31.5795C32.0962 65.2087 32.5151 64.7898 32.5151 64.2731C32.5151 50.8379 21.6237 39.9464 8.18849 39.9464H5.16308C4.58208 39.9464 4.11108 40.4174 4.11108 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 63.2087C64.6566 64.3133 63.7612 65.2087 62.6566 65.2087H37.1882C36.6715 65.2087 36.2526 64.7898 36.2526 64.2731C36.2526 50.8379 47.144 39.9464 60.5792 39.9464H63.6046C64.1856 39.9464 64.6566 40.4174 64.6566 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 7.27857C64.6566 6.174 63.7612 5.27856 62.6566 5.27856H37.1882C36.6715 5.27856 36.2526 5.69747 36.2526 6.21421C36.2526 19.6494 47.144 30.5409 60.5792 30.5409H63.6046C64.1856 30.5409 64.6566 30.0699 64.6566 29.4889V7.27857Z" fill="#E53935"/></g>
+    <circle cx="188.25" cy="347.0" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a21" cx="188.25" cy="347.0" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle cx="304.5" cy="347.0" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a22" cx="304.5" cy="347.0" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+    <circle id="g23" cx="420.75" cy="347.0" r="9.5" fill="#1C1C1C" style="opacity:0.15;transition:opacity 0.4s ease"/><g id="a23" transform="translate(403.73,331.13) scale(0.46)" style="opacity:0;transition:opacity 0.4s ease"><path d="M4.11108 7.27881C4.11108 6.17424 5.00651 5.27881 6.11108 5.27881H31.5795C32.0962 5.27881 32.5151 5.69771 32.5151 6.21445C32.5151 19.6497 21.6237 30.5411 8.18849 30.5411H5.16308C4.58208 30.5411 4.11108 30.0701 4.11108 29.4891V7.27881Z" fill="#E53935"/><path d="M4.11108 63.2087C4.11108 64.3133 5.00651 65.2087 6.11108 65.2087H31.5795C32.0962 65.2087 32.5151 64.7898 32.5151 64.2731C32.5151 50.8379 21.6237 39.9464 8.18849 39.9464H5.16308C4.58208 39.9464 4.11108 40.4174 4.11108 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 63.2087C64.6566 64.3133 63.7612 65.2087 62.6566 65.2087H37.1882C36.6715 65.2087 36.2526 64.7898 36.2526 64.2731C36.2526 50.8379 47.144 39.9464 60.5792 39.9464H63.6046C64.1856 39.9464 64.6566 40.4174 64.6566 40.9984V63.2087Z" fill="#E53935"/><path d="M64.6566 7.27857C64.6566 6.174 63.7612 5.27856 62.6566 5.27856H37.1882C36.6715 5.27856 36.2526 5.69747 36.2526 6.21421C36.2526 19.6494 47.144 30.5409 60.5792 30.5409H63.6046C64.1856 30.5409 64.6566 30.0699 64.6566 29.4889V7.27857Z" fill="#E53935"/></g>
+    <circle cx="537.0" cy="347.0" r="9.5" fill="#1C1C1C" opacity="0.15"/><circle id="a24" cx="537.0" cy="347.0" r="9.5" fill="#E53935" style="opacity:0;transition:opacity 0.4s ease"/>
+  </svg>
+</div>
+<script>
+(function(){
+  /* ── Cursor ── */
+  var card=document.getElementById('card'),cur=document.getElementById('cur');
+  var raf=null,tcx=0,tcy=0,cx=0,cy=0;
+  card.addEventListener('mouseenter',function(){card.classList.add('in');if(!raf)raf=requestAnimationFrame(loop);});
+  card.addEventListener('mouseleave',function(){card.classList.remove('in');cancelAnimationFrame(raf);raf=null;});
+  card.addEventListener('mousemove',function(e){var r=card.getBoundingClientRect();tcx=e.clientX-r.left;tcy=e.clientY-r.top;});
+  function loop(){cx+=(tcx-cx)*0.12;cy+=(tcy-cy)*0.12;cur.style.left=cx.toFixed(1)+'px';cur.style.top=cy.toFixed(1)+'px';raf=requestAnimationFrame(loop);}
+
+  /* ── Sequential fill loop ── */
+  var AIDS  = ['a0','a1','a2','a3','a4','a5','a6','a7','a8','a9','a10','a11','a12','a13','a14','a15','a16','a17','a18','a19','a20','a21','a22','a23','a24'];
+  var GIDS  = [null,null,null,null,null,'g5',null,null,null,'g9',null,null,'g12',null,null,null,'g16',null,null,null,'g20',null,null,'g23',null];
+  var N     = AIDS.length;   /* 25 */
+  var STEP  = 280;           /* ms entre cada item acender */
+  var PAUSE = 1800;          /* ms com todos acesos antes de resetar */
+  var timers = [];
+
+  function el(id){ return id ? document.getElementById(id) : null; }
+
+  function resetAll(){
+    /* Remove transitions para reset instantâneo */
+    for(var i=0;i<N;i++){
+      var a=el(AIDS[i]), g=el(GIDS[i]);
+      if(a){ a.style.transition='none'; a.style.opacity='0'; }
+      if(g){ g.style.transition='none'; g.style.opacity='0.15'; }
+    }
+    /* Força reflow antes de religar transitions */
+    void document.body.offsetHeight;
+    for(var i=0;i<N;i++){
+      var a=el(AIDS[i]), g=el(GIDS[i]);
+      if(a) a.style.transition='opacity 0.4s ease';
+      if(g) g.style.transition='opacity 0.4s ease';
+    }
+  }
+
+  function runCycle(){
+    timers.forEach(clearTimeout);
+    timers=[];
+    for(var i=0;i<N;i++){
+      (function(n){
+        timers.push(setTimeout(function(){
+          var a=el(AIDS[n]), g=el(GIDS[n]);
+          if(a) a.style.opacity='1';
+          if(g) g.style.opacity='0';      /* ghost some quando logo aparece */
+          /* Último item — agenda reset */
+          if(n===N-1){
+            timers.push(setTimeout(function(){
+              resetAll();
+              setTimeout(runCycle, 80);   /* pequeno gap antes do próximo ciclo */
+            }, PAUSE));
+          }
+        }, n * STEP));
+      })(i);
+    }
+  }
+
+  runCycle();
+})();
+</script>
+</body>
+</html>
