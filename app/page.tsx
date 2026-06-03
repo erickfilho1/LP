@@ -498,8 +498,6 @@ function UmanoHero() {
       <div className="umano-hero-inner">
         <Reveal className="umano-hero-copy">
           <div className="umano-hero-kicker">
-            <i className="umano-hero-kicker-line is-left" aria-hidden="true" />
-            <i className="umano-hero-kicker-line is-right" aria-hidden="true" />
             Para agências e profissionais de marketing
           </div>
           <h1 className="umano-hero-title">

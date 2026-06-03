@@ -455,7 +455,7 @@ section {
 }
 
 .umano-hero-circuit-base path:nth-child(-n + 2) {
-  opacity: 0;
+  stroke-width: 1.25;
 }
 
 .umano-hero-circuit-pulse {
@@ -542,29 +542,6 @@ section {
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
     0 18px 48px rgba(0, 0, 0, 0.44);
   isolation: isolate;
-}
-
-.umano-hero-kicker-line {
-  position: absolute;
-  top: 50%;
-  z-index: -2;
-  display: block;
-  width: min(42vw, 620px);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(69, 69, 69, 0.72) 72%, rgba(69, 69, 69, 0.86));
-  pointer-events: none;
-}
-
-.umano-hero-kicker-line.is-left {
-  right: calc(100% - 1px);
-  transform-origin: right center;
-  transform: rotate(0deg);
-}
-
-.umano-hero-kicker-line.is-right {
-  left: calc(100% - 1px);
-  transform-origin: left center;
-  transform: rotate(0deg) scaleX(-1);
 }
 
 .umano-hero-kicker::before {
@@ -3160,11 +3137,6 @@ section {
     padding: 10px 16px;
     font-size: 10px;
     line-height: 1.25;
-  }
-
-  .umano-hero-kicker-line {
-    width: 46vw;
-    background: linear-gradient(90deg, transparent, rgba(69, 69, 69, 0.86));
   }
 
   .umano-hero-title {
