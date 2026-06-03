@@ -225,8 +225,14 @@ function HakiPreloader() {
 
   return (
     <div className="haki-preloader" aria-label="Carregando Studio Haki">
-      <div className="haki-preloader-mark">
-        <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} priority />
+      <div className="haki-preloader-orbit">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle className="haki-preloader-track" cx="60" cy="60" r="52" />
+          <circle className="haki-preloader-progress" cx="60" cy="60" r="52" />
+        </svg>
+        <div className="haki-preloader-mark">
+          <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} priority />
+        </div>
       </div>
       <p>Creative operational studio</p>
     </div>
