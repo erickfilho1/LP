@@ -433,12 +433,73 @@ function HeroWireframe() {
 }
 
 function UmanoHero() {
+  const circuitPaths = [
+    "M445.353 -279L369.066 62.4226C364.117 84.5745 378.571 106.401 400.898 110.49L795 182.5",
+    "M1474.65 -278L1550.93 63.4226C1555.88 85.5745 1541.43 107.401 1519.1 111.49L1125 183.5",
+    "M-216.261 -35.6707L-1.55047 63.037C20.9596 73.3854 38.1246 92.1429 45.9813 114.979L97.5266 264.796C102.113 278.125 109.925 290.208 120.315 300.043L393.023 558.171C402.66 567.293 415.034 573.246 428.382 575.183L576.26 596.644C589.34 598.542 601.471 604.359 610.939 613.273L844.36 833.046",
+    "M-325.194 157.396L-158.521 219.108C-129.981 229.675 -108.786 253.285 -102.016 282.051L-76.9681 388.475C-73.0587 405.086 -64.2585 420.253 -51.6264 432.151L153.457 625.311C164.837 636.03 179.939 642.285 195.83 642.861L313.392 647.124C328.958 647.688 343.758 653.789 354.941 664.253L535.632 833.309",
+    "M2134.5 -18.9173L1923.62 76.6819C1900.69 87.0732 1883.25 106.16 1875.44 129.407L1826.21 275.845C1821.66 289.406 1813.77 301.701 1803.22 311.682L1536.06 564.475C1526.29 573.714 1513.72 579.698 1500.18 581.553L1354.75 601.485C1341.49 603.303 1329.16 609.149 1319.57 618.177L1090.51 833.757",
+    "M2215.8 157.396L2049.2 219.054C2020.65 229.62 1999.44 253.24 1992.68 282.016L1967.67 388.371C1963.76 404.987 1954.96 420.16 1942.32 432.061L1737.34 625.124C1725.96 635.845 1710.85 642.1 1694.95 642.673L1577.44 646.913C1561.87 647.475 1547.06 653.576 1535.88 664.043L1355.27 833.023",
+  ];
+
   return (
     <section id="top" className="umano-hero">
+      <div className="umano-hero-circuit" aria-hidden="true">
+        <svg className="umano-hero-circuit-svg" viewBox="0 0 1920 870" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="hero-circuit-top-left" x1="380" y1="-160" x2="790" y2="184" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor="#454545" stopOpacity="0" />
+              <stop offset="1" stopColor="#454545" stopOpacity="0.85" />
+            </linearGradient>
+            <linearGradient id="hero-circuit-top-right" x1="1540" y1="-160" x2="1128" y2="184" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor="#454545" stopOpacity="0" />
+              <stop offset="1" stopColor="#454545" stopOpacity="0.85" />
+            </linearGradient>
+            <linearGradient id="hero-pulse-gradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stopColor="#ff0f33" stopOpacity="0" />
+              <stop offset="0.45" stopColor="#ff0f33" stopOpacity="1" />
+              <stop offset="1" stopColor="#ff0f33" stopOpacity="0" />
+            </linearGradient>
+            <filter id="hero-pulse-glow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <g className="umano-hero-circuit-base">
+            {circuitPaths.map((path, index) => (
+              <path
+                key={`base-${index}`}
+                d={path}
+                pathLength="1"
+                stroke={index === 0 ? "url(#hero-circuit-top-left)" : index === 1 ? "url(#hero-circuit-top-right)" : "#454545"}
+              />
+            ))}
+            <path d="M-216 833H2136" stroke="#262624" />
+          </g>
+
+          <g className="umano-hero-circuit-pulses" filter="url(#hero-pulse-glow)">
+            {circuitPaths.map((path, index) => (
+              <path
+                key={`pulse-${index}`}
+                className={`umano-hero-circuit-pulse pulse-${index + 1}`}
+                d={path}
+                pathLength="1"
+                stroke="url(#hero-pulse-gradient)"
+              />
+            ))}
+          </g>
+        </svg>
+      </div>
+
       <div className="umano-hero-inner">
         <Reveal className="umano-hero-copy">
           <div className="umano-hero-kicker">
-            <span />
+            <i className="umano-hero-kicker-line is-left" aria-hidden="true" />
+            <i className="umano-hero-kicker-line is-right" aria-hidden="true" />
             Para agências e profissionais de marketing
           </div>
           <h1 className="umano-hero-title">
@@ -747,6 +808,122 @@ function HowItWorksRail() {
         .to(deliveryLogo, { x: getLogoCenterX, y: getLogoCenterY, scale: getLogoScale, xPercent: -50, yPercent: -50, ease: "none", duration: 0.28 }, 0.42)
         .to(deliveryGlow, { opacity: 0.72, ease: "none", duration: 0.14 }, 0.46)
         .to(deliveryLogo, { y: () => getLogoCenterY() - window.innerHeight * 0.28, opacity: 0, ease: "none", duration: 0.14 }, 0.66);
+
+      return () => tl.kill();
+    });
+
+    media.add("(max-width: 767px)", () => {
+      const deliveryCard = section.querySelector<HTMLElement>(".is-delivery-card");
+      const deliveryScene = section.querySelector<HTMLElement>(".delivery-card-scene");
+      const deliveryCopy = section.querySelector<HTMLElement>(".is-delivery-card .umano-rail-card-copy");
+      const deliveryLogo = section.querySelector<HTMLElement>(".delivery-card-logo");
+      const deliveryBg = section.querySelector<HTMLElement>(".delivery-card-bg");
+      const deliveryGlow = section.querySelector<HTMLElement>(".delivery-card-glow");
+      const railCopy = section.querySelector<HTMLElement>(".umano-rail-copy");
+      const otherCards = gsap.utils.toArray<HTMLElement>(".umano-rail-card:not(.is-delivery-card)", section);
+
+      if (!deliveryCard || !deliveryScene || !deliveryCopy || !deliveryLogo || !deliveryBg || !deliveryGlow || !railCopy) {
+        return undefined;
+      }
+
+      const getDistance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+      const getCenterInTrack = (element: HTMLElement) => {
+        let x = element.offsetLeft + element.offsetWidth / 2;
+        let y = element.offsetTop + element.offsetHeight / 2;
+        let parent = element.offsetParent as HTMLElement | null;
+
+        while (parent && parent !== track) {
+          x += parent.offsetLeft;
+          y += parent.offsetTop;
+          parent = parent.offsetParent as HTMLElement | null;
+        }
+
+        return { x, y };
+      };
+      const getFocusX = () => {
+        const center = getCenterInTrack(deliveryScene).x;
+        return viewport.clientWidth / 2 - center;
+      };
+      const getFocusDistance = () => Math.abs(getFocusX());
+      const getRailOrigin = () => {
+        const center = getCenterInTrack(deliveryScene);
+        return `${center.x}px ${center.y}px`;
+      };
+      const getRailShiftY = () => {
+        const rect = deliveryScene.getBoundingClientRect();
+        return window.innerHeight * 0.44 - (rect.top + rect.height / 2);
+      };
+      const getRailScale = () => {
+        const rect = deliveryScene.getBoundingClientRect();
+        return Math.max(window.innerWidth / rect.width, window.innerHeight / rect.height) * 1.06;
+      };
+      const getLogoCenterX = () => {
+        const rect = deliveryLogo.getBoundingClientRect();
+        return (window.innerWidth / 2 - (rect.left + rect.width / 2)) / getRailScale();
+      };
+      const getLogoCenterY = () => {
+        const rect = deliveryLogo.getBoundingClientRect();
+        return (window.innerHeight / 2 - (rect.top + rect.height / 2)) / getRailScale();
+      };
+      const getLogoScale = () => {
+        const targetWidth = Math.min(250, Math.max(150, window.innerWidth * 0.44));
+        return targetWidth / deliveryLogo.getBoundingClientRect().width / getRailScale();
+      };
+
+      gsap.set([track, deliveryCard, deliveryScene, deliveryBg, deliveryLogo, deliveryGlow, railCopy, ...otherCards], {
+        willChange: "transform, opacity, border-radius",
+      });
+      gsap.set(deliveryCard, { overflow: "hidden", zIndex: 12 });
+      gsap.set(otherCards, { zIndex: 0 });
+      gsap.set(deliveryScene, { transformOrigin: "center center" });
+      gsap.set(deliveryLogo, { xPercent: -50, yPercent: -50, transformOrigin: "center center" });
+      gsap.set(deliveryGlow, { opacity: 0 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${Math.max(getDistance(), getFocusDistance()) + window.innerHeight * 1.2}`,
+          pin: true,
+          scrub: 0.4,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      tl.to(track, { x: () => -getDistance(), ease: "none", duration: 0.52 }, 0)
+        .to([railCopy, ...otherCards], { opacity: 0, filter: "blur(6px)", ease: "none", duration: 0.1 }, 0.54)
+        .set([railCopy, ...otherCards], { visibility: "hidden" }, 0.64)
+        .to(deliveryCopy, { opacity: 0, yPercent: 20, filter: "blur(8px)", ease: "none", duration: 0.08 }, 0.56)
+        .set(deliveryCopy, { visibility: "hidden" }, 0.65)
+        .set(deliveryCard, { overflow: "visible" }, 0.62)
+        .to(deliveryCard, {
+          backgroundColor: "transparent",
+          borderColor: "rgba(5, 5, 5, 0)",
+          boxShadow: "none",
+          ease: "none",
+          duration: 0.12,
+        }, 0.62)
+        .to(section, { backgroundColor: "#050505", ease: "none", duration: 0.2 }, 0.6)
+        .set(track, { transformOrigin: getRailOrigin }, 0.62)
+        .to(track, {
+          x: getFocusX,
+          y: getRailShiftY,
+          scale: getRailScale,
+          ease: "none",
+          duration: 0.22,
+        }, 0.66)
+        .to(deliveryLogo, {
+          x: getLogoCenterX,
+          y: getLogoCenterY,
+          scale: getLogoScale,
+          xPercent: -50,
+          yPercent: -50,
+          ease: "none",
+          duration: 0.22,
+        }, 0.66)
+        .to(deliveryGlow, { opacity: 0.8, ease: "none", duration: 0.14 }, 0.7)
+        .to(deliveryLogo, { y: () => getLogoCenterY() - window.innerHeight * 0.22, opacity: 0, ease: "none", duration: 0.14 }, 0.86);
 
       return () => tl.kill();
     });
@@ -1871,6 +2048,63 @@ function UmanoCases() {
             updateEdgeSpacer();
             updateActiveCase(self.progress);
           },
+          onUpdate: (self) => updateActiveCase(self.progress),
+        },
+      });
+
+      tl.to(track, { x: () => -getDistance(), ease: "none", duration: 1 }, 0);
+      updateActiveCase(0);
+
+      return () => {
+        dispatchRailMode(false);
+        tl.kill();
+      };
+    });
+
+    media.add("(max-width: 767px)", () => {
+      const getDistance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+      let lastDispatchedIndex = -1;
+      const dispatchRailMode = (active: boolean) => {
+        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active } }));
+      };
+      const updateActiveCase = (progress = 0) => {
+        const x = -getDistance() * progress;
+        const viewportCenter = viewport.clientWidth / 2;
+        const slides = Array.from(track.querySelectorAll<HTMLElement>(".umano-case-slide"));
+        let nextIndex = 0;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+
+        slides.forEach((slide, index) => {
+          const center = slide.offsetLeft + slide.offsetWidth / 2 + x;
+          const distance = Math.abs(center - viewportCenter);
+
+          if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nextIndex = index;
+          }
+        });
+
+        setActiveCase(nextIndex);
+        if (lastDispatchedIndex !== nextIndex) {
+          lastDispatchedIndex = nextIndex;
+          window.dispatchEvent(new CustomEvent("haki:cases-index", { detail: { index: nextIndex } }));
+        }
+      };
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: viewport,
+          start: "top top",
+          end: () => `+=${getDistance() + window.innerHeight * 1.15}`,
+          pin: true,
+          scrub: 0.42,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onEnter: () => dispatchRailMode(true),
+          onEnterBack: () => dispatchRailMode(true),
+          onLeave: () => dispatchRailMode(false),
+          onLeaveBack: () => dispatchRailMode(false),
+          onRefresh: (self) => updateActiveCase(self.progress),
           onUpdate: (self) => updateActiveCase(self.progress),
         },
       });
