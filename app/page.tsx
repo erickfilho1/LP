@@ -1860,11 +1860,12 @@ const deliveryCases = [
     theme: "red",
   },
   {
-    slug: "resolve-digital",
-    title: "Resolve Digital",
+    slug: "upshare",
+    title: "Upshare",
     description: "Esteira criativa para nicho pet e veterinário, com volume recorrente e visual consistente.",
-    marker: "SOCIAL / WEB",
-    theme: "violet",
+    marker: "US / RESTAURANTES",
+    theme: "upshare",
+    image: "/assets/cases/upshare-main.svg",
   },
   {
     slug: "engage-digital",
@@ -2148,12 +2149,24 @@ function UmanoCases() {
             >
               <div className="umano-case-slide-media" aria-hidden="true">
                 <span>{project.marker}</span>
-                <div className="umano-case-mosaic">
-                  {Array.from({ length: 10 }).map((_, tileIndex) => (
-                    <i key={tileIndex} />
-                  ))}
-                </div>
-                <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} />
+                {"image" in project ? (
+                  <Image
+                    className="umano-case-main-art"
+                    src={project.image ?? ""}
+                    alt=""
+                    width={1633}
+                    height={1846}
+                  />
+                ) : (
+                  <>
+                    <div className="umano-case-mosaic">
+                      {Array.from({ length: 10 }).map((_, tileIndex) => (
+                        <i key={tileIndex} />
+                      ))}
+                    </div>
+                    <Image src="/brand/assets/haki-symbol-transparent.png" alt="" width={460} height={393} />
+                  </>
+                )}
               </div>
               <div className="umano-case-slide-copy">
                 <h3>{project.title}</h3>

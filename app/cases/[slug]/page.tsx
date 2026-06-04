@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const projects = {
   "agencia-astronauta": {
@@ -6,10 +7,13 @@ const projects = {
     description: "Landing pages, criativos e peças de lançamento para campanhas de alta demanda.",
     scope: "LPs / Criativos / Lançamento",
   },
-  "resolve-digital": {
-    title: "Resolve Digital",
-    description: "Esteira criativa para nicho pet e veterinário, com volume recorrente e visual consistente.",
-    scope: "Social / Web / Recorrência",
+  upshare: {
+    title: "Upshare",
+    description: "Agencia nos Estados Unidos que atende o nicho de restaurantes com conteudo, presenca digital e criativos recorrentes.",
+    scope: "US / Restaurantes / Social",
+    art: "/assets/cases/upshare-main.svg",
+    logo: "Upshare",
+    note: "Agencia americana especializada em restaurantes.",
   },
   "engage-digital": {
     title: "Engage Digital",
@@ -49,8 +53,31 @@ export default async function CasePage({ params }: PageProps) {
           <p className="mt-8 max-w-2xl text-xl leading-relaxed text-white/62">{project.description}</p>
         </div>
 
-        <div className="grid min-h-[420px] place-items-center overflow-hidden rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_65%_25%,rgba(255,15,51,.22),transparent_32%),#101012]">
-          <span className="text-sm font-bold uppercase tracking-[0.08em] text-white/42">Espaço para mídia do projeto</span>
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <div className="relative grid min-h-[520px] place-items-center overflow-hidden rounded-[34px] border border-white/10 bg-[#101012]">
+            {"art" in project ? (
+              <Image
+                src={project.art}
+                alt={`Arte principal do projeto ${project.title}`}
+                width={1633}
+                height={1846}
+                className="h-full w-full object-cover"
+                priority
+              />
+            ) : (
+              <span className="text-sm font-bold uppercase tracking-[0.08em] text-white/42">Espaco para midia do projeto</span>
+            )}
+          </div>
+
+          {"logo" in project ? (
+            <aside className="flex min-h-[240px] flex-col justify-between rounded-[30px] border border-white/10 bg-white/[0.035] p-6">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-[0.08em] text-[#ff0f33]">Agencia</span>
+                <strong className="mt-4 block text-4xl font-black tracking-[-0.08em]">{project.logo}</strong>
+              </div>
+              <p className="max-w-[20ch] text-base leading-relaxed text-white/58">{project.note}</p>
+            </aside>
+          ) : null}
         </div>
       </section>
     </main>
