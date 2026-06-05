@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { createWhatsappHref } from "../whatsapp";
 
 type ProfileId = "agencia" | "info" | "outro";
 
@@ -115,7 +116,6 @@ function BriefingFlow() {
   const canContinue = step === 0 ? Boolean(profile) : step === 1 ? demands.length > 0 : name.trim().length > 1;
 
   const whatsappHref = useMemo(() => {
-    const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "") || "";
     const message = [
       "Olá, Eric! Quero plugar a HAKI na minha operação.",
       "",
@@ -129,8 +129,7 @@ function BriefingFlow() {
       .filter(Boolean)
       .join("\n");
 
-    const encoded = encodeURIComponent(message);
-    return number ? `https://wa.me/${number}?text=${encoded}` : `https://api.whatsapp.com/send?text=${encoded}`;
+    return createWhatsappHref(message);
   }, [company, contact, demands, name, profileLabel, selectedPlan]);
 
   const toggleDemand = (item: string) => {

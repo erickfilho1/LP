@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import Lenis from "lenis";
+import { createWhatsappHref, getWhatsappNumberLabel } from "./whatsapp";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -130,6 +131,8 @@ const plans = [
 ];
 
 const briefingHref = (plan?: string) => `/briefing${plan ? `?plano=${encodeURIComponent(plan)}` : ""}`;
+const specialistWhatsappHref = createWhatsappHref("Ola, Eric! Quero falar sobre plugar a HAKI na minha operacao.");
+const specialistWhatsappLabel = getWhatsappNumberLabel();
 
 const portfolio = {
   "Landing pages": [
@@ -329,7 +332,7 @@ function UmanoNav() {
         </div>
       </div>
 
-      <a className="umano-nav-cta" href="#planos">
+      <a className="umano-nav-cta" href={specialistWhatsappHref} target="_blank" rel="noreferrer">
         Plugar HAKI
       </a>
     </header>
@@ -1479,7 +1482,12 @@ function Hero() {
             para ag?ncias e neg?cios digitais que querem crescer.
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <a className="group inline-flex w-full items-center justify-center gap-4 rounded-md bg-haki-red px-5 py-4 text-sm font-semibold text-white shadow-red-soft transition duration-500 ease-mass hover:-translate-y-1 sm:w-auto sm:px-7 sm:text-base" href="#planos">
+            <a
+              className="group inline-flex w-full items-center justify-center gap-4 rounded-md bg-haki-red px-5 py-4 text-sm font-semibold text-white shadow-red-soft transition duration-500 ease-mass hover:-translate-y-1 sm:w-auto sm:px-7 sm:text-base"
+              href={specialistWhatsappHref}
+              target="_blank"
+              rel="noreferrer"
+            >
               Plugar HAKI na opera??o
               <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
             </a>
@@ -2397,7 +2405,7 @@ function UmanoContact() {
           <p>Pronto para escalar?</p>
           <h2>Plugue a HAKI na sua operação e comece com fluxo claro.</h2>
           <span>Sem formulário. Chame direto e a gente entende volume, gargalo e melhor plano.</span>
-          <a href="#planos">
+          <a href={specialistWhatsappHref} target="_blank" rel="noreferrer">
             Falar com Eric agora
           </a>
         </Reveal>
@@ -2434,8 +2442,8 @@ function UmanoFooter() {
             </a>
           ))}
         </div>
-        <a className="umano-footer-cta" href="#planos">
-          Iniciar briefing
+        <a className="umano-footer-cta" href={specialistWhatsappHref} target="_blank" rel="noreferrer">
+          Falar no WhatsApp
         </a>
       </div>
       <strong>studiohaki.com</strong>
@@ -2610,13 +2618,15 @@ function Contact() {
 
           <div className="mx-auto mt-12 grid max-w-4xl gap-4 md:grid-cols-3">
             {[
-              ["WhatsApp", "Falar com especialista"],
-              ["Email", "contato@studiohaki.com"],
-              ["Briefing", "Enviar demanda inicial"],
-            ].map(([label, value], index) => (
+              ["WhatsApp", specialistWhatsappLabel, specialistWhatsappHref],
+              ["Email", "contato@studiohaki.com", "mailto:contato@studiohaki.com"],
+              ["Briefing", "Enviar demanda inicial", briefingHref()],
+            ].map(([label, value, href], index) => (
               <a
                 key={label}
-                href={label === "Email" ? "mailto:contato@studiohaki.com" : "#"}
+                href={href}
+                target={label === "WhatsApp" ? "_blank" : undefined}
+                rel={label === "WhatsApp" ? "noreferrer" : undefined}
                 className={`group rounded-xl border p-6 transition duration-500 hover:-translate-y-1 ${
                   index === 0 ? "border-haki-red/55 bg-haki-red/10" : "hairline bg-black/30"
                 }`}
