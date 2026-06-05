@@ -1983,11 +1983,15 @@ section {
   filter: none;
 }
 
-.umano-case-slide.is-upshare .umano-case-slide-media {
+.umano-case-slide.is-upshare .umano-case-slide-media,
+.umano-case-slide.is-vibefor .umano-case-slide-media,
+.umano-case-slide.is-inplexo .umano-case-slide-media {
   background: #101010;
 }
 
-.umano-case-slide.is-upshare .umano-case-slide-media::after {
+.umano-case-slide.is-upshare .umano-case-slide-media::after,
+.umano-case-slide.is-vibefor .umano-case-slide-media::after,
+.umano-case-slide.is-inplexo .umano-case-slide-media::after {
   background:
     linear-gradient(to bottom, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.42)),
     radial-gradient(circle at 50% 12%, rgba(255, 15, 51, 0.22), transparent 34%);

@@ -15,15 +15,21 @@ const projects = {
     logo: "Upshare",
     note: "Agencia americana especializada em restaurantes.",
   },
-  "engage-digital": {
-    title: "Engage Digital",
-    description: "Operação mensal com criativos, landing pages e materiais de suporte para funis de performance.",
-    scope: "Funil / Criativos / Performance",
+  vibefor: {
+    title: "Vibefor",
+    description: "Agencia focada em medicos, com criativos, presenca digital e materiais para captacao de pacientes.",
+    scope: "Medicos / Saude / Captacao",
+    art: "/assets/cases/vibefor-main.svg",
+    logo: "Vibefor",
+    note: "Agencia especializada em marketing medico.",
   },
-  "criarte-propaganda": {
-    title: "Criarte Propaganda",
-    description: "Pacotes de social media e assets comerciais para clientes locais com ritmo de entrega recorrente.",
-    scope: "Social / Conteúdo / Entrega",
+  inplexo: {
+    title: "Inplexo",
+    description: "Projeto focado em landing page, com estrutura visual para apresentar oferta, prova e conversao.",
+    scope: "Landing Page / Conversao",
+    art: "/assets/cases/inplexo-main.svg",
+    logo: "Inplexo",
+    note: "Cliente com projeto focado em landing page.",
   },
 } as const;
 
