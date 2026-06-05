@@ -118,7 +118,7 @@ const projects: Project[] = [
 ];
 
 const projectMap = Object.fromEntries(projects.map((project) => [project.slug, project]));
-const specialistWhatsappHref = createWhatsappHref("Ola, Eric. Quero entender como plugar a HAKI na minha operacao.");
+const specialistWhatsappHref = createWhatsappHref("Ola, Erick. Quero entender como plugar a HAKI na minha operacao.");
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -132,60 +132,60 @@ export default async function CasePage({ params }: PageProps) {
     <main className="min-h-screen bg-[#050505] text-[#f4f1ea]">
       <CaseHeader currentSlug={project.slug} />
 
-      <section className="mx-auto flex max-w-[1180px] flex-col gap-7 px-5 pb-12 pt-7 sm:px-6 lg:px-8 lg:pb-16 lg:pt-9">
-        <div className="grid gap-7 lg:grid-cols-[minmax(0,1.08fr)_300px] lg:items-start xl:grid-cols-[minmax(0,1.12fr)_320px]">
+      <section className="mx-auto max-w-[1180px] px-5 pb-12 pt-6 sm:px-6 lg:px-8 lg:pb-16 lg:pt-8">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_300px] xl:grid-cols-[minmax(0,1.12fr)_320px]">
           <div className="space-y-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#ff2648]">{project.scope}</p>
-            <h1 className="max-w-[11ch] text-[clamp(2.3rem,4.4vw,4.15rem)] font-semibold leading-[0.95] tracking-[-0.055em] text-white/90">
-              {project.title}
-            </h1>
-            <p className="max-w-[50ch] text-[14px] leading-6 text-white/58 sm:text-[15px] sm:leading-7">{project.description}</p>
-          </div>
-
-          <aside className="rounded-[26px] border border-white/10 bg-white/[0.028] p-5 sm:p-5.5 lg:p-6">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/42">Cliente</span>
-            <div className="mt-3 flex items-start justify-between gap-4">
-              <div>
-                <strong className="block text-[1.45rem] font-medium leading-none tracking-[-0.045em] text-white/88 sm:text-[1.55rem]">
-                  {project.logo ?? project.title}
-                </strong>
-                <p className="mt-3 max-w-[24ch] text-[13px] leading-6 text-white/54 sm:text-[14px]">{project.note ?? project.summary}</p>
-              </div>
+            <div className="space-y-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#ff2648]">{project.scope}</p>
+              <h1 className="max-w-[11ch] text-[clamp(2.3rem,4.4vw,4.15rem)] font-semibold leading-[0.95] tracking-[-0.055em] text-white/90">
+                {project.title}
+              </h1>
+              <p className="max-w-[50ch] text-[14px] leading-6 text-white/58 sm:text-[15px] sm:leading-7">{project.description}</p>
             </div>
 
-            <dl className="mt-5 grid gap-3.5 border-t border-white/8 pt-4.5">
-              <MetaRow label="Cliente desde" value={project.since} />
-              <MetaRow label="Local" value={project.location} />
-              <MetaRow label="Entregas" value={project.deliveredCount} />
-              <MetaRow label="Foco" value={project.focus} />
-            </dl>
-          </aside>
-        </div>
-
-        <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px]">
-          <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#101012] min-h-[280px] sm:min-h-[360px] lg:min-h-[500px]">
-            {project.art ? (
-              <Image
-                src={project.art}
-                alt={`Arte principal do projeto ${project.title}`}
-                width={1633}
-                height={1846}
-                className="h-full w-full object-cover object-top"
-                priority
-              />
-            ) : (
-              <div className="grid min-h-[360px] place-items-center text-[11px] font-semibold uppercase tracking-[0.2em] text-white/36">
-                Espaco principal do projeto
-              </div>
-            )}
+            <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#101012] min-h-[240px] sm:min-h-[320px] lg:min-h-[430px]">
+              {project.art ? (
+                <Image
+                  src={project.art}
+                  alt={`Arte principal do projeto ${project.title}`}
+                  width={1633}
+                  height={1846}
+                  className="h-full w-full object-cover object-top"
+                  priority
+                />
+              ) : (
+                <div className="grid min-h-[320px] place-items-center text-[11px] font-semibold uppercase tracking-[0.2em] text-white/36">
+                  Espaco principal do projeto
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="grid gap-3.5">
+          <div className="grid content-start gap-3.5">
+            <aside className="rounded-[26px] border border-white/10 bg-white/[0.028] p-5 sm:p-5.5 lg:p-6">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/42">Cliente</span>
+              <div className="mt-3 flex items-start justify-between gap-4">
+                <div>
+                  <strong className="block text-[1.45rem] font-medium leading-none tracking-[-0.045em] text-white/88 sm:text-[1.55rem]">
+                    {project.logo ?? project.title}
+                  </strong>
+                  <p className="mt-3 max-w-[24ch] text-[13px] leading-6 text-white/54 sm:text-[14px]">{project.note ?? project.summary}</p>
+                </div>
+              </div>
+
+              <dl className="mt-5 grid gap-3.5 border-t border-white/8 pt-4.5">
+                <MetaRow label="Cliente desde" value={project.since} />
+                <MetaRow label="Local" value={project.location} />
+                <MetaRow label="Entregas" value={project.deliveredCount} />
+                <MetaRow label="Foco" value={project.focus} />
+              </dl>
+            </aside>
+
             <MetricCard label="Escopo" value={project.deliverables} />
             <MetricCard label="Cadencia" value={project.cadence} />
             <MetricCard label="Resumo" value={project.summary} />
           </div>
-        </section>
+        </div>
       </section>
 
       {project.videos?.length ? (
@@ -255,7 +255,7 @@ export default async function CasePage({ params }: PageProps) {
               rel="noreferrer"
               className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/12 px-8 text-[15px] font-medium text-white/82 transition hover:border-white/22 hover:text-white"
             >
-              Falar com Eric
+              Falar com Erick
             </a>
           </div>
         </div>
@@ -286,18 +286,18 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 
 function CaseHeader({ currentSlug }: { currentSlug: string }) {
   return (
-    <header className="border-b border-white/8 bg-[#050505]/92 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[1180px] flex-col gap-4 px-5 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+    <header className="border-b border-white/[0.05] bg-[#050505]/92 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-[1180px] flex-col gap-3 px-5 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/12 px-5 text-[14px] font-medium text-white/82 transition hover:border-white/22 hover:text-white"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/[0.12] px-5 text-[14px] font-medium text-white/80 transition hover:border-white/20 hover:text-white sm:w-auto"
           >
             Voltar para home
           </Link>
         </div>
 
-        <nav className="flex flex-wrap gap-2">
+        <nav className="-mx-1 flex w-[calc(100%+8px)] gap-2 overflow-x-auto px-1 pb-1 lg:mx-0 lg:w-auto lg:flex-wrap lg:overflow-visible lg:px-0 lg:pb-0">
           {projects.map((project) => {
             const isCurrent = project.slug === currentSlug;
 
@@ -305,10 +305,10 @@ function CaseHeader({ currentSlug }: { currentSlug: string }) {
               <Link
                 key={project.slug}
                 href={`/cases/${project.slug}`}
-                className={`inline-flex min-h-10 items-center rounded-full px-4 text-[13px] font-medium transition ${
+                className={`inline-flex min-h-10 shrink-0 items-center rounded-full px-4 text-[13px] font-medium whitespace-nowrap transition ${
                   isCurrent
                     ? "bg-white text-[#050505]"
-                    : "border border-white/10 text-white/60 hover:border-white/18 hover:text-white"
+                    : "border border-white/[0.08] text-white/58 hover:border-white/16 hover:text-white"
                 }`}
               >
                 {project.title}

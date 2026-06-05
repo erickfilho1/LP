@@ -117,7 +117,7 @@ function BriefingFlow() {
 
   const whatsappHref = useMemo(() => {
     const message = [
-      "Olá, Eric! Quero plugar a HAKI na minha operação.",
+      "Olá, Erick! Quero plugar a HAKI na minha operação.",
       "",
       `Plano escolhido: ${selectedPlan}`,
       `Perfil: ${profileLabel}`,
@@ -263,7 +263,7 @@ function BriefingFlow() {
                 <div className="briefing-fields">
                   <label>
                     Seu nome
-                    <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Ex: Eric" />
+                    <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Ex: Erick" />
                   </label>
                   <label>
                     Empresa ou operação

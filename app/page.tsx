@@ -131,7 +131,7 @@ const plans = [
 ];
 
 const briefingHref = (plan?: string) => `/briefing${plan ? `?plano=${encodeURIComponent(plan)}` : ""}`;
-const specialistWhatsappHref = createWhatsappHref("Ola, Eric! Quero falar sobre plugar a HAKI na minha operacao.");
+const specialistWhatsappHref = createWhatsappHref("Ola, Erick! Quero falar sobre plugar a HAKI na minha operacao.");
 const specialistWhatsappLabel = getWhatsappNumberLabel();
 
 const portfolio = {
@@ -239,6 +239,15 @@ function HakiPreloader() {
 function UmanoNav() {
   const [isRailMode, setIsRailMode] = useState(false);
   const [railIndex, setRailIndex] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const section = document.querySelector<HTMLElement>(".umano-rail-section");
@@ -335,6 +344,59 @@ function UmanoNav() {
       <a className="umano-nav-cta" href={specialistWhatsappHref} target="_blank" rel="noreferrer">
         Plugar HAKI
       </a>
+
+      <button
+        type="button"
+        className="umano-nav-mobile-toggle"
+        aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+        aria-expanded={isMobileMenuOpen}
+        onClick={() => setIsMobileMenuOpen((current) => !current)}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+
+      <AnimatePresence>
+        {isMobileMenuOpen ? (
+          <>
+            <motion.button
+              type="button"
+              className="umano-nav-mobile-backdrop"
+              aria-label="Fechar menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <motion.div
+              className="umano-nav-mobile-panel"
+              initial={{ opacity: 0, y: -12, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.98 }}
+              transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <nav className="umano-nav-mobile-links" aria-label="Menu mobile">
+                {navItems.map(([label, href]) => (
+                  <a key={href} href={href} onClick={() => setIsMobileMenuOpen(false)}>
+                    {label}
+                  </a>
+                ))}
+              </nav>
+              <a
+                className="umano-nav-mobile-cta"
+                href={specialistWhatsappHref}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Plugar HAKI
+              </a>
+            </motion.div>
+          </>
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }
@@ -814,119 +876,8 @@ function HowItWorksRail() {
     });
 
     media.add("(max-width: 767px)", () => {
-      const deliveryCard = section.querySelector<HTMLElement>(".is-delivery-card");
-      const deliveryScene = section.querySelector<HTMLElement>(".delivery-card-scene");
-      const deliveryCopy = section.querySelector<HTMLElement>(".is-delivery-card .umano-rail-card-copy");
-      const deliveryLogo = section.querySelector<HTMLElement>(".delivery-card-logo");
-      const deliveryBg = section.querySelector<HTMLElement>(".delivery-card-bg");
-      const deliveryGlow = section.querySelector<HTMLElement>(".delivery-card-glow");
-      const railCopy = section.querySelector<HTMLElement>(".umano-rail-copy");
-      const otherCards = gsap.utils.toArray<HTMLElement>(".umano-rail-card:not(.is-delivery-card)", section);
-
-      if (!deliveryCard || !deliveryScene || !deliveryCopy || !deliveryLogo || !deliveryBg || !deliveryGlow || !railCopy) {
-        return undefined;
-      }
-
-      const getDistance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
-      const getCenterInTrack = (element: HTMLElement) => {
-        let x = element.offsetLeft + element.offsetWidth / 2;
-        let y = element.offsetTop + element.offsetHeight / 2;
-        let parent = element.offsetParent as HTMLElement | null;
-
-        while (parent && parent !== track) {
-          x += parent.offsetLeft;
-          y += parent.offsetTop;
-          parent = parent.offsetParent as HTMLElement | null;
-        }
-
-        return { x, y };
-      };
-      const getFocusX = () => {
-        const center = getCenterInTrack(deliveryScene).x;
-        return viewport.clientWidth / 2 - center;
-      };
-      const getFocusDistance = () => Math.abs(getFocusX());
-      const getRailOrigin = () => {
-        const center = getCenterInTrack(deliveryScene);
-        return `${center.x}px ${center.y}px`;
-      };
-      const getRailShiftY = () => {
-        const rect = deliveryScene.getBoundingClientRect();
-        return window.innerHeight * 0.44 - (rect.top + rect.height / 2);
-      };
-      const getRailScale = () => {
-        const rect = deliveryScene.getBoundingClientRect();
-        return Math.max(window.innerWidth / rect.width, window.innerHeight / rect.height) * 1.06;
-      };
-      const getLogoCenterX = () => {
-        const rect = deliveryLogo.getBoundingClientRect();
-        return (window.innerWidth / 2 - (rect.left + rect.width / 2)) / getRailScale();
-      };
-      const getLogoCenterY = () => {
-        const rect = deliveryLogo.getBoundingClientRect();
-        return (window.innerHeight / 2 - (rect.top + rect.height / 2)) / getRailScale();
-      };
-      const getLogoScale = () => {
-        const targetWidth = Math.min(250, Math.max(150, window.innerWidth * 0.44));
-        return targetWidth / deliveryLogo.getBoundingClientRect().width / getRailScale();
-      };
-
-      gsap.set([track, deliveryCard, deliveryScene, deliveryBg, deliveryLogo, deliveryGlow, railCopy, ...otherCards], {
-        willChange: "transform, opacity, border-radius",
-      });
-      gsap.set(deliveryCard, { overflow: "hidden", zIndex: 12 });
-      gsap.set(otherCards, { zIndex: 0 });
-      gsap.set(deliveryScene, { transformOrigin: "center center" });
-      gsap.set(deliveryLogo, { xPercent: -50, yPercent: -50, transformOrigin: "center center" });
-      gsap.set(deliveryGlow, { opacity: 0 });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: () => `+=${Math.max(getDistance(), getFocusDistance()) + window.innerHeight * 1.2}`,
-          pin: true,
-          scrub: 0.4,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      tl.to(track, { x: () => -getDistance(), ease: "none", duration: 0.52 }, 0)
-        .to([railCopy, ...otherCards], { opacity: 0, filter: "blur(6px)", ease: "none", duration: 0.1 }, 0.54)
-        .set([railCopy, ...otherCards], { visibility: "hidden" }, 0.64)
-        .to(deliveryCopy, { opacity: 0, yPercent: 20, filter: "blur(8px)", ease: "none", duration: 0.08 }, 0.56)
-        .set(deliveryCopy, { visibility: "hidden" }, 0.65)
-        .set(deliveryCard, { overflow: "visible" }, 0.62)
-        .to(deliveryCard, {
-          backgroundColor: "transparent",
-          borderColor: "rgba(5, 5, 5, 0)",
-          boxShadow: "none",
-          ease: "none",
-          duration: 0.12,
-        }, 0.62)
-        .to(section, { backgroundColor: "#050505", ease: "none", duration: 0.2 }, 0.6)
-        .set(track, { transformOrigin: getRailOrigin }, 0.62)
-        .to(track, {
-          x: getFocusX,
-          y: getRailShiftY,
-          scale: getRailScale,
-          ease: "none",
-          duration: 0.22,
-        }, 0.66)
-        .to(deliveryLogo, {
-          x: getLogoCenterX,
-          y: getLogoCenterY,
-          scale: getLogoScale,
-          xPercent: -50,
-          yPercent: -50,
-          ease: "none",
-          duration: 0.22,
-        }, 0.66)
-        .to(deliveryGlow, { opacity: 0.8, ease: "none", duration: 0.14 }, 0.7)
-        .to(deliveryLogo, { y: () => getLogoCenterY() - window.innerHeight * 0.22, opacity: 0, ease: "none", duration: 0.14 }, 0.86);
-
-      return () => tl.kill();
+      gsap.set(track, { clearProps: "all" });
+      return undefined;
     });
 
     requestAnimationFrame(() => ScrollTrigger.refresh());
@@ -1854,7 +1805,7 @@ const caseTabs = {
   ],
   "Operação": [
     ["hero-dashboard-preview", "Trello Flow", "Quadro operacional com backlog, produção, revisão e entrega."],
-    ["founder-photo", "Founder Layer", "Espaço para foto do Eric ou bastidores do estúdio."],
+    ["founder-photo", "Founder Layer", "Espaço para foto do Erick ou bastidores do estúdio."],
     ["contact-bg", "Client Room", "Espaço visual para depoimentos, reuniões ou prints de entrega."],
   ],
 };
@@ -2071,7 +2022,19 @@ function UmanoCases() {
     });
 
     media.add("(max-width: 767px)", () => {
-      const getDistance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+      const updateEdgeSpacer = () => {
+        const firstSlide = track.querySelector<HTMLElement>(".umano-case-slide");
+        if (!firstSlide) {
+          return;
+        }
+
+        const spacer = Math.max(14, viewport.clientWidth / 2 - firstSlide.offsetWidth / 2);
+        track.style.setProperty("--case-edge-spacer", `${spacer}px`);
+      };
+      const getDistance = () => {
+        updateEdgeSpacer();
+        return Math.max(0, track.scrollWidth - viewport.clientWidth);
+      };
       let lastDispatchedIndex = -1;
       const dispatchRailMode = (active: boolean) => {
         window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active } }));
@@ -2103,17 +2066,20 @@ function UmanoCases() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: viewport,
-          start: "top top",
-          end: () => `+=${getDistance() + window.innerHeight * 1.15}`,
+          start: "top 10%",
+          end: () => `+=${getDistance() + window.innerHeight * 0.72}`,
           pin: true,
-          scrub: 0.42,
+          scrub: 0.34,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onEnter: () => dispatchRailMode(true),
           onEnterBack: () => dispatchRailMode(true),
           onLeave: () => dispatchRailMode(false),
           onLeaveBack: () => dispatchRailMode(false),
-          onRefresh: (self) => updateActiveCase(self.progress),
+          onRefresh: (self) => {
+            updateEdgeSpacer();
+            updateActiveCase(self.progress);
+          },
           onUpdate: (self) => updateActiveCase(self.progress),
         },
       });
@@ -2406,13 +2372,13 @@ function UmanoContact() {
           <h2>Plugue a HAKI na sua operação e comece com fluxo claro.</h2>
           <span>Sem formulário. Chame direto e a gente entende volume, gargalo e melhor plano.</span>
           <a href={specialistWhatsappHref} target="_blank" rel="noreferrer">
-            Falar com Eric agora
+            Falar com Erick agora
           </a>
         </Reveal>
 
         <motion.div className="umano-founder-placeholder" data-slot="founder-photo" whileHover={{ y: -8 }}>
           <span>founder-photo</span>
-          <strong>Eric Filho</strong>
+          <strong>Erick Filho</strong>
           <p>Espaço para foto, vídeo curto ou bastidor do Studio Haki.</p>
         </motion.div>
       </div>
@@ -2478,7 +2444,7 @@ function About() {
             <div className="absolute inset-x-6 bottom-6 overflow-hidden rounded-xl border hairline bg-black/55 p-6 backdrop-blur-xl">
               <div className="flex items-start justify-between gap-6">
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-haki-red">Eric Filho</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-haki-red">Erick Filho</p>
                   <h3 className="mt-3 text-4xl font-medium leading-none tracking-[-0.07em] text-haki-white md:text-5xl">
                     Web designer e operador criativo.
                   </h3>
@@ -2500,7 +2466,7 @@ function About() {
           <div className="rounded-2xl border hairline bg-white/[0.018] p-8 md:p-12">
             <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Sobre n?s</p>
             <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
-              Por tr?s da HAKI est? Eric Filho.
+              Por tr?s da HAKI est? Erick Filho.
             </h2>
             <p className="mt-7 text-lg leading-8 text-haki-muted">
               Eu criei a HAKI para plugar um est?dio criativo dentro da opera??o de ag?ncias e neg?cios digitais que precisam de consist?ncia, prazo e execu??o sem depender de freelancers soltos.
@@ -2709,7 +2675,7 @@ function ContactScreen() {
                 href="mailto:contato@studiohaki.com?subject=Quero%20plugar%20a%20HAKI%20na%20minha%20opera%C3%A7%C3%A3o"
                 className="group flex w-full items-center justify-center gap-3 rounded-xl border border-white/[0.12] bg-[#24202e]/95 px-6 py-5 text-base font-semibold text-haki-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_60px_rgba(0,0,0,0.34)] transition duration-500 hover:-translate-y-1 hover:border-haki-red/50 hover:bg-haki-red/20"
               >
-                Falar com Eric agora
+                Falar com Erick agora
                 <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
               </a>
 
