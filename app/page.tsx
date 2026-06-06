@@ -3,13 +3,10 @@
 import { AnimatePresence, motion, type MotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import Lenis from "lenis";
 import { createWhatsappHref, getWhatsappNumberLabel } from "./whatsapp";
-import upsharePreview from "../brand/umano-home-desktop.png";
-import vibeforPreview from "../brand/hero-video-desktop.png";
-import inplexoPreview from "../brand/contact-headless-new.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -157,21 +154,18 @@ function useLightweightExperience() {
   const [isLightweight, setIsLightweight] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
     const connection = (navigator as Navigator & { connection?: ConnectionLike }).connection;
 
     const syncPreference = () => {
       const saveData = Boolean(connection?.saveData);
       const slowerConnection = ["slow-2g", "2g", "3g"].includes(connection?.effectiveType ?? "");
-      setIsLightweight(reduceMotion || mediaQuery.matches || saveData || slowerConnection);
+      setIsLightweight(reduceMotion || saveData || slowerConnection);
     };
 
     syncPreference();
-    mediaQuery.addEventListener("change", syncPreference);
     connection?.addEventListener?.("change", syncPreference);
 
     return () => {
-      mediaQuery.removeEventListener("change", syncPreference);
       connection?.removeEventListener?.("change", syncPreference);
     };
   }, [reduceMotion]);
@@ -2028,7 +2022,7 @@ const deliveryCases = [
     description: "Cliente desde 2026. Agencia dos Estados Unidos que atende restaurantes com conteudo, social e presenca digital recorrente.",
     marker: "US / RESTAURANTES",
     theme: "upshare",
-    image: upsharePreview,
+    image: "/assets/cases/upshare-main.svg",
   },
   {
     slug: "vibefor",
@@ -2036,7 +2030,7 @@ const deliveryCases = [
     description: "Cliente desde 2026. Agencia focada em medicos, com criativos, presenca digital e materiais para captacao de pacientes.",
     marker: "MEDICOS / SAUDE",
     theme: "vibefor",
-    image: vibeforPreview,
+    image: "/assets/cases/vibefor-main.svg",
   },
   {
     slug: "inplexo",
@@ -2044,7 +2038,7 @@ const deliveryCases = [
     description: "Cliente desde 2026. Projeto focado em landing page, com estrutura visual para apresentar oferta, prova e conversao.",
     marker: "LANDING PAGE",
     theme: "inplexo",
-    image: inplexoPreview,
+    image: "/assets/cases/inplexo-main.svg",
   },
 ];
 function PlanIncluded({ planName, items }: { planName: string; items: string[] }) {
@@ -2331,9 +2325,11 @@ function UmanoCases({ liteMode = false }: { liteMode?: boolean }) {
                 {"image" in project ? (
                   <Image
                     className="umano-case-main-art"
-                    src={project.image as StaticImageData}
+                    src={project.image}
                     alt=""
                     sizes="(max-width: 767px) 88vw, 36vw"
+                    width={1633}
+                    height={1846}
                   />
                 ) : (
                   <>
