@@ -284,9 +284,9 @@ function MetaRow({ label, value }: { label: string; value: string }) {
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-5.5 sm:px-5 sm:py-6">
+    <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-6.5 sm:px-5 sm:py-7">
       <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/38">{label}</span>
-      <p className="mt-3.5 text-[14px] leading-6 text-white/68 sm:text-[15px] sm:leading-7">{value}</p>
+      <p className="mt-4 text-[14px] leading-6 text-white/68 sm:text-[15px] sm:leading-7">{value}</p>
     </article>
   );
 }
