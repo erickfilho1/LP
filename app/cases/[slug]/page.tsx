@@ -1,9 +1,6 @@
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { createWhatsappHref } from "../../whatsapp";
-import upsharePreview from "../../../brand/umano-home-desktop.png";
-import vibeforPreview from "../../../brand/hero-video-desktop.png";
-import inplexoPreview from "../../../brand/contact-headless-new.png";
 
 type ProjectVideo = {
   src: string;
@@ -16,8 +13,8 @@ type Project = {
   title: string;
   description: string;
   scope: string;
-  art?: string | StaticImageData;
-  artMobile?: string | StaticImageData;
+  art?: string;
+  artMobile?: string;
   logo?: string;
   note?: string;
   location: string;
@@ -51,8 +48,8 @@ const projects: Project[] = [
     title: "Upshare",
     description: "Agencia nos Estados Unidos que atende o nicho de restaurantes com conteudo, presenca digital e criativos recorrentes.",
     scope: "US / Restaurantes / Social",
-    art: upsharePreview,
-    artMobile: upsharePreview,
+    art: "/assets/cases/upshare-main.svg",
+    artMobile: "/assets/cases/upshare-main.svg",
     logo: "Upshare",
     note: "Agencia americana especializada em restaurantes.",
     location: "Estados Unidos",
@@ -69,8 +66,8 @@ const projects: Project[] = [
     title: "Vibefor",
     description: "Agencia focada em medicos, com criativos, presenca digital e materiais para captacao de pacientes.",
     scope: "Medicos / Saude / Captacao",
-    art: vibeforPreview,
-    artMobile: vibeforPreview,
+    art: "/assets/cases/vibefor-main.svg",
+    artMobile: "/assets/cases/vibefor-main.svg",
     logo: "Vibefor",
     note: "Agencia especializada em marketing medico.",
     location: "Brasil",
@@ -109,8 +106,8 @@ const projects: Project[] = [
     title: "Inplexo",
     description: "Projeto focado em landing page, com estrutura visual para apresentar oferta, prova e conversao.",
     scope: "Landing Page / Conversao",
-    art: inplexoPreview,
-    artMobile: inplexoPreview,
+    art: "/assets/cases/inplexo-main.svg",
+    artMobile: "/assets/cases/inplexo-main.svg",
     logo: "Inplexo",
     note: "Cliente com projeto focado em landing page.",
     location: "Brasil",
