@@ -3394,6 +3394,10 @@ section {
     min-height: 632px;
   }
 
+  .umano-hero-circuit {
+    display: none;
+  }
+
   .umano-hero-circuit-svg {
     top: 36px;
     left: 50%;
