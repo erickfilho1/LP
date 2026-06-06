@@ -47,6 +47,14 @@ const clients = [
   ["CreativeFlow", "flow"],
 ];
 
+const clientLogos = [
+  { name: "Parceiro 01", src: "/assets/clients/client-logo-01.svg", width: 229, height: 90 },
+  { name: "Parceiro 02", src: "/assets/clients/client-logo-02.svg", width: 208, height: 71 },
+  { name: "Parceiro 03", src: "/assets/clients/client-logo-03.svg", width: 324, height: 119 },
+  { name: "Parceiro 04", src: "/assets/clients/client-logo-04.svg", width: 236, height: 89 },
+  { name: "Parceiro 05", src: "/assets/clients/client-logo-05.svg", width: 334, height: 106 },
+] as const;
+
 const boardColumns = [
   {
     title: "Backlog",
@@ -188,10 +196,13 @@ function Reveal({
 
 function SmoothScroll() {
   useEffect(() => {
+    const isCompactViewport = window.matchMedia("(max-width: 768px)").matches;
     const lenis = new Lenis({
-      duration: 1.15,
+      duration: isCompactViewport ? 0.82 : 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      syncTouch: isCompactViewport,
+      touchMultiplier: isCompactViewport ? 0.92 : 1,
     });
 
     let frame = 0;
@@ -239,6 +250,7 @@ function HakiPreloader() {
 function UmanoNav() {
   const [isRailMode, setIsRailMode] = useState(false);
   const [railIndex, setRailIndex] = useState(0);
+  const [railCount, setRailCount] = useState(4);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -300,7 +312,9 @@ function UmanoNav() {
     });
 
     const handleCasesRail = (event: Event) => {
-      casesModeActive = Boolean((event as CustomEvent<{ active: boolean }>).detail?.active);
+      const detail = (event as CustomEvent<{ active: boolean; count?: number }>).detail;
+      casesModeActive = Boolean(detail?.active);
+      setRailCount(casesModeActive ? detail?.count ?? deliveryCases.length : 4);
       syncRailMode();
     };
     const handleCasesIndex = (event: Event) => {
@@ -326,6 +340,12 @@ function UmanoNav() {
         <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} priority />
       </a>
 
+      <div className="umano-nav-mobile-rail" aria-label={`Progresso do carrossel: item ${railIndex + 1} de ${railCount}`}>
+        {Array.from({ length: railCount }).map((_, index) => (
+          <span key={`mobile-${index}`} className={railIndex === index ? "is-active" : ""} />
+        ))}
+      </div>
+
       <div className="umano-nav-center">
         <nav className="umano-nav-links" aria-label="Seções">
           <a href="#solucoes">Soluções</a>
@@ -334,8 +354,8 @@ function UmanoNav() {
           <a href="#planos">Planos</a>
         </nav>
 
-        <div className="umano-nav-rail" aria-label={`Progresso do carrossel: item ${railIndex + 1} de 4`}>
-          {[0, 1, 2, 3].map((index) => (
+        <div className="umano-nav-rail" aria-label={`Progresso do carrossel: item ${railIndex + 1} de ${railCount}`}>
+          {Array.from({ length: railCount }).map((_, index) => (
             <span key={index} className={railIndex === index ? "is-active" : ""} />
           ))}
         </div>
@@ -587,13 +607,20 @@ function UmanoLogoStrip() {
   return (
     <section className="umano-logo-strip" aria-label="Clientes e parceiros">
       <p>Agências e negócios digitais que confiam no nosso fluxo</p>
-      <div>
-        {clients.map(([name, icon]) => (
-          <span key={name}>
-            <ClientIcon type={icon} />
-            {name}
-          </span>
-        ))}
+      <div className="umano-logo-strip-viewport">
+        <div className="umano-logo-strip-grid">
+          {clientLogos.map((logo) => (
+            <span key={logo.src} className="umano-logo-badge">
+              <Image
+                src={logo.src}
+                alt={logo.name}
+                width={logo.width}
+                height={logo.height}
+                className="umano-logo-badge-image"
+              />
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -631,7 +658,7 @@ function StickyManifesto() {
   const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.985, 1, 0.992]);
   const progressScale = useTransform(smoothProgress, [0.06, 0.9], [0, 1]);
   const firstLine = ["Um", "estúdio", "dentro", "da", "sua", "operação,"];
-  const secondLine = ["com", "ritmo", "de", "produto", "e", "prazo", "de", "lançamento."];
+  const secondLine = ["com", "ritmo", "de", "produto", "e", "prazo", "de lançamento."];
   const words = [...firstLine, ...secondLine];
 
   useEffect(() => {
@@ -876,8 +903,117 @@ function HowItWorksRail() {
     });
 
     media.add("(max-width: 767px)", () => {
-      gsap.set(track, { clearProps: "all" });
-      return undefined;
+      const deliveryCard = section.querySelector<HTMLElement>(".is-delivery-card");
+      const deliveryScene = section.querySelector<HTMLElement>(".delivery-card-scene");
+      const deliveryCopy = section.querySelector<HTMLElement>(".is-delivery-card .umano-rail-card-copy");
+      const deliveryLogo = section.querySelector<HTMLElement>(".delivery-card-logo");
+      const deliveryBg = section.querySelector<HTMLElement>(".delivery-card-bg");
+      const deliveryGlow = section.querySelector<HTMLElement>(".delivery-card-glow");
+      const railCopy = section.querySelector<HTMLElement>(".umano-rail-copy");
+      const otherCards = gsap.utils.toArray<HTMLElement>(".umano-rail-card:not(.is-delivery-card)", section);
+
+      if (!deliveryCard || !deliveryScene || !deliveryCopy || !deliveryLogo || !deliveryBg || !deliveryGlow || !railCopy) {
+        return undefined;
+      }
+
+      const getCenterInTrack = (element: HTMLElement) => {
+        let x = element.offsetLeft + element.offsetWidth / 2;
+        let y = element.offsetTop + element.offsetHeight / 2;
+        let parent = element.offsetParent as HTMLElement | null;
+
+        while (parent && parent !== track) {
+          x += parent.offsetLeft;
+          y += parent.offsetTop;
+          parent = parent.offsetParent as HTMLElement | null;
+        }
+
+        return { x, y };
+      };
+      const getFocusX = () => {
+        const center = getCenterInTrack(deliveryScene).x;
+        return viewport.clientWidth / 2 - center;
+      };
+      const getFocusDistance = () => Math.abs(getFocusX());
+      const getRailOrigin = () => {
+        const center = getCenterInTrack(deliveryScene);
+        return `${center.x}px ${center.y}px`;
+      };
+      const getRailShiftY = () => {
+        const rect = deliveryScene.getBoundingClientRect();
+        return window.innerHeight * 0.52 - (rect.top + rect.height / 2);
+      };
+      const getRailScale = () => {
+        const rect = deliveryScene.getBoundingClientRect();
+        return Math.max(window.innerWidth / rect.width, window.innerHeight / rect.height) * 1.08;
+      };
+      const getLogoCenterX = () => {
+        const rect = deliveryLogo.getBoundingClientRect();
+        return (window.innerWidth / 2 - (rect.left + rect.width / 2)) / getRailScale();
+      };
+      const getLogoCenterY = () => {
+        const rect = deliveryLogo.getBoundingClientRect();
+        return (window.innerHeight / 2 - (rect.top + rect.height / 2)) / getRailScale();
+      };
+      const getLogoScale = () => {
+        const targetWidth = Math.min(220, Math.max(138, window.innerWidth * 0.38));
+        return targetWidth / deliveryLogo.getBoundingClientRect().width / getRailScale();
+      };
+
+      gsap.set([track, deliveryCard, deliveryScene, deliveryBg, deliveryLogo, deliveryGlow, railCopy, ...otherCards], {
+        willChange: "transform, opacity, border-radius",
+      });
+      gsap.set(deliveryCard, { overflow: "hidden", zIndex: 12 });
+      gsap.set(otherCards, { zIndex: 0 });
+      gsap.set(deliveryScene, { transformOrigin: "center center" });
+      gsap.set(deliveryLogo, { xPercent: -50, yPercent: -50, transformOrigin: "center center" });
+      gsap.set(deliveryGlow, { opacity: 0 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "center center",
+          end: () => `+=${getFocusDistance() * 0.9 + window.innerHeight * 0.72}`,
+          pin: true,
+          scrub: 0.34,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      tl.to(track, { x: getFocusX, ease: "none", duration: 0.4 }, 0)
+        .to([railCopy, ...otherCards], { opacity: 0, filter: "blur(6px)", ease: "none", duration: 0.11 }, 0.34)
+        .set([railCopy, ...otherCards], { visibility: "hidden" }, 0.44)
+        .to(deliveryCopy, { opacity: 0, yPercent: 20, filter: "blur(8px)", ease: "none", duration: 0.08 }, 0.36)
+        .set(deliveryCopy, { visibility: "hidden" }, 0.44)
+        .set(deliveryCard, { overflow: "visible" }, 0.41)
+        .to(deliveryCard, {
+          backgroundColor: "transparent",
+          borderColor: "rgba(5, 5, 5, 0)",
+          boxShadow: "none",
+          ease: "none",
+          duration: 0.12,
+        }, 0.41)
+        .to(section, { backgroundColor: "#050505", ease: "none", duration: 0.18 }, 0.39)
+        .set(track, { transformOrigin: getRailOrigin }, 0.42)
+        .to(track, {
+          y: getRailShiftY,
+          scale: getRailScale,
+          ease: "none",
+          duration: 0.24,
+        }, 0.46)
+        .to(deliveryLogo, {
+          x: getLogoCenterX,
+          y: getLogoCenterY,
+          scale: getLogoScale,
+          xPercent: -50,
+          yPercent: -50,
+          ease: "none",
+          duration: 0.24,
+        }, 0.46)
+        .to(deliveryGlow, { opacity: 0.76, ease: "none", duration: 0.14 }, 0.52)
+        .to(deliveryLogo, { y: () => getLogoCenterY() - window.innerHeight * 0.2, opacity: 0, ease: "none", duration: 0.15 }, 0.82);
+
+      return () => tl.kill();
     });
 
     requestAnimationFrame(() => ScrollTrigger.refresh());
@@ -988,7 +1124,7 @@ function Header() {
           className="group hidden items-center gap-3 rounded-md border border-haki-red/60 bg-haki-red px-5 py-3 text-sm font-semibold text-white shadow-red-soft transition duration-500 ease-mass hover:-translate-y-0.5 hover:bg-[#e60b2d] sm:inline-flex"
         >
           Comecar agora
-          <span className="transition-transform duration-500 ease-mass group-hover:translate-x-1">→</span>
+          <span className="transition-transform duration-500 ease-mass group-hover:translate-x-1">� </span>
         </a>
       </div>
     </header>
@@ -1440,7 +1576,7 @@ function Hero() {
               rel="noreferrer"
             >
               Plugar HAKI na opera??o
-              <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+              <span className="transition-transform duration-500 group-hover:translate-x-1">� </span>
             </a>
             <a className="inline-flex w-full items-center justify-center rounded-md border hairline bg-white/[0.025] px-5 py-4 text-sm font-semibold text-haki-muted transition duration-500 ease-mass hover:-translate-y-1 hover:text-haki-white sm:w-auto sm:px-7 sm:text-base" href="#processo">
               Ver como funciona
@@ -1767,7 +1903,7 @@ function Plans() {
               <ul className="mt-8 space-y-3 text-sm text-haki-muted">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex gap-3">
-                    <span className="text-haki-red">✓</span>
+                    <span className="text-haki-red">�S</span>
                     {feature}
                   </li>
                 ))}
@@ -1812,16 +1948,9 @@ const caseTabs = {
 
 const deliveryCases = [
   {
-    slug: "agencia-astronauta",
-    title: "Agência Astronauta",
-    description: "Parceiro desde 2024. Landing pages, criativos e peças de lançamento para campanhas de alta demanda.",
-    marker: "LP / ADS",
-    theme: "red",
-  },
-  {
     slug: "upshare",
     title: "Upshare",
-    description: "Agencia dos Estados Unidos que atende restaurantes com conteudo, social e presenca digital recorrente.",
+    description: "Cliente desde 2026. Agencia dos Estados Unidos que atende restaurantes com conteudo, social e presenca digital recorrente.",
     marker: "US / RESTAURANTES",
     theme: "upshare",
     image: "/assets/cases/upshare-main.svg",
@@ -1829,7 +1958,7 @@ const deliveryCases = [
   {
     slug: "vibefor",
     title: "Vibefor",
-    description: "Agencia focada em medicos, com criativos, presenca digital e materiais para captacao de pacientes.",
+    description: "Cliente desde 2026. Agencia focada em medicos, com criativos, presenca digital e materiais para captacao de pacientes.",
     marker: "MEDICOS / SAUDE",
     theme: "vibefor",
     image: "/assets/cases/vibefor-main.svg",
@@ -1837,13 +1966,12 @@ const deliveryCases = [
   {
     slug: "inplexo",
     title: "Inplexo",
-    description: "Projeto focado em landing page, com estrutura visual para apresentar oferta, prova e conversao.",
+    description: "Cliente desde 2026. Projeto focado em landing page, com estrutura visual para apresentar oferta, prova e conversao.",
     marker: "LANDING PAGE",
     theme: "inplexo",
     image: "/assets/cases/inplexo-main.svg",
   },
 ];
-
 function PlanIncluded({ planName, items }: { planName: string; items: string[] }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -1965,7 +2093,7 @@ function UmanoCases() {
       };
       let lastDispatchedIndex = -1;
       const dispatchRailMode = (active: boolean) => {
-        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active } }));
+        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active, count: deliveryCases.length } }));
       };
       const updateActiveCase = (progress = 0) => {
         const x = -getDistance() * progress;
@@ -2028,7 +2156,7 @@ function UmanoCases() {
           return;
         }
 
-        const spacer = Math.max(14, viewport.clientWidth / 2 - firstSlide.offsetWidth / 2);
+        const spacer = Math.max(20, viewport.clientWidth / 2 - firstSlide.offsetWidth / 2);
         track.style.setProperty("--case-edge-spacer", `${spacer}px`);
       };
       const getDistance = () => {
@@ -2037,7 +2165,7 @@ function UmanoCases() {
       };
       let lastDispatchedIndex = -1;
       const dispatchRailMode = (active: boolean) => {
-        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active } }));
+        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active, count: deliveryCases.length } }));
       };
       const updateActiveCase = (progress = 0) => {
         const x = -getDistance() * progress;
@@ -2066,10 +2194,10 @@ function UmanoCases() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: viewport,
-          start: "top 10%",
-          end: () => `+=${getDistance() + window.innerHeight * 0.72}`,
+          start: "center center",
+          end: () => `+=${getDistance() + window.innerHeight * 0.42}`,
           pin: true,
-          scrub: 0.34,
+          scrub: 0.28,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onEnter: () => dispatchRailMode(true),
@@ -2150,7 +2278,7 @@ function UmanoCases() {
               </div>
               <span className="umano-case-hover-cue" aria-hidden="true">
                 Abrir
-                <b>→</b>
+                <b>� </b>
               </span>
             </motion.a>
           ))}
@@ -2170,7 +2298,7 @@ function UmanoCases() {
         transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.55 }}
       >
         <span>Abrir</span>
-        <b>→</b>
+        <b>� </b>
       </motion.div>
     </section>
   );
@@ -2602,7 +2730,7 @@ function Contact() {
                   {value}
                 </strong>
                 <span className="mx-auto mt-8 grid h-10 w-10 place-items-center rounded-full border border-haki-red/40 text-haki-red transition-transform duration-500 group-hover:translate-x-1">
-                  →
+                  � 
                 </span>
               </a>
             ))}
@@ -2676,7 +2804,7 @@ function ContactScreen() {
                 className="group flex w-full items-center justify-center gap-3 rounded-xl border border-white/[0.12] bg-[#24202e]/95 px-6 py-5 text-base font-semibold text-haki-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_60px_rgba(0,0,0,0.34)] transition duration-500 hover:-translate-y-1 hover:border-haki-red/50 hover:bg-haki-red/20"
               >
                 Falar com Erick agora
-                <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+                <span className="transition-transform duration-500 group-hover:translate-x-1">� </span>
               </a>
 
               <div className="mt-8 flex items-center justify-center gap-5 text-haki-muted">

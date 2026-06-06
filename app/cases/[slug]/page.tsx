@@ -14,6 +14,7 @@ type Project = {
   description: string;
   scope: string;
   art?: string;
+  artMobile?: string;
   logo?: string;
   note?: string;
   location: string;
@@ -48,12 +49,13 @@ const projects: Project[] = [
     description: "Agencia nos Estados Unidos que atende o nicho de restaurantes com conteudo, presenca digital e criativos recorrentes.",
     scope: "US / Restaurantes / Social",
     art: "/assets/cases/upshare-main.svg",
+    artMobile: "/assets/cases/mobile/upshare-mobile.svg",
     logo: "Upshare",
     note: "Agencia americana especializada em restaurantes.",
     location: "Estados Unidos",
-    since: "Desde 2025",
+    since: "Desde 2026",
     deliverables: "Social media, criativos recorrentes e pecas de posicionamento",
-    deliveredCount: "30+ criativos",
+    deliveredCount: "50+ criativos",
     cadence: "Entrega semanal",
     focus: "Restaurantes e negocios locais",
     summary: "Suporte visual para manter frequencia, identidade e velocidade de publicacao no nicho de restaurantes.",
@@ -65,12 +67,13 @@ const projects: Project[] = [
     description: "Agencia focada em medicos, com criativos, presenca digital e materiais para captacao de pacientes.",
     scope: "Medicos / Saude / Captacao",
     art: "/assets/cases/vibefor-main.svg",
+    artMobile: "/assets/cases/mobile/vibefor-mobile.svg",
     logo: "Vibefor",
     note: "Agencia especializada em marketing medico.",
     location: "Brasil",
-    since: "Desde 2025",
+    since: "Desde 2026",
     deliverables: "Criativos, videos, pecas de social e materiais para captacao",
-    deliveredCount: "60+ entregas",
+    deliveredCount: "50+ criativos",
     cadence: "Operacao recorrente",
     focus: "Clinicas, medicos e saude",
     summary: "Fluxo criativo para uma agencia que precisa manter consistencia visual e volume para clientes da area medica.",
@@ -104,12 +107,13 @@ const projects: Project[] = [
     description: "Projeto focado em landing page, com estrutura visual para apresentar oferta, prova e conversao.",
     scope: "Landing Page / Conversao",
     art: "/assets/cases/inplexo-main.svg",
+    artMobile: "/assets/cases/mobile/inplexo-mobile.svg",
     logo: "Inplexo",
     note: "Cliente com projeto focado em landing page.",
     location: "Brasil",
-    since: "Desde 2025",
+    since: "Desde 2026",
     deliverables: "Landing page, estrutura de conversao e prova visual",
-    deliveredCount: "1 LP principal",
+    deliveredCount: "10 landing pages",
     cadence: "Projeto focado",
     focus: "Apresentacao de oferta",
     summary: "Construcao de uma landing page orientada a clareza, prova e conversao sem depender de excesso visual.",
@@ -118,6 +122,7 @@ const projects: Project[] = [
 ];
 
 const projectMap = Object.fromEntries(projects.map((project) => [project.slug, project]));
+const visibleProjects = projects.filter((project) => project.slug !== "agencia-astronauta");
 const specialistWhatsappHref = createWhatsappHref("Ola, Erick. Quero entender como plugar a HAKI na minha operacao.");
 
 type PageProps = {
@@ -126,7 +131,7 @@ type PageProps = {
 
 export default async function CasePage({ params }: PageProps) {
   const { slug } = await params;
-  const project = projectMap[slug] ?? projectMap["agencia-astronauta"];
+  const project = projectMap[slug] ?? visibleProjects[0];
 
   return (
     <main className="min-h-screen bg-[#050505] text-[#f4f1ea]">
@@ -145,14 +150,24 @@ export default async function CasePage({ params }: PageProps) {
 
             <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#101012] min-h-[240px] sm:min-h-[320px] lg:min-h-[430px]">
               {project.art ? (
-                <Image
-                  src={project.art}
-                  alt={`Arte principal do projeto ${project.title}`}
-                  width={1633}
-                  height={1846}
-                  className="h-full w-full object-cover object-top"
-                  priority
-                />
+                <>
+                  <Image
+                    src={project.artMobile ?? project.art}
+                    alt={`Arte principal do projeto ${project.title}`}
+                    width={1633}
+                    height={1846}
+                    className="h-full w-full object-cover object-top lg:hidden"
+                    priority
+                  />
+                  <Image
+                    src={project.art}
+                    alt={`Arte principal do projeto ${project.title}`}
+                    width={1633}
+                    height={1846}
+                    className="hidden h-full w-full object-cover object-top lg:block"
+                    priority
+                  />
+                </>
               ) : (
                 <div className="grid min-h-[320px] place-items-center text-[11px] font-semibold uppercase tracking-[0.2em] text-white/36">
                   Espaco principal do projeto
@@ -169,11 +184,11 @@ export default async function CasePage({ params }: PageProps) {
                   <strong className="block text-[1.45rem] font-medium leading-none tracking-[-0.045em] text-white/88 sm:text-[1.55rem]">
                     {project.logo ?? project.title}
                   </strong>
-                  <p className="mt-3 max-w-[24ch] text-[13px] leading-6 text-white/54 sm:text-[14px]">{project.note ?? project.summary}</p>
+                  <p className="mt-4 max-w-[24ch] text-[13px] leading-6 text-white/54 sm:text-[14px]">{project.note ?? project.summary}</p>
                 </div>
               </div>
 
-              <dl className="mt-5 grid gap-3.5 border-t border-white/8 pt-4.5">
+              <dl className="mt-6 grid gap-4 border-t border-white/8 pt-5.5">
                 <MetaRow label="Cliente desde" value={project.since} />
                 <MetaRow label="Local" value={project.location} />
                 <MetaRow label="Entregas" value={project.deliveredCount} />
@@ -268,18 +283,18 @@ export default async function CasePage({ params }: PageProps) {
 
 function MetaRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start justify-between gap-4">
+    <div className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
       <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/38">{label}</dt>
-      <dd className="max-w-[18ch] text-right text-[13px] leading-6 text-white/70 sm:text-[14px]">{value}</dd>
+      <dd className="max-w-[18ch] text-[13px] leading-6 text-white/70 sm:text-right sm:text-[14px]">{value}</dd>
     </div>
   );
 }
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4.5 sm:p-5">
+    <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4.5 sm:px-5 sm:py-5.5">
       <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/38">{label}</span>
-      <p className="mt-2.5 text-[14px] leading-6 text-white/68 sm:text-[15px] sm:leading-7">{value}</p>
+      <p className="mt-3 text-[14px] leading-6 text-white/68 sm:text-[15px] sm:leading-7">{value}</p>
     </article>
   );
 }
@@ -297,15 +312,15 @@ function CaseHeader({ currentSlug }: { currentSlug: string }) {
           </Link>
         </div>
 
-        <nav className="-mx-1 flex w-[calc(100%+8px)] gap-2 overflow-x-auto px-1 pb-1 lg:mx-0 lg:w-auto lg:flex-wrap lg:overflow-visible lg:px-0 lg:pb-0">
-          {projects.map((project) => {
+        <nav className="grid w-full grid-cols-2 gap-2 lg:flex lg:w-auto lg:flex-wrap">
+          {visibleProjects.map((project) => {
             const isCurrent = project.slug === currentSlug;
 
             return (
               <Link
                 key={project.slug}
                 href={`/cases/${project.slug}`}
-                className={`inline-flex min-h-10 shrink-0 items-center rounded-full px-4 text-[13px] font-medium whitespace-nowrap transition ${
+                className={`inline-flex min-h-10 items-center justify-center rounded-full px-4 text-center text-[13px] font-medium transition ${
                   isCurrent
                     ? "bg-white text-[#050505]"
                     : "border border-white/[0.08] text-white/58 hover:border-white/16 hover:text-white"
@@ -336,7 +351,6 @@ function CaseFooter() {
             ["Upshare", "/cases/upshare"],
             ["Vibefor", "/cases/vibefor"],
             ["Inplexo", "/cases/inplexo"],
-            ["Agencia Astronauta", "/cases/agencia-astronauta"],
           ].map(([label, href]) => (
             <Link key={label} href={href}>
               {label}

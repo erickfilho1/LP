@@ -397,6 +397,7 @@ section {
 }
 
 .umano-nav-mobile-toggle,
+.umano-nav-mobile-rail,
 .umano-nav-mobile-backdrop,
 .umano-nav-mobile-panel {
   display: none;
@@ -420,6 +421,40 @@ section {
   height: 1.5px;
   border-radius: 999px;
   background: rgba(247, 247, 242, 0.94);
+}
+
+.umano-nav-mobile-rail {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  min-width: 0;
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(8px);
+  transform: translateY(8px) scale(0.96);
+  transition:
+    opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.umano-nav-mobile-rail span {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(8, 8, 8, 0.2);
+  transition:
+    width 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.umano-nav-mobile-rail span.is-active {
+  width: 22px;
+  background: rgba(8, 8, 8, 0.86);
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.06);
 }
 
 .umano-nav-mobile-backdrop {
@@ -983,7 +1018,11 @@ section {
   color: rgba(8, 8, 8, 0.42);
 }
 
-.umano-logo-strip div {
+.umano-logo-strip-viewport {
+  width: 100%;
+}
+
+.umano-logo-strip-grid {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -991,18 +1030,28 @@ section {
   gap: clamp(28px, 6vw, 86px);
 }
 
-.umano-logo-strip span {
+.umano-logo-badge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  color: rgba(8, 8, 8, 0.72);
-  font-size: clamp(1.05rem, 1.8vw, 1.55rem);
-  font-weight: 850;
-  letter-spacing: -0.06em;
+  justify-content: center;
+  min-width: clamp(140px, 16vw, 220px);
+  min-height: clamp(56px, 6vw, 72px);
+  padding: 12px 18px;
+  border: 1px solid rgba(8, 8, 8, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 10px 30px rgba(8, 8, 8, 0.04);
 }
 
-.umano-logo-strip svg {
-  color: rgba(8, 8, 8, 0.5);
+.umano-logo-badge-image {
+  width: auto;
+  max-width: min(18vw, 180px);
+  height: auto;
+  max-height: 34px;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .umano-manifesto {
@@ -3192,6 +3241,7 @@ section {
   }
 
   .umano-nav-mobile-toggle,
+  .umano-nav-mobile-rail,
   .umano-nav-mobile-backdrop,
   .umano-nav-mobile-panel {
     display: flex;
@@ -3203,16 +3253,42 @@ section {
 
   .umano-nav.is-rail-mode {
     width: min(390px, calc(100vw - 22px));
-    gap: clamp(14px, 2.2vw, 28px);
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(8, 8, 8, 0.72);
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    border-color: rgba(8, 8, 8, 0.08);
+    background: rgba(247, 247, 242, 0.94);
     box-shadow:
-      0 24px 80px rgba(0, 0, 0, 0.34),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      0 18px 48px rgba(8, 8, 8, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  }
+
+  .umano-nav.is-rail-mode .umano-nav-logo {
+    min-width: 0;
+    width: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
   }
 
   .umano-nav.is-rail-mode .umano-nav-logo img {
-    filter: none;
+    filter: invert(1);
+    opacity: 0;
+  }
+
+  .umano-nav.is-rail-mode .umano-nav-cta {
+    opacity: 0;
+    width: 0;
+    min-width: 0;
+    padding-inline: 0;
+    overflow: hidden;
+    pointer-events: none;
+    box-shadow: none;
+  }
+
+  .umano-nav.is-rail-mode .umano-nav-mobile-rail {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
   }
 
   .umano-nav-cta {
@@ -3221,12 +3297,12 @@ section {
   }
 
   .umano-nav.is-rail-mode .umano-nav-mobile-toggle {
-    border-color: rgba(5, 5, 5, 0.08);
-    background: rgba(5, 5, 5, 0.04);
+    border-color: rgba(8, 8, 8, 0.08);
+    background: #050505;
   }
 
   .umano-nav.is-rail-mode .umano-nav-mobile-toggle span {
-    background: rgba(5, 5, 5, 0.82);
+    background: rgba(247, 247, 242, 0.94);
   }
 
   .umano-hero {
@@ -3234,34 +3310,42 @@ section {
   }
 
   .umano-hero-circuit-svg {
+    top: 36px;
     left: 50%;
-    width: 1380px;
+    width: 1520px;
+    height: calc(100% + 92px);
     max-width: none;
     transform: translateX(-50%);
   }
 
   .umano-hero-circuit-base path {
-    opacity: 0.62;
+    opacity: 0.72;
+  }
+
+  .umano-hero-circuit-base path:nth-child(-n + 2) {
+    opacity: 0.84;
   }
 
   .umano-hero-circuit-pulse {
-    stroke-width: 2.8;
+    stroke-width: 3.2;
+    stroke-dasharray: 0.11 0.89;
+    animation-duration: 7.2s;
   }
 
   .umano-hero-inner {
     min-height: 632px;
-    padding: 84px 16px 28px;
+    padding: 80px 16px 34px;
   }
 
   .umano-hero-copy {
-    margin-top: -14px;
+    margin-top: -28px;
   }
 
   .umano-hero-kicker {
     min-width: min(286px, calc(100vw - 54px));
     min-height: 48px;
-    margin-bottom: 20px;
-    padding: 10px 16px;
+    margin-bottom: 22px;
+    padding: 10px 16px 13px;
     font-size: 10px;
     line-height: 1.25;
   }
@@ -3277,7 +3361,7 @@ section {
     margin-top: 16px;
     font-size: 0.9rem;
     line-height: 1.24;
-    padding: 8px 9px;
+    padding: 9px 10px 14px;
     border-radius: 28px;
   }
 
@@ -3370,20 +3454,42 @@ section {
     padding-block: 28px;
   }
 
-  .umano-logo-strip div {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px 14px;
+  .umano-logo-strip-viewport {
+    width: 100vw;
+    overflow-x: auto;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 0 0 4px;
+    scrollbar-width: none;
   }
 
-  .umano-logo-strip span {
-    justify-content: center;
-    font-size: 0.98rem;
+  .umano-logo-strip-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .umano-logo-strip-grid {
+    width: max-content;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 12px;
+    padding-inline: 16px;
+  }
+
+  .umano-logo-badge {
+    min-width: 152px;
+    min-height: 62px;
+    padding: 10px 12px;
+    border-radius: 16px;
+  }
+
+  .umano-logo-badge-image {
+    max-width: 100%;
+    max-height: 28px;
   }
 
   .umano-manifesto {
-    height: 190vh;
-    min-height: 190vh;
+    height: 166vh;
+    min-height: 166vh;
   }
 
   .umano-manifesto-pin {
@@ -3394,19 +3500,20 @@ section {
   .umano-manifesto-sticky {
     height: 100vh;
     min-height: 100vh;
-    padding: 28px 16px 26px;
+    padding: 16px 16px 14px;
   }
 
   .umano-manifesto-kicker {
-    margin-bottom: 14px;
+    margin-bottom: 10px;
     font-size: 9px;
     letter-spacing: 0.04em;
   }
 
   .umano-manifesto h2 {
     gap: 0.08em;
-    font-size: clamp(1.94rem, 10.5vw, 3.2rem);
-    line-height: 0.92;
+    max-width: 360px;
+    font-size: clamp(2.12rem, 10.8vw, 3.34rem);
+    line-height: 0.9;
     letter-spacing: -0.085em;
   }
 
@@ -3416,12 +3523,12 @@ section {
 
   .umano-manifesto-progress {
     width: min(290px, 72vw);
-    margin-top: 18px;
+    margin-top: 12px;
   }
 
   .umano-rail-section {
-    min-height: auto;
-    padding-block: 34px 46px;
+    min-height: 100vh;
+    padding-block: 34px 74px;
   }
 
   .umano-rail-copy h2 {
@@ -3429,26 +3536,31 @@ section {
   }
 
   .umano-rail-viewport {
+    width: 100vw;
     overflow: visible;
-    margin-right: 0;
-    padding-bottom: 0;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-bottom: 10px;
     padding-inline: 0;
   }
 
   .umano-rail {
-    display: grid;
+    display: flex;
+    width: max-content;
     gap: 14px;
-    padding-inline: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
   }
 
   .umano-rail-card {
-    width: 100%;
-    min-height: 0;
+    width: min(84vw, 390px);
+    min-height: 460px;
+    flex: 0 0 auto;
     border-radius: 26px;
   }
 
   .umano-card-wire {
-    min-height: 224px;
+    min-height: 260px;
   }
 
   .umano-rail-card-copy {
@@ -3520,6 +3632,9 @@ section {
 
   .umano-case-carousel-viewport {
     overflow: hidden;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     padding: 0 0 8px;
     scroll-snap-type: none;
     scrollbar-width: none;
