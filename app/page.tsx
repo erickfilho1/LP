@@ -367,7 +367,7 @@ function UmanoNav() {
 
       <button
         type="button"
-        className="umano-nav-mobile-toggle"
+        className={`umano-nav-mobile-toggle ${isMobileMenuOpen ? "is-open" : ""}`}
         aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
         aria-expanded={isMobileMenuOpen}
         onClick={() => setIsMobileMenuOpen((current) => !current)}
@@ -404,15 +404,6 @@ function UmanoNav() {
                   </a>
                 ))}
               </nav>
-              <a
-                className="umano-nav-mobile-cta"
-                href={specialistWhatsappHref}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Plugar HAKI
-              </a>
             </motion.div>
           </>
         ) : null}
@@ -608,17 +599,25 @@ function UmanoLogoStrip() {
     <section className="umano-logo-strip" aria-label="Clientes e parceiros">
       <p>Agências e negócios digitais que confiam no nosso fluxo</p>
       <div className="umano-logo-strip-viewport">
-        <div className="umano-logo-strip-grid">
-          {clientLogos.map((logo) => (
-            <span key={logo.src} className="umano-logo-badge">
-              <Image
-                src={logo.src}
-                alt={logo.name}
-                width={logo.width}
-                height={logo.height}
-                className="umano-logo-badge-image"
-              />
-            </span>
+        <div className="umano-logo-strip-marquee">
+          {[0, 1].map((copyIndex) => (
+            <div
+              key={copyIndex}
+              className="umano-logo-strip-grid"
+              aria-hidden={copyIndex === 1 ? "true" : undefined}
+            >
+              {clientLogos.map((logo) => (
+                <span key={`${copyIndex}-${logo.src}`} className="umano-logo-badge">
+                  <Image
+                    src={logo.src}
+                    alt={copyIndex === 0 ? logo.name : ""}
+                    width={logo.width}
+                    height={logo.height}
+                    className="umano-logo-badge-image"
+                  />
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
@@ -940,11 +939,11 @@ function HowItWorksRail() {
       };
       const getRailShiftY = () => {
         const rect = deliveryScene.getBoundingClientRect();
-        return window.innerHeight * 0.52 - (rect.top + rect.height / 2);
+        return window.innerHeight * 0.44 - (rect.top + rect.height / 2);
       };
       const getRailScale = () => {
         const rect = deliveryScene.getBoundingClientRect();
-        return Math.max(window.innerWidth / rect.width, window.innerHeight / rect.height) * 1.08;
+        return Math.max(window.innerWidth / rect.width, window.innerHeight / rect.height) * 1.03;
       };
       const getLogoCenterX = () => {
         const rect = deliveryLogo.getBoundingClientRect();
@@ -971,36 +970,36 @@ function HowItWorksRail() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: "center center",
-          end: () => `+=${getFocusDistance() * 0.9 + window.innerHeight * 0.72}`,
+          start: "center 56%",
+          end: () => `+=${getFocusDistance() * 0.58 + window.innerHeight * 0.34}`,
           pin: true,
-          scrub: 0.34,
+          scrub: 0.2,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      tl.to(track, { x: getFocusX, ease: "none", duration: 0.4 }, 0)
-        .to([railCopy, ...otherCards], { opacity: 0, filter: "blur(6px)", ease: "none", duration: 0.11 }, 0.34)
-        .set([railCopy, ...otherCards], { visibility: "hidden" }, 0.44)
-        .to(deliveryCopy, { opacity: 0, yPercent: 20, filter: "blur(8px)", ease: "none", duration: 0.08 }, 0.36)
-        .set(deliveryCopy, { visibility: "hidden" }, 0.44)
-        .set(deliveryCard, { overflow: "visible" }, 0.41)
+      tl.to(track, { x: getFocusX, ease: "none", duration: 0.34 }, 0)
+        .to([railCopy, ...otherCards], { opacity: 0, filter: "blur(6px)", ease: "none", duration: 0.08 }, 0.26)
+        .set([railCopy, ...otherCards], { visibility: "hidden" }, 0.34)
+        .to(deliveryCopy, { opacity: 0, yPercent: 14, filter: "blur(8px)", ease: "none", duration: 0.06 }, 0.28)
+        .set(deliveryCopy, { visibility: "hidden" }, 0.34)
+        .set(deliveryCard, { overflow: "visible" }, 0.32)
         .to(deliveryCard, {
           backgroundColor: "transparent",
           borderColor: "rgba(5, 5, 5, 0)",
           boxShadow: "none",
           ease: "none",
-          duration: 0.12,
-        }, 0.41)
-        .to(section, { backgroundColor: "#050505", ease: "none", duration: 0.18 }, 0.39)
-        .set(track, { transformOrigin: getRailOrigin }, 0.42)
+          duration: 0.1,
+        }, 0.32)
+        .to(section, { backgroundColor: "#050505", ease: "none", duration: 0.14 }, 0.3)
+        .set(track, { transformOrigin: getRailOrigin }, 0.34)
         .to(track, {
           y: getRailShiftY,
           scale: getRailScale,
           ease: "none",
-          duration: 0.24,
-        }, 0.46)
+          duration: 0.18,
+        }, 0.36)
         .to(deliveryLogo, {
           x: getLogoCenterX,
           y: getLogoCenterY,
@@ -1008,10 +1007,10 @@ function HowItWorksRail() {
           xPercent: -50,
           yPercent: -50,
           ease: "none",
-          duration: 0.24,
-        }, 0.46)
-        .to(deliveryGlow, { opacity: 0.76, ease: "none", duration: 0.14 }, 0.52)
-        .to(deliveryLogo, { y: () => getLogoCenterY() - window.innerHeight * 0.2, opacity: 0, ease: "none", duration: 0.15 }, 0.82);
+          duration: 0.18,
+        }, 0.36)
+        .to(deliveryGlow, { opacity: 0.72, ease: "none", duration: 0.1 }, 0.42)
+        .to(deliveryLogo, { y: () => getLogoCenterY() - window.innerHeight * 0.12, opacity: 0, ease: "none", duration: 0.1 }, 0.56);
 
       return () => tl.kill();
     });

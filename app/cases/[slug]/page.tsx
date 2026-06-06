@@ -150,24 +150,14 @@ export default async function CasePage({ params }: PageProps) {
 
             <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#101012] min-h-[240px] sm:min-h-[320px] lg:min-h-[430px]">
               {project.art ? (
-                <>
-                  <Image
-                    src={project.artMobile ?? project.art}
-                    alt={`Arte principal do projeto ${project.title}`}
-                    width={1633}
-                    height={1846}
-                    className="h-full w-full object-cover object-top lg:hidden"
-                    priority
-                  />
-                  <Image
-                    src={project.art}
-                    alt={`Arte principal do projeto ${project.title}`}
-                    width={1633}
-                    height={1846}
-                    className="hidden h-full w-full object-cover object-top lg:block"
-                    priority
-                  />
-                </>
+                <Image
+                  src={project.art}
+                  alt={`Arte principal do projeto ${project.title}`}
+                  width={1633}
+                  height={1846}
+                  className="h-full w-full object-cover object-top"
+                  priority
+                />
               ) : (
                 <div className="grid min-h-[320px] place-items-center text-[11px] font-semibold uppercase tracking-[0.2em] text-white/36">
                   Espaco principal do projeto
@@ -292,9 +282,9 @@ function MetaRow({ label, value }: { label: string; value: string }) {
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4.5 sm:px-5 sm:py-5.5">
+    <article className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-5.5 sm:px-5 sm:py-6">
       <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/38">{label}</span>
-      <p className="mt-3 text-[14px] leading-6 text-white/68 sm:text-[15px] sm:leading-7">{value}</p>
+      <p className="mt-3.5 text-[14px] leading-6 text-white/68 sm:text-[15px] sm:leading-7">{value}</p>
     </article>
   );
 }

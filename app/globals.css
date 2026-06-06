@@ -413,6 +413,10 @@ section {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.03);
+  transition:
+    background 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .umano-nav-mobile-toggle span {
@@ -421,6 +425,29 @@ section {
   height: 1.5px;
   border-radius: 999px;
   background: rgba(247, 247, 242, 0.94);
+  transform-origin: center;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.umano-nav-mobile-toggle.is-open {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.umano-nav-mobile-toggle.is-open span:nth-child(1) {
+  transform: translateY(4.5px) rotate(45deg);
+}
+
+.umano-nav-mobile-toggle.is-open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.4);
+}
+
+.umano-nav-mobile-toggle.is-open span:nth-child(3) {
+  transform: translateY(-4.5px) rotate(-45deg);
 }
 
 .umano-nav-mobile-rail {
@@ -460,8 +487,9 @@ section {
   position: fixed;
   inset: 0;
   z-index: 88;
-  background: rgba(5, 5, 5, 0.52);
+  background: rgba(5, 5, 5, 0.8);
   border: 0;
+  backdrop-filter: blur(20px);
 }
 
 .umano-nav-mobile-panel {
@@ -473,11 +501,11 @@ section {
   padding: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 28px;
-  background: rgba(11, 11, 11, 0.94);
+  background: rgba(8, 8, 8, 0.8);
   box-shadow:
     0 26px 70px rgba(0, 0, 0, 0.34),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(22px);
+  backdrop-filter: blur(26px);
 }
 
 .umano-nav-mobile-links {
@@ -485,30 +513,32 @@ section {
   gap: 8px;
 }
 
-.umano-nav-mobile-links a,
-.umano-nav-mobile-cta {
+.umano-nav-mobile-links a {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  border-radius: 18px;
+  min-height: 56px;
+  border-radius: 20px;
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 650;
-  letter-spacing: -0.02em;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 .umano-nav-mobile-links a {
   border: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(247, 247, 242, 0.9);
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(247, 247, 242, 0.94);
+  transition:
+    border-color 220ms ease,
+    background 220ms ease,
+    transform 220ms ease;
 }
 
-.umano-nav-mobile-cta {
-  margin-top: 10px;
-  background: #ff0f33;
-  color: #f7f7f2;
-  box-shadow: 0 16px 44px rgba(255, 15, 51, 0.22);
+.umano-nav-mobile-links a:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.055);
+  transform: translateY(-1px);
 }
 
 .umano-hero {
@@ -1018,6 +1048,10 @@ section {
 }
 
 .umano-logo-strip-viewport {
+  width: 100%;
+}
+
+.umano-logo-strip-marquee {
   width: 100%;
 }
 
@@ -3265,7 +3299,7 @@ section {
 
   .umano-nav.is-rail-mode {
     width: min(390px, calc(100vw - 22px));
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 12px;
     border-color: rgba(8, 8, 8, 0.08);
     background: rgba(247, 247, 242, 0.94);
@@ -3275,16 +3309,16 @@ section {
   }
 
   .umano-nav.is-rail-mode .umano-nav-logo {
-    min-width: 0;
-    width: 0;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
+    flex: 0 0 auto;
+    width: auto;
+    opacity: 1;
+    overflow: visible;
+    pointer-events: auto;
   }
 
   .umano-nav.is-rail-mode .umano-nav-logo img {
     filter: invert(1);
-    opacity: 0;
+    opacity: 1;
   }
 
   .umano-nav.is-rail-mode .umano-nav-cta {
@@ -3468,15 +3502,16 @@ section {
 
   .umano-logo-strip-viewport {
     width: 100vw;
-    overflow-x: auto;
+    overflow: hidden;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    padding: 0 0 4px;
-    scrollbar-width: none;
+    padding: 0;
   }
 
-  .umano-logo-strip-viewport::-webkit-scrollbar {
-    display: none;
+  .umano-logo-strip-marquee {
+    display: flex;
+    width: max-content;
+    animation: umano-logo-marquee 18s linear infinite;
   }
 
   .umano-logo-strip-grid {
@@ -3484,19 +3519,29 @@ section {
     width: max-content;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    gap: 12px;
-    padding-inline: 16px;
+    gap: 20px;
+    padding-inline: 10px;
+    flex: 0 0 auto;
   }
 
   .umano-logo-badge {
-    min-width: 152px;
+    min-width: 132px;
     min-height: 62px;
-    padding: 0 4px;
+    padding: 0 6px;
   }
 
   .umano-logo-badge-image {
     max-width: 100%;
     max-height: 32px;
+  }
+
+  @keyframes umano-logo-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
   }
 
   .umano-manifesto {
