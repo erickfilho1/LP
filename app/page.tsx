@@ -3,10 +3,13 @@
 import { AnimatePresence, motion, type MotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import Lenis from "lenis";
 import { createWhatsappHref, getWhatsappNumberLabel } from "./whatsapp";
+import upsharePreview from "../brand/umano-home-desktop.png";
+import vibeforPreview from "../brand/hero-video-desktop.png";
+import inplexoPreview from "../brand/contact-headless-new.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -142,6 +145,40 @@ const briefingHref = (plan?: string) => `/briefing${plan ? `?plano=${encodeURICo
 const specialistWhatsappHref = createWhatsappHref("Ola, Erick! Quero falar sobre plugar a HAKI na minha operacao.");
 const specialistWhatsappLabel = getWhatsappNumberLabel();
 
+type ConnectionLike = {
+  effectiveType?: string;
+  saveData?: boolean;
+  addEventListener?: (type: "change", listener: () => void) => void;
+  removeEventListener?: (type: "change", listener: () => void) => void;
+};
+
+function useLightweightExperience() {
+  const reduceMotion = useReducedMotion();
+  const [isLightweight, setIsLightweight] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const connection = (navigator as Navigator & { connection?: ConnectionLike }).connection;
+
+    const syncPreference = () => {
+      const saveData = Boolean(connection?.saveData);
+      const slowerConnection = ["slow-2g", "2g", "3g"].includes(connection?.effectiveType ?? "");
+      setIsLightweight(reduceMotion || mediaQuery.matches || saveData || slowerConnection);
+    };
+
+    syncPreference();
+    mediaQuery.addEventListener("change", syncPreference);
+    connection?.addEventListener?.("change", syncPreference);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncPreference);
+      connection?.removeEventListener?.("change", syncPreference);
+    };
+  }, [reduceMotion]);
+
+  return isLightweight;
+}
+
 const portfolio = {
   "Landing pages": [
     ["Launch Sprint", "Página de vendas para lançamento digital", "Conversão"],
@@ -194,8 +231,12 @@ function Reveal({
   );
 }
 
-function SmoothScroll() {
+function SmoothScroll({ disabled = false }: { disabled?: boolean }) {
   useEffect(() => {
+    if (disabled) {
+      return;
+    }
+
     const isCompactViewport = window.matchMedia("(max-width: 768px)").matches;
     const lenis = new Lenis({
       duration: isCompactViewport ? 0.82 : 1.15,
@@ -219,19 +260,24 @@ function SmoothScroll() {
       cancelAnimationFrame(frame);
       lenis.destroy();
     };
-  }, []);
+  }, [disabled]);
 
   return null;
 }
 
-function HakiPreloader() {
+function HakiPreloader({ disabled = false }: { disabled?: boolean }) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    if (disabled) {
+      setIsVisible(false);
+      return;
+    }
+
     const timeout = window.setTimeout(() => setIsVisible(false), 1450);
 
     return () => window.clearTimeout(timeout);
-  }, []);
+  }, [disabled]);
 
   if (!isVisible) {
     return null;
@@ -247,7 +293,7 @@ function HakiPreloader() {
   );
 }
 
-function UmanoNav() {
+function UmanoNav({ liteMode = false }: { liteMode?: boolean }) {
   const [isRailMode, setIsRailMode] = useState(false);
   const [railIndex, setRailIndex] = useState(0);
   const [railCount, setRailCount] = useState(4);
@@ -262,6 +308,10 @@ function UmanoNav() {
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
+    if (liteMode) {
+      return;
+    }
+
     const section = document.querySelector<HTMLElement>(".umano-rail-section");
     const viewport = document.querySelector<HTMLElement>(".umano-rail-viewport");
     const track = document.querySelector<HTMLElement>(".umano-rail");
@@ -332,7 +382,7 @@ function UmanoNav() {
       window.removeEventListener("haki:cases-rail", handleCasesRail);
       window.removeEventListener("haki:cases-index", handleCasesIndex);
     };
-  }, []);
+  }, [liteMode]);
 
   return (
     <header className={`umano-nav ${isRailMode ? "is-rail-mode" : ""}`} aria-label="Navegação principal">
@@ -412,17 +462,25 @@ function UmanoNav() {
   );
 }
 
-function DynamicHeroWord() {
+function DynamicHeroWord({ liteMode = false }: { liteMode?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    if (liteMode || reduceMotion) {
+      return;
+    }
+
     const interval = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % heroWords.length);
     }, 1550);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [liteMode, reduceMotion]);
+
+  if (liteMode) {
+    return <span>Landing pages</span>;
+  }
 
   return (
     <motion.span
@@ -508,7 +566,7 @@ function HeroWireframe() {
   );
 }
 
-function UmanoHero() {
+function UmanoHero({ liteMode = false }: { liteMode?: boolean }) {
   const circuitPaths = [
     "M445.353 -279L369.066 62.4226C364.117 84.5745 378.571 106.401 400.898 110.49L795 182.5",
     "M1474.65 -278L1550.93 63.4226C1555.88 85.5745 1541.43 107.401 1519.1 111.49L1125 183.5",
@@ -557,17 +615,19 @@ function UmanoHero() {
             <path d="M-216 833H2136" stroke="#262624" />
           </g>
 
-          <g className="umano-hero-circuit-pulses" filter="url(#hero-pulse-glow)">
-            {circuitPaths.map((path, index) => (
-              <path
-                key={`pulse-${index}`}
-                className={`umano-hero-circuit-pulse pulse-${index + 1}`}
-                d={path}
-                pathLength="1"
-                stroke="url(#hero-pulse-gradient)"
-              />
-            ))}
-          </g>
+          {liteMode ? null : (
+            <g className="umano-hero-circuit-pulses" filter="url(#hero-pulse-glow)">
+              {circuitPaths.map((path, index) => (
+                <path
+                  key={`pulse-${index}`}
+                  className={`umano-hero-circuit-pulse pulse-${index + 1}`}
+                  d={path}
+                  pathLength="1"
+                  stroke="url(#hero-pulse-gradient)"
+                />
+              ))}
+            </g>
+          )}
         </svg>
       </div>
 
@@ -582,7 +642,7 @@ function UmanoHero() {
             Plugue a HAKI na sua operação.
           </h1>
           <p className="umano-hero-subtitle">
-            A HAKI entrega <DynamicHeroWord /> para sua operação, sem depender de freelancer solto.
+            A HAKI entrega <DynamicHeroWord liteMode={liteMode} /> para sua operação, sem depender de freelancer solto.
           </p>
           <div className="umano-hero-actions">
             <a href="#planos">Plugar a HAKI</a>
@@ -648,7 +708,7 @@ function ManifestWord({
   );
 }
 
-function StickyManifesto() {
+function StickyManifesto({ liteMode = false }: { liteMode?: boolean }) {
   const ref = useRef<HTMLElement | null>(null);
   const pinRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
@@ -659,6 +719,22 @@ function StickyManifesto() {
   const firstLine = ["Um", "estúdio", "dentro", "da", "sua", "operação,"];
   const secondLine = ["com", "ritmo", "de", "produto", "e", "prazo", "de lançamento."];
   const words = [...firstLine, ...secondLine];
+
+  if (liteMode) {
+    return (
+      <section ref={ref} className="umano-manifesto">
+        <div ref={pinRef} className="umano-manifesto-pin">
+          <div className="umano-manifesto-sticky">
+            <span className="umano-manifesto-kicker">Infraestrutura criativa plugada</span>
+            <h2>
+              <span className="umano-manifesto-line">{firstLine.join(" ")}</span>
+              <span className="umano-manifesto-line">{secondLine.join(" ")}</span>
+            </h2>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   useEffect(() => {
     if (!ref.current || !pinRef.current) {
@@ -756,7 +832,7 @@ function RailIcon({ type }: { type: string }) {
   );
 }
 
-function HowItWorksRail() {
+function HowItWorksRail({ liteMode = false }: { liteMode?: boolean }) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -789,7 +865,7 @@ function HowItWorksRail() {
     const viewport = viewportRef.current;
     const track = trackRef.current;
 
-    if (!section || !viewport || !track || reduceMotion) {
+    if (!section || !viewport || !track || reduceMotion || liteMode) {
       return;
     }
 
@@ -1018,7 +1094,7 @@ function HowItWorksRail() {
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
     return () => media.revert();
-  }, [reduceMotion]);
+  }, [liteMode, reduceMotion]);
 
   return (
     <section ref={sectionRef} id="processo" className="umano-rail-section">
@@ -1952,7 +2028,7 @@ const deliveryCases = [
     description: "Cliente desde 2026. Agencia dos Estados Unidos que atende restaurantes com conteudo, social e presenca digital recorrente.",
     marker: "US / RESTAURANTES",
     theme: "upshare",
-    image: "/assets/cases/upshare-main.svg",
+    image: upsharePreview,
   },
   {
     slug: "vibefor",
@@ -1960,7 +2036,7 @@ const deliveryCases = [
     description: "Cliente desde 2026. Agencia focada em medicos, com criativos, presenca digital e materiais para captacao de pacientes.",
     marker: "MEDICOS / SAUDE",
     theme: "vibefor",
-    image: "/assets/cases/vibefor-main.svg",
+    image: vibeforPreview,
   },
   {
     slug: "inplexo",
@@ -1968,7 +2044,7 @@ const deliveryCases = [
     description: "Cliente desde 2026. Projeto focado em landing page, com estrutura visual para apresentar oferta, prova e conversao.",
     marker: "LANDING PAGE",
     theme: "inplexo",
-    image: "/assets/cases/inplexo-main.svg",
+    image: inplexoPreview,
   },
 ];
 function PlanIncluded({ planName, items }: { planName: string; items: string[] }) {
@@ -2047,7 +2123,7 @@ function UmanoPlans() {
   );
 }
 
-function UmanoCases() {
+function UmanoCases({ liteMode = false }: { liteMode?: boolean }) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -2068,7 +2144,7 @@ function UmanoCases() {
     const viewport = viewportRef.current;
     const track = trackRef.current;
 
-    if (!section || !viewport || !track || reduceMotion) {
+    if (!section || !viewport || !track || reduceMotion || liteMode) {
       return;
     }
 
@@ -2223,7 +2299,7 @@ function UmanoCases() {
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
     return () => media.revert();
-  }, [reduceMotion]);
+  }, [liteMode, reduceMotion]);
 
   return (
     <section ref={sectionRef} id="cases" className="umano-cases-section">
@@ -2255,10 +2331,9 @@ function UmanoCases() {
                 {"image" in project ? (
                   <Image
                     className="umano-case-main-art"
-                    src={project.image ?? ""}
+                    src={project.image as StaticImageData}
                     alt=""
-                    width={1633}
-                    height={1846}
+                    sizes="(max-width: 767px) 88vw, 36vw"
                   />
                 ) : (
                   <>
@@ -2303,7 +2378,7 @@ function UmanoCases() {
   );
 }
 
-function WaveLensBridge() {
+function WaveLensBridge({ disabled = false }: { disabled?: boolean }) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const sendWavePointer = useCallback((event: MouseEvent<HTMLElement>, active = true) => {
@@ -2327,6 +2402,10 @@ function WaveLensBridge() {
   const releaseWavePointer = useCallback((event: MouseEvent<HTMLElement>) => {
     sendWavePointer(event, false);
   }, [sendWavePointer]);
+
+  if (disabled) {
+    return null;
+  }
 
   return (
     <section className="wave-lens-bridge" aria-label="Transição visual HAKI">
@@ -2381,7 +2460,7 @@ function UmanoFAQ() {
   );
 }
 
-function UmanoFinalStack() {
+function UmanoFinalStack({ liteMode = false }: { liteMode?: boolean }) {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
@@ -2390,7 +2469,7 @@ function UmanoFinalStack() {
     const stage = stageRef.current;
     const panel = panelRef.current;
 
-    if (!stage || !panel || reduceMotion) {
+    if (!stage || !panel || reduceMotion || liteMode) {
       return;
     }
 
@@ -2430,7 +2509,7 @@ function UmanoFinalStack() {
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
     return () => media.revert();
-  }, [reduceMotion]);
+  }, [liteMode, reduceMotion]);
 
   return (
     <div ref={stageRef} className="umano-final-stack">
@@ -2882,19 +2961,21 @@ function Footer() {
 }
 
 export default function Home() {
+  const liteMode = useLightweightExperience();
+
   return (
-    <main className="noise min-h-screen bg-haki-black">
-      <SmoothScroll />
-      <HakiPreloader />
-      <UmanoNav />
-      <UmanoHero />
+    <main className={`noise min-h-screen bg-haki-black ${liteMode ? "performance-lite" : ""}`}>
+      <SmoothScroll disabled={liteMode} />
+      <HakiPreloader disabled={liteMode} />
+      <UmanoNav liteMode={liteMode} />
+      <UmanoHero liteMode={liteMode} />
       <UmanoLogoStrip />
-      <StickyManifesto />
-      <HowItWorksRail />
+      <StickyManifesto liteMode={liteMode} />
+      <HowItWorksRail liteMode={liteMode} />
       <UmanoPlans />
-      <WaveLensBridge />
-      <UmanoCases />
-      <UmanoFinalStack />
+      <WaveLensBridge disabled={liteMode} />
+      <UmanoCases liteMode={liteMode} />
+      <UmanoFinalStack liteMode={liteMode} />
     </main>
   );
 }

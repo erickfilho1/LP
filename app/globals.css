@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,8 +6,8 @@
   color-scheme: dark;
   background: #050505;
   --font-sans: "Space Grotesk", "Satoshi", "Aptos", "Segoe UI", sans-serif;
-  --font-mono: "Manrope", "Aptos", "Segoe UI", sans-serif;
-  --font-label: "Manrope", "Aptos", "Segoe UI", sans-serif;
+  --font-mono: "Aptos", "Segoe UI", sans-serif;
+  --font-label: "Aptos", "Segoe UI", sans-serif;
 }
 
 * {
@@ -33,6 +31,28 @@ body {
   color: #f7f7f2;
   font-family: var(--font-sans), sans-serif;
   text-rendering: geometricPrecision;
+}
+
+.performance-lite .noise::before {
+  display: none;
+}
+
+.performance-lite .umano-hero-circuit-pulse,
+.performance-lite .umano-logo-strip-marquee,
+.performance-lite .umano-hero-kicker::before {
+  animation: none !important;
+}
+
+.performance-lite .umano-hero-circuit-pulse {
+  opacity: 0.12;
+}
+
+.performance-lite .umano-nav,
+.performance-lite .umano-nav-mobile-backdrop,
+.performance-lite .umano-nav-mobile-panel,
+.performance-lite .umano-hero-subtitle,
+.performance-lite .umano-wireframe-shell {
+  backdrop-filter: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -433,8 +453,16 @@ section {
 }
 
 .umano-nav-mobile-toggle.is-open {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(247, 247, 242, 0.96);
+  border-color: rgba(255, 255, 255, 0.82);
+  transform: rotate(90deg) scale(1.02);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.umano-nav-mobile-toggle.is-open span {
+  background: rgba(5, 5, 5, 0.94);
 }
 
 .umano-nav-mobile-toggle.is-open span:nth-child(1) {
@@ -487,9 +515,9 @@ section {
   position: fixed;
   inset: 0;
   z-index: 88;
-  background: rgba(5, 5, 5, 0.8);
+  background: rgba(5, 5, 5, 0.42);
   border: 0;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(18px);
 }
 
 .umano-nav-mobile-panel {
@@ -499,13 +527,13 @@ section {
   top: 84px;
   z-index: 89;
   padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 28px;
-  background: rgba(8, 8, 8, 0.8);
+  background: rgba(10, 10, 10, 0.68);
   box-shadow:
-    0 26px 70px rgba(0, 0, 0, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(26px);
+    0 26px 70px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(22px);
 }
 
 .umano-nav-mobile-links {
@@ -1053,6 +1081,10 @@ section {
 
 .umano-logo-strip-marquee {
   width: 100%;
+}
+
+.umano-logo-strip-marquee > .umano-logo-strip-grid:nth-child(2) {
+  display: none;
 }
 
 .umano-logo-strip-grid {
@@ -3351,6 +3383,15 @@ section {
     background: rgba(247, 247, 242, 0.94);
   }
 
+  .umano-nav.is-rail-mode .umano-nav-mobile-toggle.is-open {
+    border-color: rgba(8, 8, 8, 0.12);
+    background: rgba(247, 247, 242, 0.98);
+  }
+
+  .umano-nav.is-rail-mode .umano-nav-mobile-toggle.is-open span {
+    background: rgba(5, 5, 5, 0.94);
+  }
+
   .umano-hero {
     min-height: 632px;
   }
@@ -3512,6 +3553,10 @@ section {
     display: flex;
     width: max-content;
     animation: umano-logo-marquee 18s linear infinite;
+  }
+
+  .umano-logo-strip-marquee > .umano-logo-strip-grid:nth-child(2) {
+    display: flex;
   }
 
   .umano-logo-strip-grid {
@@ -3903,4 +3948,13 @@ section {
   font-family: var(--font-label), sans-serif !important;
   font-weight: 400 !important;
   letter-spacing: 0.035em !important;
+}
+
+.umano-pricing-section,
+.wave-lens-bridge,
+.umano-cases-section,
+.umano-final-stack,
+.umano-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
 }
