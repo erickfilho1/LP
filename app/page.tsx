@@ -2351,8 +2351,14 @@ function UmanoCases({ liteMode = false }: { liteMode?: boolean }) {
                 <p>{project.description}</p>
               </div>
               <span className="umano-case-hover-cue" aria-hidden="true">
-                Abrir
-                <b>{"->"}</b>
+                <span>Abrir</span>
+                <Image
+                  src="/assets/case-open-arrow.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="umano-case-open-icon"
+                />
               </span>
             </motion.a>
           ))}
@@ -2372,7 +2378,13 @@ function UmanoCases({ liteMode = false }: { liteMode?: boolean }) {
         transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.55 }}
       >
         <span>Abrir</span>
-        <b>{"->"}</b>
+        <Image
+          src="/assets/case-open-arrow.svg"
+          alt=""
+          width={16}
+          height={16}
+          className="umano-case-open-icon"
+        />
       </motion.div>
     </section>
   );
