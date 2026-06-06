@@ -3214,19 +3214,30 @@ section {
   }
 
   .umano-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     top: 12px;
-    grid-template-columns: 1fr auto auto;
     width: min(390px, calc(100vw - 22px));
     min-height: 62px;
+    gap: 10px;
     padding: 8px 9px 8px 15px;
   }
 
   .umano-nav-logo {
+    flex: 1 1 auto;
     min-width: 0;
   }
 
   .umano-nav-logo img {
     height: 24px;
+  }
+
+  .umano-nav-cta {
+    flex: 0 0 auto;
+    padding: 12px 14px;
+    font-size: 11px;
+    white-space: nowrap;
   }
 
   .umano-nav-center {
@@ -3244,13 +3255,17 @@ section {
     display: flex;
   }
 
+  .umano-nav-mobile-toggle {
+    flex: 0 0 46px;
+  }
+
   .umano-nav-mobile-panel {
     display: block;
   }
 
   .umano-nav.is-rail-mode {
     width: min(390px, calc(100vw - 22px));
-    grid-template-columns: auto 1fr auto;
+    justify-content: flex-start;
     gap: 12px;
     border-color: rgba(8, 8, 8, 0.08);
     background: rgba(247, 247, 242, 0.94);

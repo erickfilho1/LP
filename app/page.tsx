@@ -11,7 +11,7 @@ import { createWhatsappHref, getWhatsappNumberLabel } from "./whatsapp";
 gsap.registerPlugin(ScrollTrigger);
 
 const navItems = [
-  ["SoluÃ§Ãµes", "#solucoes"],
+  ["Soluções", "#solucoes"],
   ["Processo", "#processo"],
   ["Planos", "#planos"],
   ["Cases", "#cases"],
@@ -22,20 +22,20 @@ const navItems = [
 const services = [
   "Landing Pages",
   "Ads & Creatives",
-  "VÃ­deos",
+  "Vídeos",
   "Design Systems",
   "Web Elements",
 ];
 
-const heroWords = ["Landing pages", "Artes", "VÃ­deos", "Sites"];
+const heroWords = ["Landing pages", "Artes", "Vídeos", "Sites"];
 
 const metrics = [
   ["+100", "Landing pages entregues"],
-  ["+30", "AgÃªncias atendidas"],
-  ["+10", "LanÃ§amentos suportados"],
+  ["+30", "Agências atendidas"],
+  ["+10", "Lançamentos suportados"],
   ["98%", "Entregas no prazo"],
-  ["3 dias", "Prazo mÃ©dio de entrega"],
-  ["5", "SolicitaÃ§Ãµes diÃ¡rias"],
+  ["3 dias", "Prazo médio de entrega"],
+  ["5", "Solicitações diárias"],
 ];
 
 const clients = [
@@ -59,48 +59,48 @@ const boardColumns = [
   {
     title: "Backlog",
     count: "3",
-    cards: ["Landing Page", "AnÃºncio", "Video Edit"],
+    cards: ["Landing Page", "Anúncio", "Video Edit"],
   },
   {
     title: "Em andamento",
     count: "2",
-    cards: ["PÃ¡gina de Vendas", "VSL"],
+    cards: ["Página de Vendas", "VSL"],
   },
   {
-    title: "RevisÃ£o",
+    title: "Revisão",
     count: "1",
-    cards: ["PÃ¡gina Obrigado"],
+    cards: ["Página Obrigado"],
   },
   {
-    title: "ConcluÃ­do",
+    title: "Concluído",
     count: "4",
-    cards: ["AnÃºncio", "Landing Page", "Email Design", "Video Edit"],
+    cards: ["Anúncio", "Landing Page", "Email Design", "Video Edit"],
   },
 ];
 
 const processSteps = [
   {
     step: "01",
-    title: "SolicitaÃ§Ã£o",
-    text: "VocÃª envia a demanda pelo Trello com briefing simples e objetivo.",
+    title: "Solicitação",
+    text: "Você envia a demanda pelo Trello com briefing simples e objetivo.",
     icon: "request",
   },
   {
     step: "02",
-    title: "ProduÃ§Ã£o",
-    text: "Entramos em aÃ§Ã£o com nosso fluxo operacional organizado.",
+    title: "Produção",
+    text: "Entramos em ação com nosso fluxo operacional organizado.",
     icon: "progress",
   },
   {
     step: "03",
-    title: "RevisÃ£o",
-    text: "VocÃª revisa e solicita ajustes com agilidade e clareza.",
+    title: "Revisão",
+    text: "Você revisa e solicita ajustes com agilidade e clareza.",
     icon: "review",
   },
   {
     step: "04",
     title: "Entrega",
-    text: "Arquivos entregues com prazo, qualidade e consistÃªncia.",
+    text: "Arquivos entregues com prazo, qualidade e consistência.",
     icon: "delivered",
   },
 ];
@@ -109,32 +109,32 @@ const plans = [
   {
     name: "Essencial",
     price: "R$ 1.500",
-    description: "Suporte criativo diÃ¡rio para demandas contÃ­nuas.",
+    description: "Suporte criativo diário para demandas contínuas.",
     included: ["Artes"],
-    features: ["3 pedidos por dia", "Entregas em 3 dias", "RevisÃµes limitadas", "Acompanhamento Trello"],
+    features: ["3 pedidos por dia", "Entregas em 3 dias", "Revisões limitadas", "Acompanhamento Trello"],
   },
   {
     name: "Growth",
     price: "R$ 2.000",
-    description: "Ideal para agÃªncias em crescimento.",
+    description: "Ideal para agências em crescimento.",
     tag: "Mais escolhido",
     featured: true,
-    included: ["Artes", "VÃ­deos", "LPs"],
-    features: ["5 demandas por dia", "Entregas em 72h", "RevisÃµes ilimitadas", "Acompanhamento Trello"],
+    included: ["Artes", "Vídeos", "LPs"],
+    features: ["5 demandas por dia", "Entregas em 72h", "Revisões ilimitadas", "Acompanhamento Trello"],
   },
   {
     name: "Scale",
     price: "R$ 2.997",
-    description: "ProduÃ§Ã£o criativa em alta escala.",
-    included: ["Artes", "VÃ­deos", "LPs", "Prazo prioritÃ¡rio"],
-    features: ["10+ demandas por dia", "Entregas prioritÃ¡rias", "RevisÃµes ilimitadas", "Acompanhamento Trello"],
+    description: "Produção criativa em alta escala.",
+    included: ["Artes", "Vídeos", "LPs", "Prazo prioritário"],
+    features: ["10+ demandas por dia", "Entregas prioritárias", "Revisões ilimitadas", "Acompanhamento Trello"],
   },
   {
     name: "Enterprise",
     price: "Sob consulta",
     description: "Infraestrutura criativa personalizada.",
     included: ["Tudo incluso"],
-    features: ["Demandas ilimitadas", "Entrega prioritÃ¡ria", "Suporte dedicado", "Fluxo personalizado"],
+    features: ["Demandas ilimitadas", "Entrega prioritária", "Suporte dedicado", "Fluxo personalizado"],
   },
 ];
 
@@ -144,18 +144,18 @@ const specialistWhatsappLabel = getWhatsappNumberLabel();
 
 const portfolio = {
   "Landing pages": [
-    ["Launch Sprint", "PÃ¡gina de vendas para lanÃ§amento digital", "ConversÃ£o"],
-    ["Med Scale", "Landing page para captaÃ§Ã£o de pacientes", "Performance"],
-    ["Expert OS", "PÃ¡gina institucional para expert", "Autoridade"],
+    ["Launch Sprint", "Página de vendas para lançamento digital", "Conversão"],
+    ["Med Scale", "Landing page para captação de pacientes", "Performance"],
+    ["Expert OS", "Página institucional para expert", "Autoridade"],
   ],
   "Criativos": [
     ["Ad Pack 01", "Pacote de criativos para teste de oferta", "Ads"],
-    ["Reels System", "Linha visual para conteÃºdo diÃ¡rio", "Social"],
-    ["Launch Assets", "PeÃ§as para aquecimento e abertura", "LanÃ§amento"],
+    ["Reels System", "Linha visual para conteúdo diário", "Social"],
+    ["Launch Assets", "Peças para aquecimento e abertura", "Lançamento"],
   ],
-  "VÃ­deos": [
-    ["VSL Cut", "EdiÃ§Ã£o objetiva para pÃ¡gina de vendas", "VSL"],
-    ["Shorts Engine", "Cortes recorrentes para especialistas", "ConteÃºdo"],
+  "Vídeos": [
+    ["VSL Cut", "Edição objetiva para página de vendas", "VSL"],
+    ["Shorts Engine", "Cortes recorrentes para especialistas", "Conteúdo"],
     ["Offer Motion", "Motion simples para criativos pagos", "Motion"],
   ],
 };
@@ -335,7 +335,7 @@ function UmanoNav() {
   }, []);
 
   return (
-    <header className={`umano-nav ${isRailMode ? "is-rail-mode" : ""}`} aria-label="NavegaÃ§Ã£o principal">
+    <header className={`umano-nav ${isRailMode ? "is-rail-mode" : ""}`} aria-label="Navegação principal">
       <a href="#top" className="umano-nav-logo" aria-label="Studio Haki">
         <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} priority />
       </a>
@@ -347,8 +347,8 @@ function UmanoNav() {
       </div>
 
       <div className="umano-nav-center">
-        <nav className="umano-nav-links" aria-label="SeÃ§Ãµes">
-          <a href="#solucoes">SoluÃ§Ãµes</a>
+        <nav className="umano-nav-links" aria-label="Seções">
+          <a href="#solucoes">Soluções</a>
           <a href="#processo">Processo</a>
           <a href="#cases">Cases</a>
           <a href="#planos">Planos</a>
@@ -457,7 +457,7 @@ function DynamicHeroWord() {
 function HeroWireframe() {
   const heroCards = [
     ["hero-dashboard-preview", "Dashboard operacional", "Fluxo Trello + entregas"],
-    ["case-video-01", "V?deo criativo", "?rea para VSL / cortes"],
+    ["case-video-01", "Vídeo criativo", "Área para VSL / cortes"],
     ["case-image-01", "Landing page", "?rea para print do projeto"],
   ];
 
@@ -481,7 +481,7 @@ function HeroWireframe() {
             <div className="umano-wireframe-media" data-slot="hero-video">
               <span>hero-video</span>
               <strong>1920 x 800</strong>
-              <em>Substituir pelo v?deo hero final</em>
+              <em>Substituir pelo vídeo hero final</em>
             </div>
 
             <div className="umano-wireframe-core">
@@ -507,9 +507,9 @@ function HeroWireframe() {
           </div>
 
           <div className="umano-wireframe-footer">
-            <span>3 dias ?teis</span>
-            <span>5 solicita??es/dia</span>
-            <span>Fluxo previs?vel</span>
+            <span>3 dias úteis</span>
+            <span>5 solicitações/dia</span>
+            <span>Fluxo previsível</span>
           </div>
         </div>
       </div>
@@ -583,15 +583,15 @@ function UmanoHero() {
       <div className="umano-hero-inner">
         <Reveal className="umano-hero-copy">
           <div className="umano-hero-kicker">
-            Para agÃªncias e profissionais de marketing
+            Para agências e profissionais de marketing
           </div>
           <h1 className="umano-hero-title">
             Pare de depender de freelancer.
             <br />
-            Plugue a HAKI na sua operaÃ§Ã£o.
+            Plugue a HAKI na sua operação.
           </h1>
           <p className="umano-hero-subtitle">
-            A HAKI entrega <DynamicHeroWord /> para sua operaÃ§Ã£o, sem depender de freelancer solto.
+            A HAKI entrega <DynamicHeroWord /> para sua operação, sem depender de freelancer solto.
           </p>
           <div className="umano-hero-actions">
             <a href="#planos">Plugar a HAKI</a>
@@ -606,7 +606,7 @@ function UmanoHero() {
 function UmanoLogoStrip() {
   return (
     <section className="umano-logo-strip" aria-label="Clientes e parceiros">
-      <p>AgÃªncias e negÃ³cios digitais que confiam no nosso fluxo</p>
+      <p>Agências e negócios digitais que confiam no nosso fluxo</p>
       <div className="umano-logo-strip-viewport">
         <div className="umano-logo-strip-grid">
           {clientLogos.map((logo) => (
@@ -657,8 +657,8 @@ function StickyManifesto() {
   const y = useTransform(smoothProgress, [0, 0.5, 1], [18, 0, -18]);
   const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.985, 1, 0.992]);
   const progressScale = useTransform(smoothProgress, [0.06, 0.9], [0, 1]);
-  const firstLine = ["Um", "estÃºdio", "dentro", "da", "sua", "operaÃ§Ã£o,"];
-  const secondLine = ["com", "ritmo", "de", "produto", "e", "prazo", "deÂ lanÃ§amento."];
+  const firstLine = ["Um", "estúdio", "dentro", "da", "sua", "operação,"];
+  const secondLine = ["com", "ritmo", "de", "produto", "e", "prazo", "de lançamento."];
   const words = [...firstLine, ...secondLine];
 
   useEffect(() => {
@@ -775,11 +775,11 @@ function HowItWorksRail() {
   const steps: RailStep[] = [
     { icon: "queue", title: "Pedido entra", text: "Briefing simples, prioridade clara e tudo rastreado.", label: "trello-request", isRequest: true },
     { icon: "system", title: "Fluxo organiza", text: "A demanda vira card, prazo e fila operacional.", label: "ops-board", isSystem: true },
-    { icon: "production", title: "ProduÃ§Ã£o roda", text: "Design, vÃ­deo e landing page seguem sem travar seu time.", label: "creative-sprint", isProduction: true },
+    { icon: "production", title: "Produção roda", text: "Design, vídeo e landing page seguem sem travar seu time.", label: "creative-sprint", isProduction: true },
     {
       icon: "delivery",
       title: "Entrega volta",
-      text: "Arquivos prontos, revisÃ£o objetiva e histÃ³rico no Trello.",
+      text: "Arquivos prontos, revisão objetiva e histórico no Trello.",
       label: "delivery-pack",
       isDelivery: true,
     },
@@ -1066,7 +1066,7 @@ function HowItWorksRail() {
                   <div className="production-bento-crop">
                     <iframe
                       src="/assets/cards/production/bento.html"
-                      title="Bento Produ??o roda"
+                      title="Bento Produção roda"
                       className="production-bento-frame"
                       loading="lazy"
                       scrolling="no"
@@ -1124,7 +1124,7 @@ function Header() {
           className="group hidden items-center gap-3 rounded-md border border-haki-red/60 bg-haki-red px-5 py-3 text-sm font-semibold text-white shadow-red-soft transition duration-500 ease-mass hover:-translate-y-0.5 hover:bg-[#e60b2d] sm:inline-flex"
         >
           Comecar agora
-          <span className="transition-transform duration-500 ease-mass group-hover:translate-x-1">ï¿½ </span>
+          <span className="transition-transform duration-500 ease-mass group-hover:translate-x-1">{"->"}</span>
         </a>
       </div>
     </header>
@@ -1442,7 +1442,7 @@ function FullscreenNav() {
   }, [closeMenu, resetMenuItems]);
 
   return (
-    <nav ref={navRef} className="fullscreen-nav" aria-label="Navega??o principal">
+    <nav ref={navRef} className="fullscreen-nav" aria-label="Navegação principal">
       <div className="container-haki fullscreen-nav-bar">
         <a href="#top" className="nav-logo" aria-label="Voltar para o inicio" onClick={closeMenu}>
           <Image
@@ -1562,11 +1562,11 @@ function Hero() {
             Infraestrutura criativa
           </div>
           <h1 className="max-w-[620px] text-balance text-[clamp(2.45rem,4.9vw,5.9rem)] font-medium leading-[0.94] tracking-[-0.07em] text-haki-white max-sm:max-w-[calc(100vw-40px)] max-sm:text-[2.05rem] max-sm:leading-[1.02] max-sm:tracking-[-0.055em]">
-            Plugamos um est?dio criativo na sua opera??o.
+            Plugamos um estúdio criativo na sua operação.
           </h1>
           <p className="mt-6 max-w-[calc(100vw-32px)] text-base leading-7 text-haki-muted md:max-w-lg md:text-lg md:leading-8">
-            Entregamos landing pages, v?deos e criativos com velocidade, consist?ncia e previsibilidade
-            para ag?ncias e neg?cios digitais que querem crescer.
+            Entregamos landing pages, vídeos e criativos com velocidade, consistência e previsibilidade
+            para agências e negócios digitais que querem crescer.
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <a
@@ -1575,8 +1575,8 @@ function Hero() {
               target="_blank"
               rel="noreferrer"
             >
-              Plugar HAKI na opera??o
-              <span className="transition-transform duration-500 group-hover:translate-x-1">ï¿½ </span>
+              Plugar HAKI na operação
+              <span className="transition-transform duration-500 group-hover:translate-x-1">{"->"}</span>
             </a>
             <a className="inline-flex w-full items-center justify-center rounded-md border hairline bg-white/[0.025] px-5 py-4 text-sm font-semibold text-haki-muted transition duration-500 ease-mass hover:-translate-y-1 hover:text-haki-white sm:w-auto sm:px-7 sm:text-base" href="#processo">
               Ver como funciona
@@ -1715,7 +1715,7 @@ function Workflow() {
           Integramos seus fluxos e entregamos criacoes de alto volume com qualidade e previsibilidade.
         </p>
         <ul className="mt-8 space-y-3 text-sm text-haki-muted">
-          {["Demandas ilimitadas", "Entregas di?rias", "Fluxo previs?vel", "Acompanhamento no Trello"].map((item) => (
+          {["Demandas ilimitadas", "Entregas diárias", "Fluxo previsível", "Acompanhamento no Trello"].map((item) => (
             <li key={item} className="flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-haki-red" />
               {item}
@@ -1805,7 +1805,7 @@ function Process() {
       <Reveal>
         <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Nosso processo</p>
         <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
-          Um sistema para fluxo criativo previs?vel.
+          Um sistema para fluxo criativo previsível.
         </h2>
         <p className="mt-6 max-w-md leading-7 text-haki-muted">
           Do pedido a entrega, tudo rastreado, organizado e otimizado para maxima performance.
@@ -1866,10 +1866,10 @@ function Plans() {
       <Reveal className="mx-auto max-w-3xl text-center">
         <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Planos recorrentes</p>
         <h2 className="mx-auto text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
-          Planos que escalam com a sua opera??o.
+          Planos que escalam com a sua operação.
         </h2>
         <p className="mx-auto mt-6 max-w-xl leading-7 text-haki-muted">
-          Escolha o plano ideal para o volume de demandas da sua ag?ncia ou neg?cio digital.
+          Escolha o plano ideal para o volume de demandas da sua agência ou negócio digital.
         </p>
       </Reveal>
 
@@ -1903,7 +1903,7 @@ function Plans() {
               <ul className="mt-8 space-y-3 text-sm text-haki-muted">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex gap-3">
-                    <span className="text-haki-red">ï¿½S</span>
+                    <span className="text-haki-red">+</span>
                     {feature}
                   </li>
                 ))}
@@ -1922,27 +1922,27 @@ function Plans() {
 }
 
 const faqItems = [
-  ["Como a HAKI entra na minha operaÃ§Ã£o?", "VocÃª assina o plano, entra no Trello e passa a solicitar demandas por cards com prazo, briefing e status claros."],
-  ["As entregas sÃ£o realmente previsÃ­veis?", "A proposta Ã© manter uma esteira recorrente com limite de demandas, prioridade e prazo combinado para nÃ£o quebrar seu fluxo."],
-  ["Consigo usar em lanÃ§amentos?", "Sim. A HAKI funciona bem para pÃ¡ginas, criativos, cortes e peÃ§as de suporte durante aquecimento, abertura e carrinho."],
-  ["E se eu jÃ¡ tiver designer interno?", "A HAKI pode entrar como extensÃ£o operacional para tirar gargalo, absorver volume e manter seu time focado no que Ã© mais estratÃ©gico."],
+  ["Como a HAKI entra na minha operação?", "Você assina o plano, entra no Trello e passa a solicitar demandas por cards com prazo, briefing e status claros."],
+  ["As entregas são realmente previsíveis?", "A proposta é manter uma esteira recorrente com limite de demandas, prioridade e prazo combinado para não quebrar seu fluxo."],
+  ["Consigo usar em lançamentos?", "Sim. A HAKI funciona bem para páginas, criativos, cortes e peças de suporte durante aquecimento, abertura e carrinho."],
+  ["E se eu já tiver designer interno?", "A HAKI pode entrar como extensão operacional para tirar gargalo, absorver volume e manter seu time focado no que é mais estratégico."],
 ];
 
 const caseTabs = {
   "Landing pages": [
-    ["case-image-01", "Launch OS", "PÃ¡gina de vendas para lanÃ§amento com estrutura de conversÃ£o."],
+    ["case-image-01", "Launch OS", "Página de vendas para lançamento com estrutura de conversão."],
     ["case-image-02", "Expert Authority", "Landing institucional para expert com prova e oferta clara."],
-    ["case-video-01", "VSL Page", "EspaÃ§o para vÃ­deo + pÃ¡gina de conversÃ£o em uma experiÃªncia Ãºnica."],
+    ["case-video-01", "VSL Page", "Espaço para vídeo + página de conversão em uma experiência única."],
   ],
   "Criativos": [
-    ["case-image-03", "Ads Sprint", "Pacote visual para testar Ã¢ngulos de oferta em trÃ¡fego pago."],
-    ["case-video-02", "Reels Engine", "Linha visual para cortes, anÃºncios e conteÃºdo diÃ¡rio."],
-    ["case-image-04", "Launch Kit", "PeÃ§as de aquecimento, abertura e remarketing."],
+    ["case-image-03", "Ads Sprint", "Pacote visual para testar ângulos de oferta em tráfego pago."],
+    ["case-video-02", "Reels Engine", "Linha visual para cortes, anúncios e conteúdo diário."],
+    ["case-image-04", "Launch Kit", "Peças de aquecimento, abertura e remarketing."],
   ],
-  "OperaÃ§Ã£o": [
-    ["hero-dashboard-preview", "Trello Flow", "Quadro operacional com backlog, produÃ§Ã£o, revisÃ£o e entrega."],
-    ["founder-photo", "Founder Layer", "EspaÃ§o para foto do Erick ou bastidores do estÃºdio."],
-    ["contact-bg", "Client Room", "EspaÃ§o visual para depoimentos, reuniÃµes ou prints de entrega."],
+  "Operação": [
+    ["hero-dashboard-preview", "Trello Flow", "Quadro operacional com backlog, produção, revisão e entrega."],
+    ["founder-photo", "Founder Layer", "Espaço para foto do Erick ou bastidores do estúdio."],
+    ["contact-bg", "Client Room", "Espaço visual para depoimentos, reuniões ou prints de entrega."],
   ],
 };
 
@@ -2017,7 +2017,7 @@ function UmanoPlans() {
       <Reveal className="umano-section-header">
         <p>Planos recorrentes</p>
         <h2>Escolha o tamanho da infraestrutura.</h2>
-        <span>Planos para agÃªncias e infoprodutos que precisam de volume sem criar caos operacional.</span>
+        <span>Planos para agências e infoprodutos que precisam de volume sem criar caos operacional.</span>
       </Reveal>
 
       <div className="umano-pricing-grid">
@@ -2229,9 +2229,9 @@ function UmanoCases() {
   return (
     <section ref={sectionRef} id="cases" className="umano-cases-section">
       <Reveal className="umano-cases-hero">
-        <h2>ConheÃ§a<br />nossa entrega.</h2>
+        <h2>Conheça<br />nossa entrega.</h2>
         <p>
-          Veja como a HAKI organiza landing pages, criativos e vÃ­deos em um fluxo visual claro para a sua operaÃ§Ã£o.
+          Veja como a HAKI organiza landing pages, criativos e vídeos em um fluxo visual claro para a sua operação.
         </p>
       </Reveal>
 
@@ -2278,7 +2278,7 @@ function UmanoCases() {
               </div>
               <span className="umano-case-hover-cue" aria-hidden="true">
                 Abrir
-                <b>-&gt;</b>
+                <b>{"->"}</b>
               </span>
             </motion.a>
           ))}
@@ -2298,7 +2298,7 @@ function UmanoCases() {
         transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.55 }}
       >
         <span>Abrir</span>
-        <b>-&gt;</b>
+        <b>{"->"}</b>
       </motion.div>
     </section>
   );
@@ -2330,7 +2330,7 @@ function WaveLensBridge() {
   }, [sendWavePointer]);
 
   return (
-    <section className="wave-lens-bridge" aria-label="TransiÃ§Ã£o visual HAKI">
+    <section className="wave-lens-bridge" aria-label="Transição visual HAKI">
       <div
         className="wave-lens-hitbox"
         onPointerEnter={sendWavePointer}
@@ -2497,8 +2497,8 @@ function UmanoContact() {
         <div className="umano-contact-orbit" />
         <Reveal className="umano-contact-content">
           <p>Pronto para escalar?</p>
-          <h2>Plugue a HAKI na sua operaÃ§Ã£o e comece com fluxo claro.</h2>
-          <span>Sem formulÃ¡rio. Chame direto e a gente entende volume, gargalo e melhor plano.</span>
+          <h2>Plugue a HAKI na sua operação e comece com fluxo claro.</h2>
+          <span>Sem formulário. Chame direto e a gente entende volume, gargalo e melhor plano.</span>
           <a href={specialistWhatsappHref} target="_blank" rel="noreferrer">
             Falar com Erick agora
           </a>
@@ -2507,7 +2507,7 @@ function UmanoContact() {
         <motion.div className="umano-founder-placeholder" data-slot="founder-photo" whileHover={{ y: -8 }}>
           <span>founder-photo</span>
           <strong>Erick Filho</strong>
-          <p>EspaÃ§o para foto, vÃ­deo curto ou bastidor do Studio Haki.</p>
+          <p>Espaço para foto, vídeo curto ou bastidor do Studio Haki.</p>
         </motion.div>
       </div>
     </section>
@@ -2520,11 +2520,11 @@ function UmanoFooter() {
       <div className="umano-footer-grid">
         <div className="umano-footer-brand">
           <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} />
-          <p>Infraestrutura criativa para agÃªncias e negÃ³cios digitais.</p>
+          <p>Infraestrutura criativa para agências e negócios digitais.</p>
         </div>
         <div className="umano-footer-links">
           {[
-            ["SoluÃ§Ãµes", "#solucoes"],
+            ["Soluções", "#solucoes"],
             ["Processo", "#processo"],
             ["Planos", "#planos"],
             ["Cases", "#cases"],
@@ -2542,8 +2542,8 @@ function UmanoFooter() {
       </div>
       <strong>studiohaki.com</strong>
       <div className="umano-footer-bottom">
-        <span>Â© 2026 HAKI Studio.</span>
-        <span>Termos de uso Â· Privacidade</span>
+        <span>© 2026 HAKI Studio.</span>
+        <span>Termos de uso · Privacidade</span>
       </div>
     </footer>
   );
@@ -2551,9 +2551,9 @@ function UmanoFooter() {
 
 function About() {
   const aboutBullets = [
-    ["Opera??o", "Eu entro como uma extens?o criativa da sua ag?ncia, sem criar mais uma camada de gest?o."],
-    ["Velocidade", "Meu foco ? manter a demanda andando com prazo claro, prioridade e previsibilidade."],
-    ["Parceria", "N?o busco rela??o transacional. A ideia ? construir um fluxo onde os dois lados crescem."],
+    ["Operação", "Eu entro como uma extensão criativa da sua agência, sem criar mais uma camada de gestão."],
+    ["Velocidade", "Meu foco é manter a demanda andando com prazo claro, prioridade e previsibilidade."],
+    ["Parceria", "Não busco relação transacional. A ideia é construir um fluxo onde os dois lados crescem."],
   ];
 
   return (
@@ -2592,15 +2592,15 @@ function About() {
 
         <Reveal delay={0.12}>
           <div className="rounded-2xl border hairline bg-white/[0.018] p-8 md:p-12">
-            <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Sobre n?s</p>
+            <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Sobre nós</p>
             <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
-              Por tr?s da HAKI est? Erick Filho.
+              Por trás da HAKI está Erick Filho.
             </h2>
             <p className="mt-7 text-lg leading-8 text-haki-muted">
-              Eu criei a HAKI para plugar um est?dio criativo dentro da opera??o de ag?ncias e neg?cios digitais que precisam de consist?ncia, prazo e execu??o sem depender de freelancers soltos.
+              Eu criei a HAKI para plugar um estúdio criativo dentro da operação de agências e negócios digitais que precisam de consistência, prazo e execução sem depender de freelancers soltos.
             </p>
             <p className="mt-5 leading-7 text-haki-muted">
-              Minha fun??o ? transformar demanda em fluxo: landing pages, criativos e v?deos organizados em uma rotina clara, com acompanhamento e entregas que n?o quebram o ritmo do seu time.
+              Minha função é transformar demanda em fluxo: landing pages, criativos e vídeos organizados em uma rotina clara, com acompanhamento e entregas que não quebram o ritmo do seu time.
             </p>
 
             <div className="mt-10 space-y-4">
@@ -2637,7 +2637,7 @@ function Portfolio() {
           Trabalhos separados por tipo de demanda.
         </h2>
         <p className="mx-auto mt-6 max-w-xl leading-7 text-haki-muted">
-          Por enquanto, com cases gen?ricos. Depois, substitu?mos pelos seus projetos reais e pelos designs finais.
+          Por enquanto, com cases genéricos. Depois, substituímos pelos seus projetos reais e pelos designs finais.
         </p>
       </Reveal>
 
@@ -2703,10 +2703,10 @@ function Contact() {
           <div className="mx-auto max-w-4xl">
             <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Contato</p>
             <h2 className="mx-auto text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-7xl">
-              Quer plugar a HAKI na sua opera??o?
+              Quer plugar a HAKI na sua operação?
             </h2>
             <p className="mx-auto mt-6 max-w-2xl leading-7 text-haki-muted">
-              Chame para entender qual plano faz sentido para sua demanda, volume e momento da opera??o.
+              Chame para entender qual plano faz sentido para sua demanda, volume e momento da operação.
             </p>
           </div>
 
@@ -2730,7 +2730,7 @@ function Contact() {
                   {value}
                 </strong>
                 <span className="mx-auto mt-8 grid h-10 w-10 place-items-center rounded-full border border-haki-red/40 text-haki-red transition-transform duration-500 group-hover:translate-x-1">
-                  ï¿½ 
+                  {"->"}
                 </span>
               </a>
             ))}
@@ -2795,7 +2795,7 @@ function ContactScreen() {
               Vamos conversar?
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-haki-muted md:text-lg">
-              Quer previsibilidade criativa na sua opera??o? Me chama direto e eu te ajudo a entender o melhor formato para sua demanda.
+              Quer previsibilidade criativa na sua operação? Me chama direto e eu te ajudo a entender o melhor formato para sua demanda.
             </p>
 
             <div className="mx-auto mt-12 max-w-2xl">
@@ -2804,7 +2804,7 @@ function ContactScreen() {
                 className="group flex w-full items-center justify-center gap-3 rounded-xl border border-white/[0.12] bg-[#24202e]/95 px-6 py-5 text-base font-semibold text-haki-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_60px_rgba(0,0,0,0.34)] transition duration-500 hover:-translate-y-1 hover:border-haki-red/50 hover:bg-haki-red/20"
               >
                 Falar com Erick agora
-                <span className="transition-transform duration-500 group-hover:translate-x-1">ï¿½ </span>
+                <span className="transition-transform duration-500 group-hover:translate-x-1">{"->"}</span>
               </a>
 
               <div className="mt-8 flex items-center justify-center gap-5 text-haki-muted">
@@ -2832,7 +2832,7 @@ function FinalCta() {
           <div className="p-8 md:p-14">
             <p className="mb-5 font-mono text-xs uppercase tracking-[0.16em] text-haki-red">Pronto para escalar?</p>
             <h2 className="text-balance text-5xl font-medium leading-[0.95] tracking-[-0.06em] text-haki-white md:text-6xl">
-              Plugue a HAKI na sua opera??o e comece hoje.
+              Plugue a HAKI na sua operação e comece hoje.
             </h2>
             <p className="mt-6 max-w-lg leading-7 text-haki-muted">
               Integramos com seu fluxo atual e entregamos criatividade com velocidade e previsibilidade.
@@ -2853,7 +2853,7 @@ function FinalCta() {
 
 function Footer() {
   const footerLinks = [
-    ["Solu??es", "#solucoes"],
+    ["Soluções", "#solucoes"],
     ["Processo", "#processo"],
     ["Planos", "#planos"],
     ["Cases", "#cases"],
@@ -2865,7 +2865,7 @@ function Footer() {
     <footer className="container-haki border-t border-white/[0.08] py-12">
       <div className="grid gap-10 md:grid-cols-[0.8fr_1fr_0.8fr]">
         <Image src="/brand/assets/haki-logo-transparent.png" alt="HAKI" width={1570} height={393} className="h-8 w-fit" />
-        <p className="max-w-xs text-sm leading-6 text-haki-muted">Infraestrutura criativa para ag?ncias e neg?cios digitais.</p>
+        <p className="max-w-xs text-sm leading-6 text-haki-muted">Infraestrutura criativa para agências e negócios digitais.</p>
         <div className="grid grid-cols-2 gap-3 text-sm text-haki-muted md:justify-self-end">
           {footerLinks.map(([item, href]) => (
             <a key={item} href={href} className="transition hover:text-haki-white">
@@ -2875,8 +2875,8 @@ function Footer() {
         </div>
       </div>
       <div className="mt-12 flex flex-wrap justify-between gap-4 border-t border-white/[0.08] pt-6 text-xs text-haki-muted">
-        <span>Â© 2026 HAKI Studio. Todos os direitos reservados.</span>
-        <span>Termos de uso Â· Privacidade</span>
+        <span>© 2026 HAKI Studio. Todos os direitos reservados.</span>
+        <span>Termos de uso · Privacidade</span>
       </div>
     </footer>
   );
