@@ -1055,6 +1055,10 @@ section {
   width: 100%;
 }
 
+.umano-logo-strip-marquee > .umano-logo-strip-grid:nth-child(2) {
+  display: none;
+}
+
 .umano-logo-strip-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -3512,6 +3516,10 @@ section {
     display: flex;
     width: max-content;
     animation: umano-logo-marquee 18s linear infinite;
+  }
+
+  .umano-logo-strip-marquee > .umano-logo-strip-grid:nth-child(2) {
+    display: flex;
   }
 
   .umano-logo-strip-grid {
