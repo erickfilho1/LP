@@ -2327,6 +2327,8 @@ section {
   height: 16px;
   flex: 0 0 16px;
   transform: translateY(0.5px) rotate(45deg);
+  filter: brightness(0) invert(1);
+  opacity: 0.96;
 }
 
 .umano-case-slide:focus-visible .umano-case-hover-cue {

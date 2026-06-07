@@ -2131,12 +2131,14 @@ function UmanoCases() {
           scrub: 0.34,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onToggle: (self) => dispatchRailMode(self.isActive),
           onEnter: () => dispatchRailMode(true),
           onEnterBack: () => dispatchRailMode(true),
           onLeave: () => dispatchRailMode(false),
           onLeaveBack: () => dispatchRailMode(false),
           onRefresh: (self) => {
             updateEdgeSpacer();
+            dispatchRailMode(self.isActive);
             updateActiveCase(self.progress);
           },
           onUpdate: (self) => updateActiveCase(self.progress),
@@ -2203,12 +2205,14 @@ function UmanoCases() {
           scrub: 0.28,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onToggle: (self) => dispatchRailMode(self.isActive),
           onEnter: () => dispatchRailMode(true),
           onEnterBack: () => dispatchRailMode(true),
           onLeave: () => dispatchRailMode(false),
           onLeaveBack: () => dispatchRailMode(false),
           onRefresh: (self) => {
             updateEdgeSpacer();
+            dispatchRailMode(self.isActive);
             updateActiveCase(self.progress);
           },
           onUpdate: (self) => updateActiveCase(self.progress),
