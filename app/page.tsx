@@ -2419,6 +2419,23 @@ function UmanoFinalStack() {
 
     media.add("(min-width: 768px)", () => {
       const ctx = gsap.context(() => {
+        const releaseCaseRail = () => {
+          window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active: false } }));
+        };
+
+        ScrollTrigger.create({
+          trigger: stage,
+          start: "top bottom",
+          end: "bottom top",
+          onEnter: releaseCaseRail,
+          onEnterBack: releaseCaseRail,
+          onRefresh: (self) => {
+            if (self.isActive) {
+              releaseCaseRail();
+            }
+          },
+        });
+
         gsap.set(panel, {
           clipPath: "inset(0% 0% 0% 0% round 0px)",
           transformOrigin: "top center",

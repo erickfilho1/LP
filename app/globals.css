@@ -3966,9 +3966,7 @@ section {
 
 .umano-pricing-section,
 .wave-lens-bridge,
-.umano-cases-section,
-.umano-final-stack,
-.umano-footer {
+.umano-cases-section {
   content-visibility: auto;
   contain-intrinsic-size: 900px;
 }
