@@ -266,71 +266,92 @@ function UmanoNav() {
     const viewport = document.querySelector<HTMLElement>(".umano-rail-viewport");
     const track = document.querySelector<HTMLElement>(".umano-rail");
 
-    if (!section || !viewport || !track) {
-      return;
-    }
-
     let railModeActive = false;
     let casesModeActive = false;
+    let finalStackActive = false;
     const syncRailMode = () => setIsRailMode(railModeActive || casesModeActive);
-    const getDistance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
-    const deliveryCard = document.querySelector<HTMLElement>(".is-delivery-card");
-    const getFocusDistance = () => {
-      if (!deliveryCard) {
-        return getDistance();
-      }
+    const triggers: Array<{ kill: () => void }> = [];
 
-      const targetX = window.innerWidth / 2 - (deliveryCard.offsetLeft + deliveryCard.offsetWidth / 2);
-      return Math.abs(targetX);
+    const setCasesMode = (active: boolean, count = deliveryCases.length) => {
+      casesModeActive = active;
+      setRailCount(active ? count : 4);
+      syncRailMode();
     };
-    const railTrigger = ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: () => `+=${getFocusDistance() * 0.62 + window.innerHeight * 0.16}`,
-      onEnter: () => {
-        railModeActive = true;
-        syncRailMode();
-      },
-      onEnterBack: () => {
-        railModeActive = true;
-        syncRailMode();
-      },
-      onLeave: () => {
-        railModeActive = false;
-        syncRailMode();
-      },
-      onLeaveBack: () => {
-        railModeActive = false;
-        syncRailMode();
-      },
-      onUpdate: (self) => {
-        const carouselProgress = Math.min(1, self.progress / 0.52);
-        const nextIndex = Math.min(3, Math.max(0, Math.round(carouselProgress * 3)));
-        setRailIndex((current) => (current === nextIndex ? current : nextIndex));
-      },
-      invalidateOnRefresh: true,
-    });
+
+    if (section && viewport && track) {
+      const getDistance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+      const deliveryCard = document.querySelector<HTMLElement>(".is-delivery-card");
+      const getFocusDistance = () => {
+        if (!deliveryCard) {
+          return getDistance();
+        }
+
+        const targetX = window.innerWidth / 2 - (deliveryCard.offsetLeft + deliveryCard.offsetWidth / 2);
+        return Math.abs(targetX);
+      };
+
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top top",
+          end: () => `+=${getFocusDistance() * 0.62 + window.innerHeight * 0.16}`,
+          onEnter: () => {
+            railModeActive = true;
+            syncRailMode();
+          },
+          onEnterBack: () => {
+            railModeActive = true;
+            syncRailMode();
+          },
+          onLeave: () => {
+            railModeActive = false;
+            syncRailMode();
+          },
+          onLeaveBack: () => {
+            railModeActive = false;
+            syncRailMode();
+          },
+          onUpdate: (self) => {
+            const carouselProgress = Math.min(1, self.progress / 0.52);
+            const nextIndex = Math.min(3, Math.max(0, Math.round(carouselProgress * 3)));
+            setRailIndex((current) => (current === nextIndex ? current : nextIndex));
+          },
+          invalidateOnRefresh: true,
+        }),
+      );
+    }
 
     const handleCasesRail = (event: Event) => {
       const detail = (event as CustomEvent<{ active: boolean; count?: number }>).detail;
-      casesModeActive = Boolean(detail?.active);
-      setRailCount(casesModeActive ? detail?.count ?? deliveryCases.length : 4);
-      syncRailMode();
+      const finalStack = document.querySelector<HTMLElement>(".umano-final-stack");
+      const finalStackEntering = finalStack ? finalStack.getBoundingClientRect().top < window.innerHeight * 0.95 : false;
+      if (detail?.active && finalStackEntering) {
+        return;
+      }
+      setCasesMode(Boolean(detail?.active), detail?.count ?? deliveryCases.length);
     };
     const handleCasesIndex = (event: Event) => {
       const nextIndex = (event as CustomEvent<{ index: number }>).detail?.index ?? 0;
       setRailIndex((current) => (current === nextIndex ? current : nextIndex));
     };
+    const handleFinalStack = (event: Event) => {
+      finalStackActive = Boolean((event as CustomEvent<{ active: boolean }>).detail?.active);
+      if (finalStackActive) {
+        setCasesMode(false);
+      }
+    };
 
     window.addEventListener("haki:cases-rail", handleCasesRail);
     window.addEventListener("haki:cases-index", handleCasesIndex);
+    window.addEventListener("haki:final-stack", handleFinalStack);
 
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
     return () => {
-      railTrigger.kill();
+      triggers.forEach((trigger) => trigger.kill());
       window.removeEventListener("haki:cases-rail", handleCasesRail);
       window.removeEventListener("haki:cases-index", handleCasesIndex);
+      window.removeEventListener("haki:final-stack", handleFinalStack);
     };
   }, []);
 
@@ -2103,7 +2124,7 @@ function UmanoCases() {
       };
       let lastDispatchedIndex = -1;
       const dispatchRailMode = (active: boolean) => {
-        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active } }));
+        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active, count: deliveryCases.length } }));
       };
       const updateActiveCase = (progress = 0) => {
         const x = -getDistance() * progress;
@@ -2132,21 +2153,26 @@ function UmanoCases() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: viewport,
-          start: "top 16%",
+          start: "top 35%",
           end: () => `+=${getDistance() + window.innerHeight * 0.7}`,
           pin: true,
           scrub: 0.34,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onToggle: (self) => dispatchRailMode(self.isActive),
           onEnter: () => dispatchRailMode(true),
           onEnterBack: () => dispatchRailMode(true),
           onLeave: () => dispatchRailMode(false),
           onLeaveBack: () => dispatchRailMode(false),
           onRefresh: (self) => {
             updateEdgeSpacer();
+            dispatchRailMode(self.isActive);
             updateActiveCase(self.progress);
           },
-          onUpdate: (self) => updateActiveCase(self.progress),
+          onUpdate: (self) => {
+            dispatchRailMode(self.isActive);
+            updateActiveCase(self.progress);
+          },
         },
       });
 
@@ -2412,6 +2438,29 @@ function UmanoFinalStack() {
 
     media.add("(min-width: 768px)", () => {
       const ctx = gsap.context(() => {
+        const releaseCaseRail = () => {
+          window.dispatchEvent(new CustomEvent("haki:final-stack", { detail: { active: true } }));
+          window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active: false } }));
+        };
+        const unlockCaseRail = () => {
+          window.dispatchEvent(new CustomEvent("haki:final-stack", { detail: { active: false } }));
+        };
+
+        ScrollTrigger.create({
+          trigger: stage,
+          start: "top bottom",
+          end: "bottom top",
+          onEnter: releaseCaseRail,
+          onEnterBack: releaseCaseRail,
+          onLeave: unlockCaseRail,
+          onLeaveBack: unlockCaseRail,
+          onRefresh: (self) => {
+            if (self.isActive) {
+              releaseCaseRail();
+            }
+          },
+        });
+
         gsap.set(panel, {
           clipPath: "inset(0% 0% 0% 0% round 0px)",
           transformOrigin: "top center",
