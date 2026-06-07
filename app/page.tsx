@@ -1951,6 +1951,13 @@ const caseTabs = {
 
 const deliveryCases = [
   {
+    slug: "agencia-astronauta",
+    title: "Agência Astronauta",
+    description: "Parceiro desde 2024. Landing pages, criativos e peças de lançamento para campanhas de alta demanda.",
+    marker: "LP / ADS",
+    theme: "red",
+  },
+  {
     slug: "upshare",
     title: "Upshare",
     description: "Cliente desde 2026. Agencia dos Estados Unidos que atende restaurantes com conteudo, social e presenca digital recorrente.",
@@ -2096,7 +2103,7 @@ function UmanoCases() {
       };
       let lastDispatchedIndex = -1;
       const dispatchRailMode = (active: boolean) => {
-        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active, count: deliveryCases.length } }));
+        window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active } }));
       };
       const updateActiveCase = (progress = 0) => {
         const x = -getDistance() * progress;
@@ -2131,14 +2138,12 @@ function UmanoCases() {
           scrub: 0.34,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onToggle: (self) => dispatchRailMode(self.isActive),
           onEnter: () => dispatchRailMode(true),
           onEnterBack: () => dispatchRailMode(true),
           onLeave: () => dispatchRailMode(false),
           onLeaveBack: () => dispatchRailMode(false),
           onRefresh: (self) => {
             updateEdgeSpacer();
-            dispatchRailMode(self.isActive);
             updateActiveCase(self.progress);
           },
           onUpdate: (self) => updateActiveCase(self.progress),
@@ -2263,7 +2268,7 @@ function UmanoCases() {
                 {"image" in project ? (
                   <Image
                     className="umano-case-main-art"
-                    src={project.image}
+                    src={project.image ?? ""}
                     alt=""
                     sizes="(max-width: 767px) 88vw, 36vw"
                     width={1633}
@@ -2285,14 +2290,8 @@ function UmanoCases() {
                 <p>{project.description}</p>
               </div>
               <span className="umano-case-hover-cue" aria-hidden="true">
-                <span>Abrir</span>
-                <Image
-                  src="/assets/case-open-arrow.svg"
-                  alt=""
-                  width={16}
-                  height={16}
-                  className="umano-case-open-icon"
-                />
+                Abrir
+                <b>→</b>
               </span>
             </motion.a>
           ))}
@@ -2312,13 +2311,7 @@ function UmanoCases() {
         transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.55 }}
       >
         <span>Abrir</span>
-        <Image
-          src="/assets/case-open-arrow.svg"
-          alt=""
-          width={16}
-          height={16}
-          className="umano-case-open-icon"
-        />
+        <b>→</b>
       </motion.div>
     </section>
   );
@@ -2419,23 +2412,6 @@ function UmanoFinalStack() {
 
     media.add("(min-width: 768px)", () => {
       const ctx = gsap.context(() => {
-        const releaseCaseRail = () => {
-          window.dispatchEvent(new CustomEvent("haki:cases-rail", { detail: { active: false } }));
-        };
-
-        ScrollTrigger.create({
-          trigger: stage,
-          start: "top bottom",
-          end: "bottom top",
-          onEnter: releaseCaseRail,
-          onEnterBack: releaseCaseRail,
-          onRefresh: (self) => {
-            if (self.isActive) {
-              releaseCaseRail();
-            }
-          },
-        });
-
         gsap.set(panel, {
           clipPath: "inset(0% 0% 0% 0% round 0px)",
           transformOrigin: "top center",
