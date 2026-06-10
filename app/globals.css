@@ -3342,8 +3342,12 @@ section {
 
   .umano-nav-mobile-backdrop {
     position: fixed;
-    inset: 0;
+    inset: auto;
+    top: -12px;
+    left: calc(50% - 50vw);
     z-index: 0;
+    width: 100vw;
+    min-height: 100dvh;
     background: #f7f7f2;
     border: 0;
     backdrop-filter: none;
@@ -3351,12 +3355,16 @@ section {
 
   .umano-nav-mobile-panel {
     position: fixed;
-    inset: 0;
+    inset: auto;
+    top: -12px;
+    left: calc(50% - 50vw);
     z-index: 1;
+    width: 100vw;
+    min-height: 100dvh;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    padding: clamp(108px, 18vh, 134px) 38px 40px;
+    padding: clamp(110px, 18vh, 136px) 38px max(56px, calc(34px + env(safe-area-inset-bottom)));
     border: 0;
     border-radius: 0;
     background: #f7f7f2;
