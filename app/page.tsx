@@ -19,6 +19,14 @@ const navItems = [
   ["Contato", "#contato"],
 ] as const;
 
+const mobileMenuItems = [
+  ["Cases", "#cases"],
+  ["Planos", "#planos"],
+  ["Contato", "#contato"],
+  ["Processo", "#processo"],
+  ["Home", "#top"],
+] as const;
+
 const services = [
   "Landing Pages",
   "Ads & Creatives",
@@ -398,9 +406,10 @@ function UmanoNav() {
               transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
             >
               <nav className="umano-nav-mobile-links" aria-label="Menu mobile">
-                {navItems.map(([label, href]) => (
+                {mobileMenuItems.map(([label, href]) => (
                   <a key={href} href={href} onClick={() => setIsMobileMenuOpen(false)}>
-                    {label}
+                    <span>{label}</span>
+                    <span aria-hidden="true">→</span>
                   </a>
                 ))}
               </nav>
