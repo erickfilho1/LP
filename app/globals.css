@@ -3359,7 +3359,7 @@ section {
     padding: clamp(108px, 18vh, 134px) 38px 40px;
     border: 0;
     border-radius: 0;
-    background: transparent;
+    background: #f7f7f2;
     box-shadow: none;
     backdrop-filter: none;
     color: #111111;
