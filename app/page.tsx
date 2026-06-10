@@ -980,26 +980,26 @@ function HowItWorksRail() {
       });
 
       tl.to(track, { x: getFocusX, ease: "none", duration: 0.34 }, 0)
-        .to([railCopy, ...otherCards], { opacity: 0, filter: "blur(6px)", ease: "none", duration: 0.08 }, 0.26)
-        .set([railCopy, ...otherCards], { visibility: "hidden" }, 0.34)
-        .to(deliveryCopy, { opacity: 0, yPercent: 14, filter: "blur(8px)", ease: "none", duration: 0.06 }, 0.28)
-        .set(deliveryCopy, { visibility: "hidden" }, 0.34)
-        .set(deliveryCard, { overflow: "visible" }, 0.32)
+        .to([railCopy, ...otherCards], { opacity: 0, filter: "blur(6px)", ease: "none", duration: 0.08 }, 0.48)
+        .set([railCopy, ...otherCards], { visibility: "hidden" }, 0.56)
+        .to(deliveryCopy, { opacity: 0, yPercent: 14, filter: "blur(8px)", ease: "none", duration: 0.06 }, 0.5)
+        .set(deliveryCopy, { visibility: "hidden" }, 0.58)
+        .set(deliveryCard, { overflow: "visible" }, 0.56)
         .to(deliveryCard, {
           backgroundColor: "transparent",
           borderColor: "rgba(5, 5, 5, 0)",
           boxShadow: "none",
           ease: "none",
           duration: 0.1,
-        }, 0.32)
-        .to(section, { backgroundColor: "#050505", ease: "none", duration: 0.14 }, 0.3)
-        .set(track, { transformOrigin: getRailOrigin }, 0.34)
+        }, 0.56)
+        .to(section, { backgroundColor: "#050505", ease: "none", duration: 0.14 }, 0.54)
+        .set(track, { transformOrigin: getRailOrigin }, 0.58)
         .to(track, {
           y: getRailShiftY,
           scale: getRailScale,
           ease: "none",
           duration: 0.18,
-        }, 0.36)
+        }, 0.6)
         .to(deliveryLogo, {
           x: getLogoCenterX,
           y: getLogoCenterY,
@@ -1008,9 +1008,9 @@ function HowItWorksRail() {
           yPercent: -50,
           ease: "none",
           duration: 0.18,
-        }, 0.36)
-        .to(deliveryGlow, { opacity: 0.72, ease: "none", duration: 0.1 }, 0.42)
-        .to(deliveryLogo, { y: () => getLogoCenterY() - window.innerHeight * 0.12, opacity: 0, ease: "none", duration: 0.1 }, 0.56);
+        }, 0.6)
+        .to(deliveryGlow, { opacity: 0.72, ease: "none", duration: 0.1 }, 0.7)
+        .to(deliveryLogo, { y: () => getLogoCenterY() - window.innerHeight * 0.12, opacity: 0, ease: "none", duration: 0.1 }, 0.82);
 
       return () => tl.kill();
     });
