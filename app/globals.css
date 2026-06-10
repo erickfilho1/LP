@@ -2261,10 +2261,13 @@ section {
   right: 22px;
   bottom: 108px;
   z-index: 5;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   width: 74px;
   height: 74px;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
   border-radius: 18px;
   background: #ff0f33;
   color: #fff;
@@ -2279,11 +2282,14 @@ section {
     transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.umano-case-hover-cue b {
+.umano-case-arrow-icon {
   display: block;
-  margin-top: -18px;
-  font-size: 1.25rem;
-  line-height: 1;
+  width: 18px;
+  height: 18px;
+  margin-top: 0;
+  background: currentColor;
+  mask: url("/icons/case-arrow.svg") center / contain no-repeat;
+  -webkit-mask: url("/icons/case-arrow.svg") center / contain no-repeat;
 }
 
 .umano-case-slide:focus-visible .umano-case-hover-cue {
@@ -2348,11 +2354,10 @@ section {
   will-change: transform, opacity;
 }
 
-.umano-case-cursor b {
-  display: block;
+.umano-case-cursor .umano-case-arrow-icon {
+  width: 15px;
+  height: 15px;
   margin-top: 1px;
-  font-size: 1.14rem;
-  line-height: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -3897,7 +3902,8 @@ section {
   }
 
   .umano-footer > strong {
-    font-size: clamp(2.6rem, 15vw, 4.8rem);
+    font-size: clamp(2.1rem, 12vw, 3.4rem);
+    letter-spacing: -0.085em;
   }
 
   .umano-case-dots {
@@ -3989,7 +3995,8 @@ section {
 
   .umano-footer > strong {
     margin-top: 48px;
-    font-size: clamp(3.4rem, 18vw, 6rem);
+    font-size: clamp(2.1rem, 12vw, 3.45rem);
+    letter-spacing: -0.085em;
   }
 
   .fullscreen-nav-bar {

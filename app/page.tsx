@@ -2286,7 +2286,7 @@ function UmanoCases() {
               </div>
               <span className="umano-case-hover-cue" aria-hidden="true">
                 Abrir
-                <b>{"->"}</b>
+                <span className="umano-case-arrow-icon" />
               </span>
             </motion.a>
           ))}
@@ -2306,7 +2306,7 @@ function UmanoCases() {
         transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.55 }}
       >
         <span>Abrir</span>
-        <b>{"->"}</b>
+        <span className="umano-case-arrow-icon" />
       </motion.div>
     </section>
   );
@@ -2548,7 +2548,7 @@ function UmanoFooter() {
           Falar no WhatsApp
         </a>
       </div>
-      <strong>studiohaki.com</strong>
+      <strong>studiohaki.com.br</strong>
       <div className="umano-footer-bottom">
         <span>© 2026 HAKI Studio.</span>
         <span>Termos de uso · Privacidade</span>

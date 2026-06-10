@@ -351,7 +351,7 @@ function CaseFooter() {
           Falar no WhatsApp
         </a>
       </div>
-      <strong>studiohaki.com</strong>
+      <strong>studiohaki.com.br</strong>
       <div className="umano-footer-bottom">
         <span>© 2026 HAKI Studio.</span>
         <span>Cases, operacao criativa e landing pages.</span>
