@@ -683,6 +683,10 @@ function StickyManifesto() {
             return "+=0";
           }
 
+          if (window.matchMedia("(max-width: 768px)").matches) {
+            return `+=${Math.max(window.innerHeight * 0.56, ref.current.offsetHeight - window.innerHeight)}`;
+          }
+
           return `+=${Math.max(ref.current.offsetHeight - window.innerHeight, window.innerHeight)}`;
         },
         pin: pinRef.current,
