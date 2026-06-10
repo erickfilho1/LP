@@ -3307,10 +3307,17 @@ section {
   }
 
   .umano-nav:has(.umano-nav-mobile-panel) {
+    z-index: 120;
     border-color: transparent;
     background: transparent;
     box-shadow: none;
     backdrop-filter: none;
+  }
+
+  .umano-nav:has(.umano-nav-mobile-panel) .umano-nav-logo,
+  .umano-nav:has(.umano-nav-mobile-panel) .umano-nav-mobile-toggle {
+    position: relative;
+    z-index: 3;
   }
 
   .umano-nav:has(.umano-nav-mobile-panel) .umano-nav-logo img {
@@ -3334,8 +3341,9 @@ section {
   }
 
   .umano-nav-mobile-backdrop {
+    position: fixed;
     inset: 0;
-    z-index: 88;
+    z-index: 0;
     background: #f7f7f2;
     border: 0;
     backdrop-filter: none;
@@ -3344,7 +3352,7 @@ section {
   .umano-nav-mobile-panel {
     position: fixed;
     inset: 0;
-    z-index: 89;
+    z-index: 1;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -3488,10 +3496,17 @@ section {
   }
 
   .umano-nav.is-rail-mode:has(.umano-nav-mobile-panel) {
+    z-index: 120;
     border-color: transparent;
     background: transparent;
     box-shadow: none;
     backdrop-filter: none;
+  }
+
+  .umano-nav.is-rail-mode:has(.umano-nav-mobile-panel) .umano-nav-logo,
+  .umano-nav.is-rail-mode:has(.umano-nav-mobile-panel) .umano-nav-mobile-toggle {
+    position: relative;
+    z-index: 3;
   }
 
   .umano-nav.is-rail-mode:has(.umano-nav-mobile-panel) .umano-nav-mobile-rail {
