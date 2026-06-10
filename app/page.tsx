@@ -660,9 +660,10 @@ function ManifestWord({
 function StickyManifesto() {
   const ref = useRef<HTMLElement | null>(null);
   const pinRef = useRef<HTMLDivElement | null>(null);
+  const [isMobileManifest, setIsMobileManifest] = useState(false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 76, damping: 24, mass: 0.2 });
-  const y = useTransform(smoothProgress, [0, 0.5, 1], [18, 0, -18]);
+  const y = useTransform(smoothProgress, [0, 0.5, 1], isMobileManifest ? [8, 0, 0] : [18, 0, -18]);
   const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.985, 1, 0.992]);
   const progressScale = useTransform(smoothProgress, [0.06, 0.9], [0, 1]);
   const firstLine = ["Um", "estúdio", "dentro", "da", "sua", "operação,"];
@@ -674,6 +675,11 @@ function StickyManifesto() {
       return;
     }
 
+    const media = window.matchMedia("(max-width: 768px)");
+    const syncMobileManifest = () => setIsMobileManifest(media.matches);
+    syncMobileManifest();
+    media.addEventListener("change", syncMobileManifest);
+
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: ref.current,
@@ -684,7 +690,7 @@ function StickyManifesto() {
           }
 
           if (window.matchMedia("(max-width: 768px)").matches) {
-            return `+=${Math.max(window.innerHeight * 0.56, ref.current.offsetHeight - window.innerHeight)}`;
+            return `+=${Math.max(window.innerHeight * 0.42, ref.current.offsetHeight - window.innerHeight)}`;
           }
 
           return `+=${Math.max(ref.current.offsetHeight - window.innerHeight, window.innerHeight)}`;
@@ -699,7 +705,10 @@ function StickyManifesto() {
 
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
-    return () => ctx.revert();
+    return () => {
+      media.removeEventListener("change", syncMobileManifest);
+      ctx.revert();
+    };
   }, []);
 
   return (

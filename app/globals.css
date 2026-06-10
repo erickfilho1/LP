@@ -3710,20 +3710,20 @@ section {
   }
 
   .umano-manifesto {
-    height: 124vh;
-    min-height: 124vh;
+    height: 96vh;
+    min-height: 670px;
   }
 
   .umano-manifesto-pin {
-    height: 72dvh;
-    min-height: 520px;
+    height: 66dvh;
+    min-height: 470px;
   }
 
   .umano-manifesto-sticky {
-    height: 72dvh;
-    min-height: 520px;
+    height: 66dvh;
+    min-height: 470px;
     align-content: start;
-    padding: clamp(42px, 8vh, 64px) 16px 18px;
+    padding: clamp(78px, 12vh, 96px) 16px 12px;
   }
 
   .umano-manifesto-kicker {
