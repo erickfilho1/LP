@@ -48,8 +48,8 @@ const projects: Project[] = [
     title: "Upshare",
     description: "Agencia nos Estados Unidos que atende o nicho de restaurantes com conteudo, presenca digital e criativos recorrentes.",
     scope: "US / Restaurantes / Social",
-    art: "/assets/cases/upshare-main.svg",
-    artMobile: "/assets/cases/mobile/upshare-mobile.svg",
+    art: "/assets/cases/optimized/upshare-main.webp",
+    artMobile: "/assets/cases/optimized/upshare-mobile.webp",
     logo: "Upshare",
     note: "Agencia americana especializada em restaurantes.",
     location: "Estados Unidos",
@@ -66,8 +66,8 @@ const projects: Project[] = [
     title: "Vibefor",
     description: "Agencia focada em medicos, com criativos, presenca digital e materiais para captacao de pacientes.",
     scope: "Medicos / Saude / Captacao",
-    art: "/assets/cases/vibefor-main.svg",
-    artMobile: "/assets/cases/mobile/vibefor-mobile.svg",
+    art: "/assets/cases/optimized/vibefor-main.webp",
+    artMobile: "/assets/cases/optimized/vibefor-mobile.webp",
     logo: "Vibefor",
     note: "Agencia especializada em marketing medico.",
     location: "Brasil",
@@ -106,8 +106,8 @@ const projects: Project[] = [
     title: "Inplexo",
     description: "Projeto focado em landing page, com estrutura visual para apresentar oferta, prova e conversao.",
     scope: "Landing Page / Conversao",
-    art: "/assets/cases/inplexo-main.svg",
-    artMobile: "/assets/cases/mobile/inplexo-mobile.svg",
+    art: "/assets/cases/optimized/inplexo-main.webp",
+    artMobile: "/assets/cases/optimized/inplexo-mobile.webp",
     logo: "Inplexo",
     note: "Cliente com projeto focado em landing page.",
     location: "Brasil",
@@ -155,6 +155,7 @@ export default async function CasePage({ params }: PageProps) {
                   alt={`Arte principal do projeto ${project.title}`}
                   width={1633}
                   height={1846}
+                  sizes="(max-width: 1023px) calc(100vw - 40px), 820px"
                   className="h-full w-full object-cover object-top"
                   priority
                 />
@@ -225,7 +226,7 @@ export default async function CasePage({ params }: PageProps) {
                     className="aspect-[9/16] w-full bg-black object-cover"
                     controls
                     playsInline
-                    preload="metadata"
+                    preload="none"
                     src={video.src}
                   />
                 </div>

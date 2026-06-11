@@ -1161,7 +1161,7 @@ section {
 .umano-manifesto-word {
   display: inline-block;
   margin-right: 0.16em;
-  will-change: transform, color;
+  will-change: transform;
 }
 
 .umano-manifesto-progress {
@@ -3251,7 +3251,17 @@ section {
   will-change: transform, opacity;
 }
 
+@media (min-width: 769px) and (max-width: 1200px) {
+  .umano-nav {
+    backdrop-filter: blur(18px);
+  }
+}
+
 @media (max-width: 768px) {
+  .umano-nav {
+    backdrop-filter: blur(12px);
+  }
+
   .container-haki {
     padding-inline: 16px;
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, type MotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -204,27 +204,48 @@ function Reveal({
 
 function SmoothScroll() {
   useEffect(() => {
-    const isCompactViewport = window.matchMedia("(max-width: 768px)").matches;
+    const usesTouchScrolling = window.matchMedia("(pointer: coarse)").matches;
+
+    if (usesTouchScrolling) {
+      return;
+    }
+
     const lenis = new Lenis({
-      duration: isCompactViewport ? 0.82 : 1.15,
+      duration: 1.05,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      syncTouch: isCompactViewport,
-      touchMultiplier: isCompactViewport ? 0.92 : 1,
+      syncTouch: false,
     });
 
     let frame = 0;
+    let isRunning = true;
 
     const raf = (time: number) => {
+      if (!isRunning) {
+        return;
+      }
+
       lenis.raf(time);
-      ScrollTrigger.update();
       frame = requestAnimationFrame(raf);
     };
 
+    const handleVisibilityChange = () => {
+      isRunning = !document.hidden;
+
+      if (isRunning) {
+        frame = requestAnimationFrame(raf);
+      } else {
+        cancelAnimationFrame(frame);
+      }
+    };
+
     frame = requestAnimationFrame(raf);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
+      isRunning = false;
       cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       lenis.destroy();
     };
   }, []);
@@ -634,110 +655,100 @@ function UmanoLogoStrip() {
   );
 }
 
-function ManifestWord({
-  word,
-  index,
-  total,
-  progress,
-}: {
-  word: string;
-  index: number;
-  total: number;
-  progress: MotionValue<number>;
-}) {
-  const start = 0.08 + (index / total) * 0.64;
-  const end = start + 0.2;
-  const color = useTransform(progress, [start, end], ["rgba(8,8,8,0.16)", "rgba(8,8,8,0.84)"]);
-  const y = useTransform(progress, [start, end], [12, 0]);
-
-  return (
-    <motion.span className="umano-manifesto-word" style={{ color, y }}>
-      {word}
-    </motion.span>
-  );
-}
-
 function StickyManifesto() {
   const ref = useRef<HTMLElement | null>(null);
   const pinRef = useRef<HTMLDivElement | null>(null);
-  const [isMobileManifest, setIsMobileManifest] = useState(false);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 76, damping: 24, mass: 0.2 });
-  const y = useTransform(smoothProgress, [0, 0.5, 1], isMobileManifest ? [8, 0, 0] : [18, 0, -18]);
-  const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.985, 1, 0.992]);
-  const progressScale = useTransform(smoothProgress, [0.06, 0.9], [0, 1]);
+  const stickyRef = useRef<HTMLDivElement | null>(null);
+  const progressRef = useRef<HTMLElement | null>(null);
   const firstLine = ["Um", "estúdio", "dentro", "da", "sua", "operação,"];
   const secondLine = ["com", "ritmo", "de", "produto", "e", "prazo", "de lançamento."];
-  const words = [...firstLine, ...secondLine];
 
   useEffect(() => {
-    if (!ref.current || !pinRef.current) {
+    const section = ref.current;
+    const pin = pinRef.current;
+    const sticky = stickyRef.current;
+    const progress = progressRef.current;
+
+    if (!section || !pin || !sticky || !progress) {
       return;
     }
 
-    const media = window.matchMedia("(max-width: 768px)");
-    const syncMobileManifest = () => setIsMobileManifest(media.matches);
-    syncMobileManifest();
-    media.addEventListener("change", syncMobileManifest);
+    const media = gsap.matchMedia();
 
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: ref.current,
-        start: "top top",
-        end: () => {
-          if (!ref.current) {
-            return "+=0";
-          }
+    media.add(
+      {
+        mobile: "(max-width: 768px)",
+        desktop: "(min-width: 769px)",
+      },
+      (context) => {
+        const isMobile = Boolean(context.conditions?.mobile);
+        const words = gsap.utils.toArray<HTMLElement>(".umano-manifesto-word", section);
 
-          if (window.matchMedia("(max-width: 768px)").matches) {
-            return `+=${Math.max(window.innerHeight * 0.42, ref.current.offsetHeight - window.innerHeight)}`;
-          }
+        gsap.set(sticky, { y: isMobile ? 8 : 18, scale: 0.985, force3D: true });
+        gsap.set(words, { color: "rgba(8,8,8,0.16)", y: 12, force3D: true });
+        gsap.set(progress, { scaleX: 0, transformOrigin: "left center", force3D: true });
 
-          return `+=${Math.max(ref.current.offsetHeight - window.innerHeight, window.innerHeight)}`;
-        },
-        pin: pinRef.current,
-        pinSpacing: false,
-        scrub: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      });
-    }, ref);
+        const timeline = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => {
+              const distance = isMobile
+                ? Math.max(window.innerHeight * 0.42, section.offsetHeight - window.innerHeight)
+                : Math.max(section.offsetHeight - window.innerHeight, window.innerHeight);
+
+              return `+=${distance}`;
+            },
+            pin,
+            pinSpacing: false,
+            scrub: isMobile ? 0.12 : 0.28,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            fastScrollEnd: true,
+          },
+        });
+
+        timeline
+          .to(sticky, { y: 0, scale: 1, duration: 0.18 }, 0)
+          .to(words, { color: "rgba(8,8,8,0.84)", y: 0, duration: 0.18, stagger: 0.045 }, 0.05)
+          .to(progress, { scaleX: 1, duration: 0.72 }, 0.06);
+
+        if (!isMobile) {
+          timeline.to(sticky, { y: -18, scale: 0.992, duration: 0.12 }, 0.88);
+        }
+      },
+      section,
+    );
 
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
     return () => {
-      media.removeEventListener("change", syncMobileManifest);
-      ctx.revert();
+      media.revert();
     };
   }, []);
 
   return (
     <section ref={ref} className="umano-manifesto">
       <div ref={pinRef} className="umano-manifesto-pin">
-        <motion.div style={{ y, scale }} className="umano-manifesto-sticky">
+        <div ref={stickyRef} className="umano-manifesto-sticky">
           <span className="umano-manifesto-kicker">Infraestrutura criativa plugada</span>
           <h2>
             <span className="umano-manifesto-line">
               {firstLine.map((word, index) => (
-                <ManifestWord key={`${word}-${index}`} word={word} index={index} total={words.length} progress={smoothProgress} />
+                <span key={`${word}-${index}`} className="umano-manifesto-word">{word}</span>
               ))}
             </span>
             <span className="umano-manifesto-line">
               {secondLine.map((word, index) => (
-                <ManifestWord
-                  key={`${word}-${index + firstLine.length}`}
-                  word={word}
-                  index={index + firstLine.length}
-                  total={words.length}
-                  progress={smoothProgress}
-                />
+                <span key={`${word}-${index + firstLine.length}`} className="umano-manifesto-word">{word}</span>
               ))}
             </span>
           </h2>
           <div className="umano-manifesto-progress" aria-hidden="true">
-            <motion.i style={{ scaleX: progressScale }} />
+            <i ref={progressRef} />
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -1974,7 +1985,7 @@ const deliveryCases = [
     description: "Cliente desde 2026. Agencia dos Estados Unidos que atende restaurantes com conteudo, social e presenca digital recorrente.",
     marker: "US / RESTAURANTES",
     theme: "upshare",
-    image: "/assets/cases/upshare-main.svg",
+    image: "/assets/cases/optimized/upshare-main.webp",
   },
   {
     slug: "vibefor",
@@ -1982,7 +1993,7 @@ const deliveryCases = [
     description: "Cliente desde 2026. Agencia focada em medicos, com criativos, presenca digital e materiais para captacao de pacientes.",
     marker: "MEDICOS / SAUDE",
     theme: "vibefor",
-    image: "/assets/cases/vibefor-main.svg",
+    image: "/assets/cases/optimized/vibefor-main.webp",
   },
   {
     slug: "inplexo",
@@ -1990,7 +2001,7 @@ const deliveryCases = [
     description: "Cliente desde 2026. Projeto focado em landing page, com estrutura visual para apresentar oferta, prova e conversao.",
     marker: "LANDING PAGE",
     theme: "inplexo",
-    image: "/assets/cases/inplexo-main.svg",
+    image: "/assets/cases/optimized/inplexo-main.webp",
   },
 ];
 function PlanIncluded({ planName, items }: { planName: string; items: string[] }) {
@@ -2279,9 +2290,10 @@ function UmanoCases() {
                     className="umano-case-main-art"
                     src={project.image ?? ""}
                     alt=""
-                    width={1633}
-                    height={1846}
-                  />
+                   width={1633}
+                   height={1846}
+                   sizes="(max-width: 767px) 88vw, 46vw"
+                 />
                 ) : (
                   <>
                     <div className="umano-case-mosaic">
